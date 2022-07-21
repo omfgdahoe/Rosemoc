@@ -164,10 +164,10 @@ function Library:CreateWindow(Config, Parent)
 		local Tab = Folder.Tab:Clone()
 		local TabButton = Folder.TabButton:Clone()
 
-		Tab.Name = Name .. " T"
+		Tab.Name = Name .. " Tab"
 		Tab.Parent = TContainer
 
-		TabButton.Name = Name .. " TB"
+		TabButton.Name = Name .. " TabButton"
 		TabButton.Parent = TBContainer
 		TabButton.Title.Text = Name
 		TabButton.BackgroundColor3 = Config.Color
@@ -223,7 +223,7 @@ function Library:CreateWindow(Config, Parent)
 		function TabInit:CreateSection(Name)
 			local SectionInit = {}
 			local Section = Folder.Section:Clone()
-			Section.Name = Name .. " S"
+			Section.Name = Name .. " Section"
 			Section.Parent = GetSide(false)
 
 			Section.Title.Text = Name
@@ -236,7 +236,7 @@ function Library:CreateWindow(Config, Parent)
 			function SectionInit:CreateLabel(Name)
 				local LabelInit = {}
 				local Label = Folder.Label:Clone()
-				Label.Name = Name .. " L"
+				Label.Name = Name .. " Label"
 				Label.Parent = Section.Container
 				Label.Text = Name
 				Label.Size = UDim2.new(1,-10,0,Label.TextBounds.Y)
@@ -249,7 +249,7 @@ function Library:CreateWindow(Config, Parent)
 			function SectionInit:CreateButton(Name, Callback)
 				local ButtonInit = {}
 				local Button = Folder.Button:Clone()
-				Button.Name = Name .. " B"
+				Button.Name = Name .. " Button"
 				Button.Parent = Section.Container
 				Button.Title.Text = Name
 				Button.Size = UDim2.new(1,-10,0,Button.Title.TextBounds.Y + 5)
@@ -295,7 +295,7 @@ function Library:CreateWindow(Config, Parent)
 			function SectionInit:CreateTextBox(Name, PlaceHolder, NumbersOnly, Callback)
 				local TextBoxInit = {}
 				local TextBox = Folder.TextBox:Clone()
-				TextBox.Name = Name .. " T"
+				TextBox.Name = Name .. " TextBox"
 				TextBox.Parent = Section.Container
 				TextBox.Title.Text = Name
 				TextBox.Background.Input.PlaceholderText = PlaceHolder
@@ -337,7 +337,7 @@ function Library:CreateWindow(Config, Parent)
 				local DefaultLocal = Default or false
 				local ToggleInit = {}
 				local Toggle = Folder.Toggle:Clone()
-				Toggle.Name = Name .. " T"
+				Toggle.Name = Name .. " Toggle"
 				Toggle.Parent = Section.Container
 				Toggle.Title.Text = Name
 				Toggle.Size = UDim2.new(1,-10,0,Toggle.Title.TextBounds.Y + 5)
@@ -451,7 +451,7 @@ function Library:CreateWindow(Config, Parent)
 				local DefaultLocal = Default or 50
 				local SliderInit = {}
 				local Slider = Folder.Slider:Clone()
-				Slider.Name = Name .. " S"
+				Slider.Name = Name .. " Slider"
 				Slider.Parent = Section.Container
 				
 				Slider.Title.Text = Name
@@ -566,7 +566,7 @@ function Library:CreateWindow(Config, Parent)
 			function SectionInit:CreateDropdown(Name, OptionTable, Callback, InitialValue)
 				local DropdownInit = {}
 				local Dropdown = Folder.Dropdown:Clone()
-				Dropdown.Name = Name .. " D"
+				Dropdown.Name = Name .. " Dropdown"
 				Dropdown.Parent = Section.Container
 
 				Dropdown.Title.Text = Name
@@ -671,12 +671,12 @@ function Library:CreateWindow(Config, Parent)
 				local Colorpicker = Folder.Colorpicker:Clone()
 				local Pallete = Folder.Pallete:Clone()
 
-				Colorpicker.Name = Name .. " CP"
+				Colorpicker.Name = Name .. " Colorpicker"
 				Colorpicker.Parent = Section.Container
 				Colorpicker.Title.Text = Name
 				Colorpicker.Size = UDim2.new(1,-10,0,Colorpicker.Title.TextBounds.Y + 5)
 
-				Pallete.Name = Name .. " P"
+				Pallete.Name = Name .. " Pallete"
 				Pallete.Parent = Screen
 
 				local ColorTable = {
