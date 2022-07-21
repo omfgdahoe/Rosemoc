@@ -328,6 +328,9 @@ function Library:CreateWindow(Config, Parent)
 						end)
 					end
 				end
+                function TextBotInit:GetObject()
+                    return TextBox
+                end
 				return TextBoxInit
 			end
 			function SectionInit:CreateToggle(Name, Default, Callback)
@@ -654,6 +657,9 @@ function Library:CreateWindow(Config, Parent)
 				if InitialValue then
 					DropdownInit:SetOption(InitialValue)
 				end
+                function DropdownInit:GetObject()
+                    return Dropdown
+                end
 				return DropdownInit
 			end
 			function SectionInit:CreateColorpicker(Name,Callback)
