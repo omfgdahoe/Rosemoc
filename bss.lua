@@ -1725,11 +1725,13 @@ end)
 uitoggle:CreateKeybind(tostring(Config.Keybind):gsub("Enum.KeyCode.", ""),
                        function(Key) Config.Keybind = Enum.KeyCode[Key] end)
 uitoggle:SetState(true)
-guisettings:CreateColorpicker("UI Color",
-                              function(Color) Window:ChangeColor(Color) end)
+local UIColorPicker = guisettings:CreateColorpicker("UI Color", function(Color) Window:ChangeColor(Color) end)
+repeat 
+    task.wait()
+until UIColorPicker:GetObject() and UIColorPicker:GetObject():FindFirstChild("Color")
+UIColorPicker:GetObject().Color.BackgroundColor3 = Config.Color
 local themes = guisettings:CreateDropdown("Image", {
-    "Default", "Hearts", "Abstract", "Hexagon", "Circles", "Lace With Flowers",
-    "Floral"
+    "Default", "Hearts", "Abstract", "Hexagon", "Circles", "Lace With Flowers", "Floral"
 }, function(Name)
     if Name == "Default" then
         Window:SetBackground("2151741365")
@@ -1762,8 +1764,6 @@ kocmocs:CreateButton("Load Config", function()
                     obj.Container.Value.Text = kocmoc[i][j]
                 elseif lastCharacters == " Slider" then
                     task.spawn(function()
-                        --a + ((b - a) * c)
-                        --obj.Slider.Bar.Size = UDim2.new(kocmoc[i][j] / 100, 0, 1, 0)
                         local Tween = game:GetService("TweenService"):Create(
                             obj.Slider.Bar,
                             TweenInfo.new(1),
