@@ -788,6 +788,10 @@ function Library:CreateWindow(Config, Parent)
 					end
 				end
 
+                function ColorpickerInit:GetObject()
+                    return Colorpicker
+                end
+
 				return ColorpickerInit
 			end
 			return SectionInit
