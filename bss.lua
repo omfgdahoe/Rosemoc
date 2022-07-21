@@ -1767,7 +1767,7 @@ kocmocs:CreateButton("Load Config", function()
                         local Tween = game:GetService("TweenService"):Create(
                             obj.Slider.Bar,
                             TweenInfo.new(1),
-                            {Size = UDim2.new(kocmoc[i][j] / 100, 0, 1, 0)}
+                            {Size = UDim2.new((tonumber(kocmoc[i][j]) - k:GetMin() / (k:GetMax() - k:GetMin())) / 100, 0, 1, 0)}
                         )
                         Tween:Play()
                         local startStamp = tick()
@@ -2795,8 +2795,8 @@ task.spawn(function()
         wait(2)
         pcall(function()
             for i, v in pairs(game.CoreGui:GetDescendants()) do
-                if v.Name == "Startup Slider" then
-                    v.Parent.Parent.RightSide["Information Slider"].Parent = v.Parent
+                if v.Name == "Startup Section" then
+                    v.Parent.Parent.RightSide["Information Section"].Parent = v.Parent
                     v:Destroy()
                 end
             end
