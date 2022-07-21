@@ -557,6 +557,14 @@ function Library:CreateWindow(Config, Parent)
 					return GlobalSliderValue
 				end
 
+                function SliderInit:GetMin()
+                    return Min
+                end
+
+                function SliderInit:GetMax()
+                    return Max
+                end
+
                 function SliderInit:GetObject()
                     return Slider
                 end

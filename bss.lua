@@ -1995,6 +1995,12 @@ task.spawn(function()
                                             fieldselected = game:GetService("Workspace").FlowerZones[kocmoc.bestfields.red]
                                             break
                                         end
+                                    elseif string.match(v.Parent.Parent.TitleBar.Text, "Bee") then
+                                        if string.match(text, "Blueberries") then
+                                            game.ReplicatedStorage.Events.ConstructHiveCellFromEgg:InvokeServer(5, 3, "Blueberry", 25, false)
+                                        elseif string.match(text, "Strawberries") then
+                                            game.ReplicatedStorage.Events.ConstructHiveCellFromEgg:InvokeServer(5, 3, "Strawberry", 25, false)
+                                        end
                                     end
                                 end
                             else
