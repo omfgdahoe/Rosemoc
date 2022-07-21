@@ -557,6 +557,10 @@ function Library:CreateWindow(Config, Parent)
 					return GlobalSliderValue
 				end
 
+                function SliderInit:GetObject()
+                    return Slider
+                end
+
 				return SliderInit
 			end
 			function SectionInit:CreateDropdown(Name, OptionTable, Callback, InitialValue)
