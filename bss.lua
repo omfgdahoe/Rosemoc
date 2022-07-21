@@ -874,38 +874,27 @@ end
 
 function makequests()
     for i, v in next, game:GetService("Workspace").NPCs:GetChildren() do
-        if v.Name ~= "Ant Challenge Info" and v.Name ~= "Bubble Bee Man 2" and
-            v.Name ~= "Wind Shrine" and v.Name ~= "Gummy Bear" then
+        if v.Name ~= "Ant Challenge Info" and v.Name ~= "Bubble Bee Man 2" and v.Name ~= "Wind Shrine" and v.Name ~= "Gummy Bear" then
             if v:FindFirstChild("Platform") then
                 if v.Platform:FindFirstChild("AlertPos") then
                     if v.Platform.AlertPos:FindFirstChild("AlertGui") then
-                        if v.Platform.AlertPos.AlertGui:FindFirstChild(
-                            "ImageLabel") then
+                        if v.Platform.AlertPos.AlertGui:FindFirstChild("ImageLabel") then
                             image = v.Platform.AlertPos.AlertGui.ImageLabel
-                            button = game:GetService("Players").LocalPlayer
-                                         .PlayerGui.ScreenGui.ActivateButton
-                                         .MouseButton1Click
+                            button = game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.ActivateButton.MouseButton1Click
                             if image.ImageTransparency == 0 then
                                 if kocmoc.toggles.tptonpc then
-                                    game.Players.LocalPlayer.Character
-                                        .HumanoidRootPart.CFrame = CFrame.new(
-                                                                       v.Platform
-                                                                           .Position
-                                                                           .X,
-                                                                       v.Platform
-                                                                           .Position
-                                                                           .Y +
-                                                                           3,
-                                                                       v.Platform
-                                                                           .Position
-                                                                           .Z)
+                                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(
+                                        v.Platform.Position.X,
+                                        v.Platform.Position.Y + 3,
+                                        v.Platform.Position.Z
+                                    )
                                     task.wait(1)
                                 else
-                                    api.tween(2,
-                                              CFrame.new(v.Platform.Position.X,
-                                                         v.Platform.Position.Y +
-                                                             3,
-                                                         v.Platform.Position.Z))
+                                    api.tween(2, CFrame.new(
+                                        v.Platform.Position.X,
+                                        v.Platform.Position.Y + 3,
+                                        v.Platform.Position.Z)
+                                    )
                                     task.wait(3)
                                 end
                                 for b, z in next, getconnections(button) do
@@ -1366,17 +1355,14 @@ misco:CreateDropdown("Generate Amulet", {
     "Supreme Star Amulet", "Diamond Star Amulet", "Gold Star Amulet",
     "Silver Star Amulet", "Bronze Star Amulet", "Moon Amulet"
 }, function(Option)
-    local A_1 = Option .. " Generator"
-    local Event = game:GetService("ReplicatedStorage").Events.ToyEvent
-    Event:FireServer(A_1)
+    game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer(Option .. " Generator")
 end)
 misco:CreateButton("Export Stats Table [📜]", function()
     local StatCache = require(game.ReplicatedStorage.ClientStatCache)
     writefile("Stats_" .. api.nickname .. ".json", StatCache:Encode())
 end)
 
-if string.find(string.upper(identifyexecutor()), "SYN") or
-    string.find(string.upper(identifyexecutor()), "SCRIP") then
+if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.upper(identifyexecutor()), "SCRIP") then
     local visu = misctab:CreateSection("Visual")
     local alertText = "☢️ A nuke is incoming! ☢️"
     local alertDesign = "Purple"
@@ -1388,8 +1374,7 @@ if string.find(string.upper(identifyexecutor()), "SYN") or
     visu:CreateButton("Spawn Coconut", function()
         syn.secure_call(function()
             require(game.ReplicatedStorage.LocalFX.FallingCoconut)({
-                Pos = game.Players.LocalPlayer.Character.Humanoid.RootPart
-                    .CFrame.p,
+                Pos = game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame.p,
                 Dur = 0.6,
                 Radius = 16,
                 Delay = 1.5,
@@ -1400,8 +1385,7 @@ if string.find(string.upper(identifyexecutor()), "SYN") or
     visu:CreateButton("Spawn Hostile Coconut", function()
         syn.secure_call(function()
             require(game.ReplicatedStorage.LocalFX.FallingCoconut)({
-                Pos = game.Players.LocalPlayer.Character.Humanoid.RootPart
-                    .CFrame.p,
+                Pos = game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame.p,
                 Dur = 0.6,
                 Radius = 16,
                 Delay = 1.5,
@@ -1412,8 +1396,7 @@ if string.find(string.upper(identifyexecutor()), "SYN") or
     visu:CreateButton("Spawn Mythic Meteor", function()
         syn.secure_call(function()
             require(game.ReplicatedStorage.LocalFX.MythicMeteor)({
-                Pos = game.Players.LocalPlayer.Character.Humanoid.RootPart
-                    .CFrame.p,
+                Pos = game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame.p,
                 Dur = 0.6,
                 Radius = 16,
                 Delay = 1.5,
@@ -1429,38 +1412,30 @@ if string.find(string.upper(identifyexecutor()), "SYN") or
         }
         syn.secure_call(function()
             require(game.ReplicatedStorage.LocalFX.JellyBeanToss)({
-                Start = game.Players.LocalPlayer.Character.Humanoid.RootPart
-                    .CFrame.p,
+                Start = game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame.p,
                 Type = jellybeans[math.random(1, #jellybeans)],
-                End = (game.Players.LocalPlayer.Character.Humanoid.RootPart
-                    .CFrame * CFrame.new(0, 0, -35)).p +
-                    Vector3.new(math.random(1, 20), 0, math.random(1, 20))
+                End = (game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame * CFrame.new(0, 0, -35)).p + Vector3.new(math.random(1, 20), 0, math.random(1, 20))
             })
         end, game.Players.LocalPlayer.PlayerScripts.ClientInit)
     end)
     visu:CreateButton("Spawn Puffshroom Spores", function()
         task.spawn(function()
             syn.secure_call(function()
-                local field =
-                    game:GetService("Workspace").FlowerZones:GetChildren()[math.random(
-                        1,
-                        #game:GetService("Workspace").FlowerZones:GetChildren())]
+                local field = game:GetService("Workspace").FlowerZones:GetChildren()[math.random(1, #game:GetService("Workspace").FlowerZones:GetChildren())]
                 local pos = field.CFrame.p
                 require(game.ReplicatedStorage.LocalFX.PuffshroomSporeThrow)({
-                    Start = game.Players.LocalPlayer.Character.HumanoidRootPart
-                        .CFrame.p,
+                    Start = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.p,
                     End = pos
                 })
             end, game.Players.LocalPlayer.PlayerScripts.ClientInit)
-            wait(10)
+            task.wait(10)
             workspace.Particles:FindFirstChild("SporeCloud"):Destroy()
         end)
     end)
     visu:CreateButton("Spawn Party Popper", function()
         syn.secure_call(function()
             require(game:GetService("ReplicatedStorage").LocalFX.PartyPopper)({
-                Pos = game.Players.LocalPlayer.Character.Humanoid.RootPart
-                    .CFrame.p
+                Pos = game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame.p
             })
         end, game.Players.LocalPlayer.PlayerScripts.ClientInit)
     end)
@@ -1468,14 +1443,22 @@ if string.find(string.upper(identifyexecutor()), "SYN") or
         syn.secure_call(function()
             require(game.ReplicatedStorage.LocalFX.LocalFlames).AddFlame(
                 game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame.p,
-                10, 1, game.Players.LocalPlayer.UserId, false)
+                10,
+                1,
+                game.Players.LocalPlayer.UserId,
+                false
+            )
         end, game.Players.LocalPlayer.PlayerScripts.ClientInit)
     end)
     visu:CreateButton("Spawn Dark Flame", function()
         syn.secure_call(function()
             require(game.ReplicatedStorage.LocalFX.LocalFlames).AddFlame(
                 game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame.p,
-                10, 1, game.Players.LocalPlayer.UserId, true)
+                10,
+                1,
+                game.Players.LocalPlayer.UserId,
+                true
+            )
         end, game.Players.LocalPlayer.PlayerScripts.ClientInit)
     end)
     local booolholder = false
@@ -1486,9 +1469,12 @@ if string.find(string.upper(identifyexecutor()), "SYN") or
                 wait(0.1)
                 syn.secure_call(function()
                     require(game.ReplicatedStorage.LocalFX.LocalFlames).AddFlame(
-                        game.Players.LocalPlayer.Character.Humanoid.RootPart
-                            .CFrame.p, 10, 1, game.Players.LocalPlayer.UserId,
-                        false)
+                        game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame.p,
+                        10,
+                        1,
+                        game.Players.LocalPlayer.UserId,
+                        false
+                    )
                 end, game.Players.LocalPlayer.PlayerScripts.ClientInit)
             until booolholder == false
         else
@@ -1502,9 +1488,12 @@ if string.find(string.upper(identifyexecutor()), "SYN") or
                 wait(0.1)
                 syn.secure_call(function()
                     require(game.ReplicatedStorage.LocalFX.LocalFlames).AddFlame(
-                        game.Players.LocalPlayer.Character.Humanoid.RootPart
-                            .CFrame.p, 10, 1, game.Players.LocalPlayer.UserId,
-                        true)
+                        game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame.p,
+                        10,
+                        1,
+                        game.Players.LocalPlayer.UserId,
+                        true
+                    )
                 end, game.Players.LocalPlayer.PlayerScripts.ClientInit)
             until booolholder == false
         else
@@ -1548,10 +1537,8 @@ if string.find(string.upper(identifyexecutor()), "SYN") or
     local destroym = true
     visu:CreateToggle("Destroy Map", true, function(State) destroym = State end)
     local nukeDuration = 10
-    local nukePosition = Vector3.new(-26.202560424804688, 0.657240390777588,
-                                     172.31759643554688)
-    local spoof = game:GetService("Players").LocalPlayer.PlayerScripts
-                      .AlertBoxes
+    local nukePosition = Vector3.new(-26.202560424804688, 0.657240390777588, 172.31759643554688)
+    local spoof = game:GetService("Players").LocalPlayer.PlayerScripts.AlertBoxes
     function Nuke()
         require(game.ReplicatedStorage.LocalFX.MythicMeteor)({
             Pos = nukePosition,
@@ -1580,26 +1567,24 @@ if string.find(string.upper(identifyexecutor()), "SYN") or
                 local y = math.random(-100, 100) / 100
                 local z = math.random(-100, 100) / 100
                 Humanoid.CameraOffset = Vector3.new(x, y, z)
-                wait(0.01)
+                task.wait(0.01)
             end
         end)
         syn.secure_call(pushAlert, spoof)
-        wait(10)
+        task.wait(10)
         spawn(function()
-            syn.secure_call(Nuke,
-                            game.Players.LocalPlayer.PlayerScripts.ClientInit)
+            syn.secure_call(Nuke, game.Players.LocalPlayer.PlayerScripts.ClientInit)
         end)
-        wait(nukeDuration)
+        task.wait(nukeDuration)
         spawn(function()
-            syn.secure_call(DustCloud,
-                            game.Players.LocalPlayer.PlayerScripts.ClientInit)
+            syn.secure_call(DustCloud, game.Players.LocalPlayer.PlayerScripts.ClientInit)
         end)
-        wait(1)
+        task.wait(1)
         local Orb = game:GetService("Workspace").Particles:FindFirstChild("Orb")
         if Orb then Orb.CanCollide = true end
         if destroym == true then
             repeat
-                wait(3)
+                task.wait(3)
                 for i, v in pairs(Orb:GetTouchingParts()) do
                     if v.Anchored == true then
                         v.Anchored = false
@@ -1617,8 +1602,7 @@ local autofeed = itemstab:CreateSection("Auto Feed")
 local function feedAllBees(treat, amt)
     for L = 1, 5 do
         for U = 1, 10 do
-            game:GetService("ReplicatedStorage").Events.ConstructHiveCellFromEgg:InvokeServer(
-                L, U, treat, amt)
+            game:GetService("ReplicatedStorage").Events.ConstructHiveCellFromEgg:InvokeServer(L, U, treat, amt)
         end
     end
 end
@@ -1655,7 +1639,9 @@ end)
 guiElements["toggles"]["loopfarmspeed"] = farmsettings:CreateToggle("^ Loop Speed On Autofarming", nil, function(State)
     kocmoc.toggles.loopfarmspeed = State
 end)
-guiElements["toggles"]["farmflower"] = farmsettings:CreateToggle("Don't Walk In Field", nil, function(State) kocmoc.toggles.farmflower = State end)
+guiElements["toggles"]["farmflower"] = farmsettings:CreateToggle("Don't Walk In Field", nil, function(State)
+    kocmoc.toggles.farmflower = State
+end)
 guiElements["toggles"]["convertballoons"] = farmsettings:CreateToggle("Convert Hive Balloon", nil, function(State)
     kocmoc.toggles.convertballoons = State
 end)
@@ -1672,12 +1658,12 @@ guiElements["vars"]["jumppower"] = farmsettings:CreateSlider("Jump Power", 0, 12
     kocmoc.vars.jumppower = Value
 end)
 local raresettings = setttab:CreateSection("Tokens Settings")
-raresettings:CreateTextBox("Asset ID", "rbxassetid", false,
-                           function(Value) rarename = Value end)
+raresettings:CreateTextBox("Asset ID", "rbxassetid", false, function(Value)
+    rarename = Value
+end)
 raresettings:CreateButton("Add Token To Rares List", function()
     table.insert(kocmoc.rares, rarename)
-    game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild(
-        "Rares List Dropdown", true):Destroy()
+    game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild("Rares List Dropdown", true):Destroy()
     raresettings:CreateDropdown("Rares List", kocmoc.rares, function(Option) end)
 end)
 raresettings:CreateButton("Remove Token From Rares List", function()
@@ -1965,51 +1951,63 @@ task.spawn(function()
 
             if kocmoc.toggles.autofarm then
                 if kocmoc.toggles.autodoquest and
-                    game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui
-                        .Menus.Children.Quests.Content:FindFirstChild("Frame") then
-                    for i, v in next,
-                                game:GetService("Players").LocalPlayer.PlayerGui
-                                    .ScreenGui.Menus.Children.Quests:GetDescendants() do
+                    game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Menus.Children.Quests.Content:FindFirstChild("Frame") then
+                    for i, v in next, game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.Menus.Children.Quests:GetDescendants() do
                         if v.Name == "Description" then
-                            if string.match(v.Parent.Parent.TitleBar.Text,
-                                            kocmoc.vars.npcprefer) or
-                                kocmoc.vars.npcprefer == "All Quests" and
-                                not string.find(v.Text, "Puffshroom") then
-                                pollentypes = {
-                                    "White Pollen", "Red Pollen", "Blue Pollen",
-                                    "Blue Flowers", "Red Flowers",
-                                    "White Flowers"
-                                }
-                                text = v.Text
-                                if api.returnvalue(fieldstable, text) and
-                                    not string.find(v.Text, "Complete!") and
-                                    not api.findvalue(kocmoc.blacklistedfields,
-                                                      api.returnvalue(
-                                                          fieldstable, text)) then
-                                    d = api.returnvalue(fieldstable, text)
-                                    fieldselected =
-                                        game:GetService("Workspace").FlowerZones[d]
-                                    break
-                                elseif api.returnvalue(pollentypes, text) and
-                                    not string.find(v.Text, "Complete!") then
-                                    d = api.returnvalue(pollentypes, text)
-                                    if d == "Blue Flowers" or d == "Blue Pollen" then
-                                        fieldselected = game:GetService(
-                                                            "Workspace").FlowerZones[kocmoc.bestfields
-                                                            .blue]
+                            if kocmoc.vars.npcprefer == "No Brown Bear" then
+                                if not string.match(v.Parent.Parent.TitleBar.Text, "Brown Bear") then
+                                    pollentypes = {
+                                        "White Pollen", "Red Pollen", "Blue Pollen",
+                                        "Blue Flowers", "Red Flowers",
+                                        "White Flowers"
+                                    }
+                                    text = v.Text
+                                    if api.returnvalue(fieldstable, text) and not string.find(v.Text, "Complete!") and not api.findvalue(kocmoc.blacklistedfields, api.returnvalue( fieldstable, text)) then
+                                        d = api.returnvalue(fieldstable, text)
+                                        fieldselected = game:GetService("Workspace").FlowerZones[d]
                                         break
-                                    elseif d == "White Flowers" or d ==
-                                        "White Pollen" then
-                                        fieldselected = game:GetService(
-                                                            "Workspace").FlowerZones[kocmoc.bestfields
-                                                            .white]
+                                    elseif api.returnvalue(pollentypes, text) and not string.find(v.Text, "Complete!") then
+                                        d = api.returnvalue(pollentypes, text)
+                                        if d == "Blue Flowers" or d == "Blue Pollen" then
+                                            fieldselected = game:GetService("Workspace").FlowerZones[kocmoc.bestfields.blue]
+                                            break
+                                        elseif d == "White Flowers" or d ==
+                                            "White Pollen" then
+                                            fieldselected = game:GetService("Workspace").FlowerZones[kocmoc.bestfields.white]
+                                            break
+                                        elseif d == "Red Flowers" or d ==
+                                            "Red Pollen" then
+                                            fieldselected = game:GetService("Workspace").FlowerZones[kocmoc.bestfields.red]
+                                            break
+                                        end
+                                    end
+                                end
+                            else
+                                if string.match(v.Parent.Parent.TitleBar.Text, kocmoc.vars.npcprefer) or kocmoc.vars.npcprefer == "All Quests" and not string.find(v.Text, "Puffshroom") then
+                                    pollentypes = {
+                                        "White Pollen", "Red Pollen", "Blue Pollen",
+                                        "Blue Flowers", "Red Flowers",
+                                        "White Flowers"
+                                    }
+                                    text = v.Text
+                                    if api.returnvalue(fieldstable, text) and not string.find(v.Text, "Complete!") and not api.findvalue(kocmoc.blacklistedfields, api.returnvalue( fieldstable, text)) then
+                                        d = api.returnvalue(fieldstable, text)
+                                        fieldselected = game:GetService("Workspace").FlowerZones[d]
                                         break
-                                    elseif d == "Red Flowers" or d ==
-                                        "Red Pollen" then
-                                        fieldselected = game:GetService(
-                                                            "Workspace").FlowerZones[kocmoc.bestfields
-                                                            .red]
-                                        break
+                                    elseif api.returnvalue(pollentypes, text) and not string.find(v.Text, "Complete!") then
+                                        d = api.returnvalue(pollentypes, text)
+                                        if d == "Blue Flowers" or d == "Blue Pollen" then
+                                            fieldselected = game:GetService("Workspace").FlowerZones[kocmoc.bestfields.blue]
+                                            break
+                                        elseif d == "White Flowers" or d ==
+                                            "White Pollen" then
+                                            fieldselected = game:GetService("Workspace").FlowerZones[kocmoc.bestfields.white]
+                                            break
+                                        elseif d == "Red Flowers" or d ==
+                                            "Red Pollen" then
+                                            fieldselected = game:GetService("Workspace").FlowerZones[kocmoc.bestfields.red]
+                                            break
+                                        end
                                     end
                                 end
                             end
@@ -2522,81 +2520,80 @@ task.spawn(function()
         end
         if kocmoc.toggles.autodispense then
             if kocmoc.dispensesettings.rj then
-                local A_1 = "Free Royal Jelly Dispenser"
-                local Event = game:GetService("ReplicatedStorage").Events
-                                  .ToyEvent
-                Event:FireServer(A_1)
+                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer("Free Royal Jelly Dispenser")
             end
             if kocmoc.dispensesettings.blub then
-                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer(
-                    "Blueberry Dispenser")
+                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer("Blueberry Dispenser")
             end
             if kocmoc.dispensesettings.straw then
-                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer(
-                    "Strawberry Dispenser")
+                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer("Strawberry Dispenser")
             end
             if kocmoc.dispensesettings.treat then
-                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer(
-                    "Treat Dispenser")
+                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer("Treat Dispenser")
             end
             if kocmoc.dispensesettings.coconut then
-                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer(
-                    "Coconut Dispenser")
+                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer("Coconut Dispenser")
             end
             if kocmoc.dispensesettings.glue then
-                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer(
-                    "Glue Dispenser")
+                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer("Glue Dispenser")
             end
         end
         if kocmoc.toggles.autoboosters then
             if kocmoc.dispensesettings.white then
-                game.ReplicatedStorage.Events.ToyEvent:FireServer(
-                    "Field Booster")
+                game.ReplicatedStorage.Events.ToyEvent:FireServer("Field Booster")
             end
             if kocmoc.dispensesettings.red then
-                game.ReplicatedStorage.Events.ToyEvent:FireServer(
-                    "Red Field Booster")
+                game.ReplicatedStorage.Events.ToyEvent:FireServer("Red Field Booster")
             end
             if kocmoc.dispensesettings.blue then
-                game.ReplicatedStorage.Events.ToyEvent:FireServer(
-                    "Blue Field Booster")
+                game.ReplicatedStorage.Events.ToyEvent:FireServer("Blue Field Booster")
             end
         end
         if kocmoc.toggles.clock then
-            game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer(
-                "Wealth Clock")
+            game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer("Wealth Clock")
         end
         if kocmoc.toggles.freeantpass then
-            game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer(
-                "Free Ant Pass Dispenser")
+            game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer("Free Ant Pass Dispenser")
         end
-        gainedhoneylabel:UpdateText("Gained Honey: " ..
-                                        api.suffixstring(
-                                            temptable.honeycurrent -
-                                                temptable.honeystart))
+        gainedhoneylabel:UpdateText("Gained Honey: " .. api.suffixstring(temptable.honeycurrent - temptable.honeystart))
+    end
+end)
+
+task.spawn(function()
+    while task.wait(1) do
+        local completeQuest = game.ReplicatedStorage.Events.CompleteQuestFromPool
+        completeQuest:FireServer("Polar Bear")
+        completeQuest:FireServer("Brown Bear 2")
+        completeQuest:FireServer("Black Bear 2")
+        completeQuest:FireServer("Bucko Bee")
+        completeQuest:FireServer("Riley Bee")
+        completeQuest:FireServer("Honey Bee")
+        task.wait(1)
+        local getQuest = game.ReplicatedStorage.Events.GiveQuestFromPool
+        getQuest:FireServer("Polar Bear")
+        getQuest:FireServer("Brown Bear 2")
+        getQuest:FireServer("Black Bear 2")
+        getQuest:FireServer("Bucko Bee")
+        getQuest:FireServer("Riley Bee")
+        getQuest:FireServer("Honey Bee")
     end
 end)
 
 game:GetService("RunService").Heartbeat:connect(function()
     if kocmoc.toggles.autoquest then
-        firesignal(game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui
-                       .NPC.ButtonOverlay.MouseButton1Click)
+        firesignal(game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui.NPC.ButtonOverlay.MouseButton1Click)
     end
     if kocmoc.toggles.loopspeed then
-        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = kocmoc.vars
-                                                                    .walkspeed
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = kocmoc.vars.walkspeed
     end
     if kocmoc.toggles.loopjump then
-        game.Players.LocalPlayer.Character.Humanoid.JumpPower = kocmoc.vars
-                                                                    .jumppower
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = kocmoc.vars.jumppower
     end
 end)
 
 game:GetService("RunService").Heartbeat:connect(function()
-    for i, v in next,
-                game.Players.LocalPlayer.PlayerGui.ScreenGui:WaitForChild(
-                    "MinigameLayer"):GetChildren() do
-        for k, q in next, v:WaitForChild("GuiGrid"):GetDescendants() do
+    for _, v in next, game.Players.LocalPlayer.PlayerGui.ScreenGui:WaitForChild("MinigameLayer"):GetChildren() do
+        for _, q in next, v:WaitForChild("GuiGrid"):GetDescendants() do
             if q.Name == "ObjContent" or q.Name == "ObjImage" then
                 q.Visible = true
             end
@@ -2608,12 +2605,11 @@ game:GetService("RunService").Heartbeat:connect(function()
     if temptable.float then
         game.Players.LocalPlayer.Character.Humanoid.BodyTypeScale.Value = 0
         floatpad.CanCollide = true
-        floatpad.CFrame = CFrame.new(game.Players.LocalPlayer.Character
-                                         .HumanoidRootPart.Position.X,
-                                     game.Players.LocalPlayer.Character
-                                         .HumanoidRootPart.Position.Y - 3.75,
-                                     game.Players.LocalPlayer.Character
-                                         .HumanoidRootPart.Position.Z)
+        floatpad.CFrame = CFrame.new(
+            game.Players.LocalPlayer.Character.HumanoidRootPart.Position.X,
+            game.Players.LocalPlayer.Character.HumanoidRootPart.Position.Y - 3.75,
+            game.Players.LocalPlayer.Character.HumanoidRootPart.Position.Z
+        )
         task.wait(0)
     else
         floatpad.CanCollide = false
@@ -2670,11 +2666,9 @@ end
 
 task.spawn(function()
     while task.wait() do
-        pos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+        local pos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
         task.wait(0.00001)
-        currentSpeed = (pos -
-                           game.Players.LocalPlayer.Character.HumanoidRootPart
-                               .Position).magnitude
+        local currentSpeed = (pos - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude
         if currentSpeed > 0 then
             temptable.running = true
         else
