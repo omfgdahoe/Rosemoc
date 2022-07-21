@@ -1764,10 +1764,11 @@ kocmocs:CreateButton("Load Config", function()
                     obj.Container.Value.Text = kocmoc[i][j]
                 elseif lastCharacters == " Slider" then
                     task.spawn(function()
+                        print(kocmoc[i][j], k:GetMin(), k:GetMax())
                         local Tween = game:GetService("TweenService"):Create(
                             obj.Slider.Bar,
                             TweenInfo.new(1),
-                            {Size = UDim2.new((tonumber(kocmoc[i][j]) - k:GetMin() / (k:GetMax() - k:GetMin())) / 100, 0, 1, 0)}
+                            {Size = UDim2.new((tonumber(kocmoc[i][j]) - k:GetMin()) / (k:GetMax() - k:GetMin()), 0, 1, 0)}
                         )
                         Tween:Play()
                         local startStamp = tick()
