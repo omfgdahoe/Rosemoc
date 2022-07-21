@@ -328,7 +328,7 @@ function Library:CreateWindow(Config, Parent)
 						end)
 					end
 				end
-                function TextBotInit:GetObject()
+                function TextBoxInit:GetObject()
                     return TextBox
                 end
 				return TextBoxInit
