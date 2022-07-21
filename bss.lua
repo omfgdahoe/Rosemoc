@@ -1761,15 +1761,30 @@ kocmocs:CreateButton("Load Config", function()
                 if lastCharacters == " Dropdown" then
                     obj.Container.Value.Text = kocmoc[i][j]
                 elseif lastCharacters == " Slider" then
-                    obj.Slider.Bar.Size = UDim2.new(kocmoc[i][j] / 100, 0, 1, 0)
-                    obj.Value.PlaceholderText = kocmoc[i][j]
+                    task.spawn(function()
+                        --a + ((b - a) * c)
+                        --obj.Slider.Bar.Size = UDim2.new(kocmoc[i][j] / 100, 0, 1, 0)
+                        local Tween = game:GetService("TweenService"):Create(
+                            obj.Slider.Bar,
+                            TweenInfo.new(1),
+                            {Size = UDim2.new(kocmoc[i][j] / 100, 0, 1, 0)}
+                        )
+                        Tween:Play()
+                        local startStamp = tick()
+                        local startValue = tonumber(obj.Value.PlaceholderText)
+                        while tick() - startStamp < 1 do
+                            task.wait()
+                            local partial = tick() - startStamp
+                            local value = (startValue + ((tonumber(kocmoc[i][j]) - startValue) * partial))
+                            obj.Value.PlaceholderText = math.round(value * 100) / 100
+                        end
+                        obj.Value.PlaceholderText = tonumber(kocmoc[i][j])
+                    end)
                 elseif lastCharacters == " Toggle" then
                     obj.Toggle.BackgroundColor3 = kocmoc[i][j] and Config.Color or Color3.fromRGB(50,50,50)
                 elseif lastCharacters == " TextBox" then
                     obj.Background.Input.Text = kocmoc[i][j]
                 end
-            else
-                print(i,j)
             end
         end
     end
