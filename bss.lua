@@ -1066,7 +1066,8 @@ local Window = library:CreateWindow(Config, game:GetService("CoreGui"))
 local guiElements = {
     toggles = {},
     vars = {},
-    bestfields = {}
+    bestfields = {},
+    dispensesettings = {}
 }
 
 local hometab = Window:CreateTab("Home")
@@ -1676,26 +1677,26 @@ raresettings:CreateTextBox("Asset ID", "rbxassetid", false,
 raresettings:CreateButton("Add Token To Rares List", function()
     table.insert(kocmoc.rares, rarename)
     game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild(
-        "Rares List D", true):Destroy()
+        "Rares List Dropdown", true):Destroy()
     raresettings:CreateDropdown("Rares List", kocmoc.rares, function(Option) end)
 end)
 raresettings:CreateButton("Remove Token From Rares List", function()
     table.remove(kocmoc.rares, api.tablefind(kocmoc.rares, rarename))
     game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild(
-        "Rares List D", true):Destroy()
+        "Rares List Dropdown", true):Destroy()
     raresettings:CreateDropdown("Rares List", kocmoc.rares, function(Option) end)
 end)
 raresettings:CreateButton("Add Token To Blacklist", function()
     table.insert(kocmoc.bltokens, rarename)
     game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild(
-        "Tokens Blacklist D", true):Destroy()
+        "Tokens Blacklist Dropdown", true):Destroy()
     raresettings:CreateDropdown("Tokens Blacklist", kocmoc.bltokens,
                                 function(Option) end)
 end)
 raresettings:CreateButton("Remove Token From Blacklist", function()
     table.remove(kocmoc.bltokens, api.tablefind(kocmoc.bltokens, rarename))
     game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild(
-        "Tokens Blacklist D", true):Destroy()
+        "Tokens Blacklist Dropdown", true):Destroy()
     raresettings:CreateDropdown("Tokens Blacklist", kocmoc.bltokens,
                                 function(Option) end)
 end)
@@ -1704,31 +1705,31 @@ raresettings:CreateDropdown("Tokens Blacklist", kocmoc.bltokens,
 raresettings:CreateDropdown("Rares List", kocmoc.rares, function(Option) end)
 local dispsettings = setttab:CreateSection(
                          "Auto Dispenser & Auto Boosters Settings")
-guiElements["toggles"]["enablestatuspanel"] = dispsettings:CreateToggle("Royal Jelly Dispenser", nil, function(State)
+guiElements["dispensesettings"]["rj"] = dispsettings:CreateToggle("Royal Jelly Dispenser", nil, function(State)
     kocmoc.dispensesettings.rj = not kocmoc.dispensesettings.rj
 end)
-guiElements["toggles"]["enablestatuspanel"] = dispsettings:CreateToggle("Blueberry Dispenser", nil, function(State)
+guiElements["dispensesettings"]["blub"] = dispsettings:CreateToggle("Blueberry Dispenser", nil, function(State)
     kocmoc.dispensesettings.blub = not kocmoc.dispensesettings.blub
 end)
-guiElements["toggles"]["enablestatuspanel"] = dispsettings:CreateToggle("Strawberry Dispenser", nil, function(State)
+guiElements["dispensesettings"]["straw"] = dispsettings:CreateToggle("Strawberry Dispenser", nil, function(State)
     kocmoc.dispensesettings.straw = not kocmoc.dispensesettings.straw
 end)
-guiElements["toggles"]["enablestatuspanel"] = dispsettings:CreateToggle("Treat Dispenser", nil, function(State)
+guiElements["dispensesettings"]["treat"] = dispsettings:CreateToggle("Treat Dispenser", nil, function(State)
     kocmoc.dispensesettings.treat = not kocmoc.dispensesettings.treat
 end)
-guiElements["toggles"]["enablestatuspanel"] = dispsettings:CreateToggle("Coconut Dispenser", nil, function(State)
+guiElements["dispensesettings"]["coconut"] = dispsettings:CreateToggle("Coconut Dispenser", nil, function(State)
     kocmoc.dispensesettings.coconut = not kocmoc.dispensesettings.coconut
 end)
-guiElements["toggles"]["enablestatuspanel"] = dispsettings:CreateToggle("Glue Dispenser", nil, function(State)
+guiElements["dispensesettings"]["glue"] = dispsettings:CreateToggle("Glue Dispenser", nil, function(State)
     kocmoc.dispensesettings.glue = not kocmoc.dispensesettings.glue
 end)
-guiElements["toggles"]["enablestatuspanel"] = dispsettings:CreateToggle("Mountain Top Booster", nil, function(State)
+guiElements["dispensesettings"]["white"] = dispsettings:CreateToggle("Mountain Top Booster", nil, function(State)
     kocmoc.dispensesettings.white = not kocmoc.dispensesettings.white
 end)
-guiElements["toggles"]["enablestatuspanel"] = dispsettings:CreateToggle("Blue Field Booster", nil, function(State)
+guiElements["dispensesettings"]["blue"] = dispsettings:CreateToggle("Blue Field Booster", nil, function(State)
     kocmoc.dispensesettings.blue = not kocmoc.dispensesettings.blue
 end)
-guiElements["toggles"]["enablestatuspanel"] = dispsettings:CreateToggle("Red Field Booster", nil, function(State)
+guiElements["dispensesettings"]["red"] = dispsettings:CreateToggle("Red Field Booster", nil, function(State)
     kocmoc.dispensesettings.red = not kocmoc.dispensesettings.red
 end)
 local guisettings = setttab:CreateSection("GUI Settings")
@@ -1766,6 +1767,26 @@ kocmocs:CreateTextBox("Config Name", "ex: stumpconfig", false,
                       function(Value) temptable.configname = Value end)
 kocmocs:CreateButton("Load Config", function()
     kocmoc = game:service("HttpService"):JSONDecode(readfile("kocmoc/BSS_" .. temptable.configname .. ".json"))
+    for i,v in pairs(guiElements) do
+        for j,k in pairs(v) do
+            local obj = k:GetObject()
+            local lastCharacters = obj.Name:reverse():sub(0, obj.Name:reverse():find(" ")):reverse()
+            if kocmoc[i][j] then
+                if lastCharacters == " Dropdown" then
+                    obj.Container.Value.Text = kocmoc[i][j]
+                elseif lastCharacters == " Slider" then
+                    obj.Slider.Bar.Size = UDim2.new(kocmoc[i][j] / 100, 0, 1, 0)
+                    obj.Value.PlaceholderText = kocmoc[i][j]
+                elseif lastCharacters == " Toggle" then
+                    obj.Toggle.BackgroundColor3 = kocmoc[i][j] and Config.Color or Color3.fromRGB(50,50,50)
+                elseif lastCharacters == " TextBox" then
+                    obj.Background.Input.Text = kocmoc[i][j]
+                end
+            else
+                print(i,j)
+            end
+        end
+    end
 end)
 kocmocs:CreateButton("Save Config", function()
     writefile("kocmoc/BSS_" .. temptable.configname .. ".json", game:service("HttpService"):JSONEncode(kocmoc))
@@ -1786,7 +1807,7 @@ fieldsettings:CreateDropdown("Field", fieldstable,
 fieldsettings:CreateButton("Add Field To Blacklist", function()
     table.insert(kocmoc.blacklistedfields, temptable.blackfield)
     game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild(
-        "Blacklisted Fields D", true):Destroy()
+        "Blacklisted Fields Dropdown", true):Destroy()
     fieldsettings:CreateDropdown("Blacklisted Fields", kocmoc.blacklistedfields,
                                  function(Option) end)
 end)
@@ -1794,7 +1815,7 @@ fieldsettings:CreateButton("Remove Field From Blacklist", function()
     table.remove(kocmoc.blacklistedfields,
                  api.tablefind(kocmoc.blacklistedfields, temptable.blackfield))
     game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild(
-        "Blacklisted Fields D", true):Destroy()
+        "Blacklisted Fields Dropdown", true):Destroy()
     fieldsettings:CreateDropdown("Blacklisted Fields", kocmoc.blacklistedfields,
                                  function(Option) end)
 end)
@@ -1813,12 +1834,12 @@ pts:CreateTextBox("Asset ID", "rbxassetid", false,
 pts:CreateButton("Add Token To Priority List", function()
     table.insert(kocmoc.priority, rarename)
     game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild(
-        "Priority List D", true):Destroy()
+        "Priority List Dropdown", true):Destroy()
     pts:CreateDropdown("Priority List", kocmoc.priority, function(Option) end)
 end)
 pts:CreateButton("Remove Token From Priority List", function()
     table.remove(kocmoc.priority, api.tablefind(kocmoc.priority, rarename))
-    game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild("Priority List D", true):Destroy()
+    game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild("Priority List Dropdown", true):Destroy()
     pts:CreateDropdown("Priority List", kocmoc.priority, function(Option) end)
 end)
 pts:CreateDropdown("Priority List", kocmoc.priority, function(Option) end)
@@ -1826,13 +1847,6 @@ pts:CreateDropdown("Priority List", kocmoc.priority, function(Option) end)
 loadingUI:UpdateText("Loaded UI")
 local loadingLoops = loadingInfo:CreateLabel("Loading Loops..")
 -- script
-
-for i,v in pairs(guiElements) do
-    print(i,v)
-    for j,k in pairs(v) do
-        print(i,j,k:GetObject())
-    end
-end
 
 local honeytoggleouyfyt = false
 task.spawn(function()
@@ -2766,8 +2780,8 @@ task.spawn(function()
         wait(2)
         pcall(function()
             for i, v in pairs(game.CoreGui:GetDescendants()) do
-                if v.Name == "Startup S" then
-                    v.Parent.Parent.RightSide["Information S"].Parent = v.Parent
+                if v.Name == "Startup Slider" then
+                    v.Parent.Parent.RightSide["Information Slider"].Parent = v.Parent
                     v:Destroy()
                 end
             end
