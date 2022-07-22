@@ -34,6 +34,7 @@ local playerstatsevent = game:GetService("ReplicatedStorage").Events.RetrievePla
 local statstable = playerstatsevent:InvokeServer()
 local monsterspawners = game.Workspace.MonsterSpawners
 local rarename
+local playerToFollow = nil
 function rtsg()
     tab = game.ReplicatedStorage.Events.RetrievePlayerStats:InvokeServer()
     return tab
@@ -164,8 +165,7 @@ getgenv().temptable = {
     runningfor = 0,
     oldtool = rtsg()["EquippedCollector"],
     ["gacf"] = function(part, st)
-        coordd = CFrame.new(part.Position.X, part.Position.Y + st,
-                            part.Position.Z)
+        coordd = CFrame.new(part.Position.X, part.Position.Y + st, part.Position.Z)
         return coordd
     end
 }
@@ -364,7 +364,8 @@ getgenv().kocmoc = {
         honeymaskconv = false,
         resetbeenergy = false,
         enablestatuspanel = false,
-        autoequipmask = false
+        autoequipmask = false,
+        followplayer = false
     },
     vars = {
         field = "Ant Field",
@@ -385,7 +386,8 @@ getgenv().kocmoc = {
         autoconvertWaitTime = 10,
         defmask = "Bubble",
         resettimer = 3,
-        questcolorprefer = "Any NPC"
+        questcolorprefer = "Any NPC",
+        playertofollow = ""
     },
     dispensesettings = {
         blub = false,
@@ -526,7 +528,7 @@ function killmobs()
                     if kocmoc.toggles.avoidmobs then
                         avoidmob()
                     end
-                    task.wait(3)
+                    task.wait(1)
                 until v:FindFirstChild("TimerLabel", true).Visible
                 for i = 1, 4 do
                     gettoken(monsterpart.Position)
@@ -583,10 +585,12 @@ function farmant()
             ["Category"] = "Collector"
         })
     end
+    local oldmask = rtsg()["EquippedAccessories"]["Hat"]
+    maskequip("Demon Mask")
     game.ReplicatedStorage.Events.ToyEvent:FireServer("Ant Challenge")
     kocmoc.toggles.autodig = true
-    local acl = CFrame.new(127, 48, 547)
-    local acr = CFrame.new(65, 48, 534)
+    local acl = CFrame.new(Vector3.new(127, 48, 547), Vector3.new(94, 51.8, 550))
+    local acr = CFrame.new(Vector3.new(65, 48, 534), Vector3.new(94, 51.8, 550))
     task.wait(1)
     game.ReplicatedStorage.Events.PlayerActivesCommand:FireServer({
         ["Name"] = "Sprinkler Builder"
@@ -614,11 +618,11 @@ function farmant()
                                 end
                             end
                             
-                            if plr.Character:FindFirstChild("Humanoid") and smallest > 20 and smallest < 100 then
-                                local save = plr.Character.HumanoidRootPart.CFrame
-                                plr.Character.HumanoidRootPart.CFrame = CFrame.new(token.CFrame.p)
+                            if player.Character:FindFirstChild("Humanoid") and smallest > 20 and smallest < 100 then
+                                local save = player.Character.HumanoidRootPart.CFrame
+                                player.Character.HumanoidRootPart.CFrame = CFrame.new(token.CFrame.p)
                                 task.wait(0.5)
-                                plr.Character.HumanoidRootPart.CFrame = save
+                                player.Character.HumanoidRootPart.CFrame = save
                                 break
                             end
                         end
@@ -655,6 +659,7 @@ function farmant()
             ["Category"] = "Collector"
         })
     end
+    maskequip(oldmask)
     temptable.started.ant = false
     antpart.CanCollide = false
 end
@@ -877,7 +882,7 @@ end
 function avoidmob()
     for i, v in next, game.Workspace.Monsters:GetChildren() do
         if v:FindFirstChild("Head") then
-            if (v.Head.Position -player.Character.HumanoidRootPart.Position).magnitude < 30 and api.humanoid():GetState() ~= Enum.HumanoidStateType.Freefall then
+            if (v.Head.Position - player.Character.HumanoidRootPart.Position).magnitude < 30 and api.humanoid():GetState() ~= Enum.HumanoidStateType.Freefall then
                 player.Character.Humanoid.Jump = true
             end
         end
@@ -1200,6 +1205,12 @@ farmo:CreateLabel("")
 guiElements["toggles"]["honeymaskconv"] = farmo:CreateToggle("Auto Honey Mask", nil, function(bool) kocmoc.toggles.honeymaskconv = bool end)
 guiElements["vars"]["defmask"] = farmo:CreateDropdown("Default Mask", MasksTable, function(val) kocmoc.vars.defmask = val end)
 guiElements["toggles"]["autoequipmask"] = farmo:CreateToggle("Equip Mask Based on Field", nil, function(bool) kocmoc.toggles.autoequipmask = bool end)
+guiElements["toggles"]["followplayer"] = farmo:CreateToggle("Follow Player", nil, function(bool)
+    kocmoc.toggles.followplayer = bool
+end)
+guiElements["vars"]["playertofollow"] = farmo:CreateTextBox("Player to Follow", "player name", function(Value)
+    kocmoc.vars.playertofollow = Value
+end)
 -- farmo:CreateToggle("Farm Closest Leaves", nil, function(State) kocmoc.toggles.farmclosestleaf = State end)
 
 local farmt = farmtab:CreateSection("Farming")
@@ -2100,6 +2111,12 @@ task.spawn(function()
                     end
                 else
                     fieldselected = game.Workspace.FlowerZones[kocmoc.vars.field]
+                    if kocmoc.toggles.followplayer then
+                        local playerToFollow = game.Players:FindFirstChild(kocmoc.vars.playertofollow)
+                        if playerToFollow and playerToFollow.Character:FindFirstChild("HumanoidRootPart") then
+                            fieldselected = playerToFollow.Character.HumanoidRootPart.CFrame
+                        end
+                    end
                 end
                 local colorGroup = fieldselected:FindFirstChild("ColorGroup")
                 if kocmoc.toggles.autoequipmask and colorGroup and colorGroup.Value == "Red" then
