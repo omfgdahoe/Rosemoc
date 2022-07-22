@@ -31,6 +31,7 @@ All changes from kocmoc v3 will be documented here.
 - Added a new option for NPC filtering, `No Brown Bear` which will do all quests except brown bear ones
 - Added `Only Farm Ants From NPC` dropdown to pick which NPC to start ant challenges from (incase you are prioritizing a certain color and dont want to waste passes)
 
+## Other Changes
 ### Auto Ant Changes
 - Token links will now be collected during the ant challenge to increase score
 - If you are using tide popper your tool will not be swapped out so you wont lose your stacking buff
