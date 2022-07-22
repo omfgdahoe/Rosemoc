@@ -547,7 +547,7 @@ function killmobs()
                     if kocmoc.toggles.avoidmobs then
                         avoidmob()
                     end
-                    task.wait(1)
+                    task.wait(3)
                 until v:FindFirstChild("TimerLabel", true).Visible
                 for i = 1, 4 do
                     gettoken(monsterpart.Position)
@@ -2127,6 +2127,19 @@ task.spawn(function()
                                 end
                             end
                         end
+                        if i == #player.PlayerGui.ScreenGui.Menus.Children.Quests:GetDescendants() then
+                            if kocmoc.toggles.followplayer then
+                                local playerToFollow = game.Players:FindFirstChild(kocmoc.vars.playertofollow)
+                                if playerToFollow and playerToFollow.Character:FindFirstChild("HumanoidRootPart") then
+                                    fieldselected = findField(playerToFollow.Character.HumanoidRootPart)
+                                    if not fieldselected then
+                                        fieldselected = game.Workspace.FlowerZones[kocmoc.vars.field]
+                                    end
+                                end
+                            else
+                                fieldselected = game.Workspace.FlowerZones[kocmoc.vars.field]
+                            end
+                        end
                     end
                 else
                     if kocmoc.toggles.followplayer then
@@ -2682,10 +2695,10 @@ task.spawn(function()
 end)
 
 game:GetService("RunService").Heartbeat:connect(function()
-    if kocmoc.toggles.loopspeed then
+    if kocmoc.toggles.loopspeed and player.Character:FindFirstChild("Humanoid") then
         player.Character.Humanoid.WalkSpeed = kocmoc.vars.walkspeed
     end
-    if kocmoc.toggles.loopjump then
+    if kocmoc.toggles.loopjump and player.Character:FindFirstChild("Humanoid") then
         player.Character.Humanoid.JumpPower = kocmoc.vars.jumppower
     end
 end)
