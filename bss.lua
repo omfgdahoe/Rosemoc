@@ -491,18 +491,20 @@ function makesprinklers()
         e = 4
     end
     for i = 1, e do
-        k = api.humanoid().JumpPower
-        if e ~= 1 then
-            api.humanoid().JumpPower = 70
-            api.humanoid().Jump = true
-            task.wait(.2)
-        end
-        game.ReplicatedStorage.Events.PlayerActivesCommand:FireServer({
-            ["Name"] = "Sprinkler Builder"
-        })
-        if e ~= 1 then
-            api.humanoid().JumpPower = k
-            task.wait(1)
+        if api.humanoid() then
+            k = api.humanoid().JumpPower
+            if e ~= 1 then
+                api.humanoid().JumpPower = 70
+                api.humanoid().Jump = true
+                task.wait(.2)
+            end
+            game.ReplicatedStorage.Events.PlayerActivesCommand:FireServer({
+                ["Name"] = "Sprinkler Builder"
+            })
+            if e ~= 1 then
+                api.humanoid().JumpPower = k
+                task.wait(1)
+            end
         end
     end
 end
@@ -521,6 +523,9 @@ function killmobs()
                 api.humanoidrootpart().CFrame = monsterpart.CFrame
                 repeat
                     api.humanoidrootpart().CFrame = monsterpart.CFrame
+                    if kocmoc.toggles.avoidmobs then
+                        avoidmob()
+                    end
                     task.wait(3)
                 until v:FindFirstChild("TimerLabel", true).Visible
                 for i = 1, 4 do
@@ -872,10 +877,7 @@ end
 function avoidmob()
     for i, v in next, game.Workspace.Monsters:GetChildren() do
         if v:FindFirstChild("Head") then
-            if (v.Head.Position -
-                player.Character.HumanoidRootPart.Position).magnitude <
-                30 and api.humanoid():GetState() ~=
-                Enum.HumanoidStateType.Freefall then
+            if (v.Head.Position -player.Character.HumanoidRootPart.Position).magnitude < 30 and api.humanoid():GetState() ~= Enum.HumanoidStateType.Freefall then
                 player.Character.Humanoid.Jump = true
             end
         end
@@ -1947,8 +1949,7 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
         if v.Name == "WarningDisk" and not temptable.started.vicious and
             kocmoc.toggles.autofarm and not temptable.started.ant and
             kocmoc.toggles.farmcoco and
-            (v.Position - api.humanoidrootpart().Position).magnitude <
-            temptable.magnitude and not temptable.converting then
+            (v.Position - api.humanoidrootpart().Position).magnitude < temptable.magnitude and not temptable.converting then
             table.insert(temptable.coconuts, v)
             getcoco(v)
             gettoken()
@@ -2641,9 +2642,6 @@ task.spawn(function()
 end)
 
 game:GetService("RunService").Heartbeat:connect(function()
-    if kocmoc.toggles.autoquest then
-        firesignal(player.PlayerGui.ScreenGui.NPC.ButtonOverlay.MouseButton1Click)
-    end
     if kocmoc.toggles.loopspeed then
         player.Character.Humanoid.WalkSpeed = kocmoc.vars.walkspeed
     end
@@ -2917,12 +2915,8 @@ task.spawn(function()
                           game.Workspace.Toys["Wealth Clock"]
                               .Platform.Position + Vector3.new(0, 5, 0)))
         end)
-        local mmsUpd = panel2:CreateButton("Mythic Meteor Shower: 00:00",
-                                           function()
-            api.tween(1,
-                      CFrame.new(
-                          game.Workspace.Toys["Mythic Meteor Shower"]
-                              .Platform.Position + Vector3.new(0, 5, 0)))
+        local mmsUpd = panel2:CreateButton("Mythic Meteor Shower: 00:00", function()
+            api.tween(1, CFrame.new( game.Workspace.Toys["Mythic Meteor Shower"].Platform.Position + Vector3.new(0, 5, 0)))
         end)
         local utilities = {
             ["Red Field Booster"] = rfbUpd,
