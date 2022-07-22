@@ -34,7 +34,6 @@ local playerstatsevent = game:GetService("ReplicatedStorage").Events.RetrievePla
 local statstable = playerstatsevent:InvokeServer()
 local monsterspawners = game.Workspace.MonsterSpawners
 local rarename
-local playerToFollow = nil
 function rtsg()
     tab = game.ReplicatedStorage.Events.RetrievePlayerStats:InvokeServer()
     return tab
@@ -1208,7 +1207,7 @@ guiElements["toggles"]["autoequipmask"] = farmo:CreateToggle("Equip Mask Based o
 guiElements["toggles"]["followplayer"] = farmo:CreateToggle("Follow Player", nil, function(bool)
     kocmoc.toggles.followplayer = bool
 end)
-guiElements["vars"]["playertofollow"] = farmo:CreateTextBox("Player to Follow", "player name", function(Value)
+guiElements["vars"]["playertofollow"] = farmo:CreateTextBox("Player to Follow", "player name", false, function(Value)
     kocmoc.vars.playertofollow = Value
 end)
 -- farmo:CreateToggle("Farm Closest Leaves", nil, function(State) kocmoc.toggles.farmclosestleaf = State end)
