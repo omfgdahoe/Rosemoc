@@ -5,7 +5,7 @@ All changes from kocmoc v3 will be documented here.
 ### Farming Section
 #### Changed
 - Changed `Autodig` to include both normal and steal at the same time instead of either or
-- Changed `Auto Do Quests` to do [ant challenges]() and feed treats, also added [more config options]()
+- Changed `Auto Do Quests` to do [ant challenges](https://github.com/RoseGoldIsntGay/Rosemoc#auto-ant-changes) and feed treats, also added [more config options](https://github.com/RoseGoldIsntGay/Rosemoc#added-1)
 #### Added
 - Added `Equip Mask Based on Field` which will equip Demon / Gummy / Diamond mask based on your current field
 - Added `Follow Player` to follow a player around the map, useful for grinding alts or staying close to an endgame friend
