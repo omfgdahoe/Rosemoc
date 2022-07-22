@@ -407,6 +407,26 @@ getgenv().KocmocPremium = {}
 
 -- functions
 
+local function findField(part)
+    local root = part
+    if not root then return nil end
+    
+    for _,v in pairs(game.Workspace.FlowerZones:GetChildren()) do
+        local rootPos = root.CFrame.p
+        local fieldPos = v.CFrame.p
+        local fieldSize = v.Size + Vector3.new(0, 30, 0)
+        if rootPos.X > fieldPos.X - fieldSize.X/2 and rootPos.X < fieldPos.X + fieldSize.X/2 then
+            if rootPos.Z > fieldPos.Z - fieldSize.Z/2 and rootPos.Z < fieldPos.Z + fieldSize.Z/2 then
+                if rootPos.Y > fieldPos.Y - fieldSize.Y/2 and rootPos.Y < fieldPos.Y + fieldSize.Y/2 then
+                    return v
+                end
+            end
+        end
+    end
+    
+    return nil
+end
+
 function statsget()
     local StatCache = require(game.ReplicatedStorage.ClientStatCache)
     local stats = StatCache:Get()
@@ -2109,12 +2129,16 @@ task.spawn(function()
                         end
                     end
                 else
-                    fieldselected = game.Workspace.FlowerZones[kocmoc.vars.field]
                     if kocmoc.toggles.followplayer then
                         local playerToFollow = game.Players:FindFirstChild(kocmoc.vars.playertofollow)
                         if playerToFollow and playerToFollow.Character:FindFirstChild("HumanoidRootPart") then
-                            fieldselected = playerToFollow.Character.HumanoidRootPart.CFrame
+                            fieldselected = findField(playerToFollow.Character.HumanoidRootPart)
+                            if not fieldselected then
+                                fieldselected = game.Workspace.FlowerZones[kocmoc.vars.field]
+                            end
                         end
+                    else
+                        fieldselected = game.Workspace.FlowerZones[kocmoc.vars.field]
                     end
                 end
                 local colorGroup = fieldselected:FindFirstChild("ColorGroup")
