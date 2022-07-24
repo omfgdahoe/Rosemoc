@@ -487,32 +487,29 @@ function gettoken(v3)
         itb = false
         if r:FindFirstChildOfClass("Decal") and
             kocmoc.toggles.enabletokenblacklisting then
-            if api.findvalue(kocmoc.bltokens, string.split(
-                                 r:FindFirstChildOfClass("Decal").Texture,
-                                 "rbxassetid://")[2]) then itb = true end
+            if api.findvalue(kocmoc.bltokens, string.split(r:FindFirstChildOfClass("Decal").Texture, "rbxassetid://")[2]) then
+                itb = true
+            end
         end
-        if tonumber((r.Position -
-                        player.Character.HumanoidRootPart
-                            .Position).magnitude) <= temptable.magnitude / 1.4 and
-            not itb and (v3 - r.Position).magnitude <= temptable.magnitude then
+        if tonumber((r.Position - player.Character.HumanoidRootPart.Position).magnitude) <= temptable.magnitude / 1.4 and not itb and (v3 - r.Position).magnitude <= temptable.magnitude then
             farm(r)
         end
     end
 end
 
-function makesprinklers()
+function makesprinklers(onlyonesprinkler)
     sprinkler = rtsg().EquippedSprinkler
-    e = 1
-    if sprinkler == "Basic Sprinkler" or sprinkler == "The Supreme Saturator" then
-        e = 1
+    local sprinklercount = 1
+    if sprinkler == "Basic Sprinkler" or sprinkler == "The Supreme Saturator" or onlyonesprinkler then
+        sprinklercount = 1
     elseif sprinkler == "Silver Soakers" then
-        e = 2
+        sprinklercount = 2
     elseif sprinkler == "Golden Gushers" then
-        e = 3
+        sprinklercount = 3
     elseif sprinkler == "Diamond Drenchers" then
-        e = 4
+        sprinklercount = 4
     end
-    for i = 1, e do
+    for i = 1, sprinklercount do
         if api.humanoid() then
             k = api.humanoid().JumpPower
             if e ~= 1 then
@@ -1048,7 +1045,7 @@ local function useConvertors()
 end
 
 local function getBuffTime(decalID)
-    if not decalID then return end
+    if not decalID then return 0 end
     if player and player.PlayerGui and player.PlayerGui.ScreenGui then
         for i,v in pairs(player.PlayerGui.ScreenGui:GetChildren()) do
             if v.Name == "TileGrid" then
@@ -1062,6 +1059,8 @@ local function getBuffTime(decalID)
             end
         end
     end
+
+    return 0
 end
 
 local function fetchBuffTable(stats)
@@ -2162,6 +2161,9 @@ task.spawn(function()
                 else
                     maskequip("Gummy Mask")
                 end
+
+                local onlyonesprinkler = false
+
                 fieldpos = CFrame.new(
                     fieldselected.Position.X,
                     fieldselected.Position.Y + 3,
@@ -2169,11 +2171,12 @@ task.spawn(function()
                 )
                 fieldposition = fieldselected.Position
                 if temptable.sprouts.detected and temptable.sprouts.coords and kocmoc.toggles.farmsprouts then
+                    onlyonesprinkler = true
                     fieldposition = temptable.sprouts.coords.Position
                     fieldpos = temptable.sprouts.coords
                 end
-                if kocmoc.toggles.farmpuffshrooms and
-                    game.Workspace.Happenings.Puffshrooms:FindFirstChildOfClass("Model") then
+                if kocmoc.toggles.farmpuffshrooms and game.Workspace.Happenings.Puffshrooms:FindFirstChildOfClass("Model") then
+                    onlyonesprinkler = true
                     if api.partwithnamepart("Mythic", game.Workspace.Happenings.Puffshrooms) then
                         temptable.magnitude = 25
                         fieldpos = api.partwithnamepart("Mythic", game.Workspace.Happenings.Puffshrooms):FindFirstChild("Puffball Stem").CFrame
@@ -2258,7 +2261,7 @@ task.spawn(function()
                         task.wait(2)
                         temptable.tokensfarm = true
                         if kocmoc.toggles.autosprinkler then
-                            makesprinklers()
+                            makesprinklers(onlyonesprinkler)
                         end
                     else
                         if kocmoc.toggles.killmondo then
@@ -2296,7 +2299,7 @@ task.spawn(function()
                             api.tween(0.1, fieldpos)
                             task.wait(2)
                             if kocmoc.toggles.autosprinkler then
-                                makesprinklers()
+                                makesprinklers(onlyonesprinkler)
                             end
                         end
                         getprioritytokens()
