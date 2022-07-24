@@ -35,10 +35,10 @@ local statstable = playerstatsevent:InvokeServer()
 local monsterspawners = game.Workspace.MonsterSpawners
 local rarename
 function rtsg()
-    tab = game.ReplicatedStorage.Events.RetrievePlayerStats:InvokeServer()
-    return tab
+    return game.ReplicatedStorage.Events.RetrievePlayerStats:InvokeServer()
 end
 function maskequip(mask)
+    if rtsg()["EquippedAccessories"]["Hat"] == mask then return end
     game:GetService("ReplicatedStorage").Events.ItemPackageEvent:InvokeServer("Equip", {
         ["Mute"] = false,
         ["Type"] = mask,
@@ -70,7 +70,7 @@ for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
 end
 
 getgenv().temptable = {
-    version = "4.0.4",
+    version = "4.0.5",
     blackfield = "Sunflower Field",
     redfields = {},
     bluefields = {},
@@ -386,7 +386,8 @@ getgenv().kocmoc = {
         defmask = "Bubble",
         resettimer = 3,
         questcolorprefer = "Any NPC",
-        playertofollow = ""
+        playertofollow = "",
+        convertballoonpercent = 50
     },
     dispensesettings = {
         blub = false,
@@ -735,27 +736,14 @@ function getprioritytokens()
 end
 
 function gethiveballoon()
-    task.wait()
-    result = false
-    for i, hive in next, game.Workspace.Honeycombs:GetChildren() do
-        task.wait()
-        if hive:FindFirstChild("Owner") and hive:FindFirstChild("SpawnPos") then
-            if tostring(hive.Owner.Value) == player.Name then
-                for e, balloon in next, game.Workspace.Balloons
-                                      .HiveBalloons:GetChildren() do
-                    task.wait()
-                    if balloon:FindFirstChild("BalloonRoot") then
-                        if (balloon.BalloonRoot.Position -
-                            hive.SpawnPos.Value.Position).magnitude < 15 then
-                            result = true
-                            break
-                        end
-                    end
-                end
+    for _,balloon in pairs(game.Workspace.Balloons.HiveBalloons:GetChildren()) do
+        if balloon:FindFirstChild("BalloonRoot") then
+            if balloon.BalloonRoot.CFrame.p.X == player.SpawnPos.Value.p.X then
+                return true
             end
         end
     end
-    return result
+    return false
 end
 
 function converthoney()
@@ -977,23 +965,19 @@ getgenv().Tvk1 = {true, "💖"}
 local function donateToShrine(item, qnt)
     print(qnt)
     local s, e = pcall(function()
-        game:GetService("ReplicatedStorage").Events.WindShrineDonation:InvokeServer(
-            item, qnt)
+        game:GetService("ReplicatedStorage").Events.WindShrineDonation:InvokeServer(item, qnt)
         wait(0.5)
         game.ReplicatedStorage.Events.WindShrineTrigger:FireServer()
 
-        local UsePlatform = game.Workspace.NPCs["Wind Shrine"]
-                                .Stage
-        player.Character.HumanoidRootPart.CFrame =
-            UsePlatform.CFrame + Vector3.new(0, 5, 0)
+        local UsePlatform = game.Workspace.NPCs["Wind Shrine"].Stage
+        player.Character.HumanoidRootPart.CFrame = UsePlatform.CFrame + Vector3.new(0, 5, 0)
 
         for i = 1, 120 do
             wait(0.05)
             for i, v in pairs(game.Workspace.Collectibles:GetChildren()) do
                 if (v.Position - UsePlatform.Position).magnitude < 60 and
                     v.CFrame.YVector.Y == 1 then
-                    player.Character
-                        .HumanoidRootPart.CFrame = v.CFrame
+                    player.Character.HumanoidRootPart.CFrame = v.CFrame
                 end
             end
         end
@@ -1060,6 +1044,23 @@ local function useConvertors()
         string.find(kocmoc.vars.autouseMode, "All") then
         game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer(
             {["Name"] = "Coconut"})
+    end
+end
+
+local function getBuffTime(decalID)
+    if not decalID then return end
+    if player and player.PlayerGui and player.PlayerGui.ScreenGui then
+        for i,v in pairs(player.PlayerGui.ScreenGui:GetChildren()) do
+            if v.Name == "TileGrid" then
+                for j,k in pairs(v:GetChildren()) do
+                    if k:FindFirstChild("BG") and k.BG:FindFirstChild("Icon") then
+                        if k.BG.Icon.Image == "rbxassetid://" .. decalID then
+                            return k.BG.Bar.Size.Y.Scale
+                        end
+                    end
+                end
+            end
+        end
     end
 end
 
@@ -1708,6 +1709,11 @@ end)
 guiElements["toggles"]["convertballoons"] = farmsettings:CreateToggle("Convert Hive Balloon", nil, function(State)
     kocmoc.toggles.convertballoons = State
 end)
+local balloonPercentSlider = farmsettings:CreateSlider("Balloon Blessing % To Convert At", 0, 100, 50, false, function(Value)
+    kocmoc.vars.convertballoonpercent = Value
+end)
+balloonPercentSlider:AddToolTip("0% = Always convert balloon when converting bag")
+guiElements["vars"]["convertballoonpercent"] = balloonPercentSlider
 guiElements["toggles"]["donotfarmtokens"] = farmsettings:CreateToggle("Don't Farm Tokens", nil, function(State)
     kocmoc.toggles.donotfarmtokens = State
 end)
@@ -2001,16 +2007,12 @@ end)
 task.spawn(function()
     while task.wait() do
         temptable.magnitude = 50
-        if player.Character:FindFirstChild("ProgressLabel",
-                                                             true) then
-            local pollenprglbl =
-                player.Character:FindFirstChild(
-                    "ProgressLabel", true)
+        if player.Character:FindFirstChild("ProgressLabel", true) then
+            local pollenprglbl = player.Character:FindFirstChild("ProgressLabel", true)
             maxpollen = tonumber(pollenprglbl.Text:match("%d+$"))
             local pollencount = player.CoreStats.Pollen.Value
             pollenpercentage = pollencount / maxpollen * 100
-            fieldselected = game.Workspace.FlowerZones[kocmoc.vars
-                                .field]
+            fieldselected = game.Workspace.FlowerZones[kocmoc.vars.field]
 
             if kocmoc.toggles.autouseconvertors == true then
                 if tonumber(pollenpercentage) >=
@@ -2019,9 +2021,7 @@ task.spawn(function()
                         temptable.consideringautoconverting = true
                         spawn(function()
                             wait(kocmoc.vars.autoconvertWaitTime)
-                            if tonumber(pollenpercentage) >=
-                                (kocmoc.vars.convertat -
-                                    (kocmoc.vars.autoconvertWaitTime)) then
+                            if tonumber(pollenpercentage) >= (kocmoc.vars.convertat - (kocmoc.vars.autoconvertWaitTime)) then
                                 useConvertors()
                             end
                             temptable.consideringautoconverting = false
@@ -2196,7 +2196,62 @@ task.spawn(function()
                         fieldposition = fieldpos.Position
                     end
                 end
-
+                
+                if kocmoc.toggles.convertballoons and kocmoc.vars.convertballoonpercent and gethiveballoon() and getBuffTime("8083443467") < tonumber(kocmoc.vars.convertballoonpercent) / 100 then
+                    temptable.tokensfarm = false
+                    api.tween(2, player.SpawnPos.Value * CFrame.fromEulerAnglesXYZ(0, 110, 0) + Vector3.new(0, 0, 9))
+                    task.wait(2)
+                    temptable.converting = true
+                    repeat converthoney() until player.CoreStats.Pollen.Value == 0
+                    if kocmoc.toggles.convertballoons and gethiveballoon() then
+                        task.wait(6)
+                        repeat
+                            task.wait()
+                            converthoney()
+                        until gethiveballoon() == false or not kocmoc.toggles.convertballoons
+                    end
+                    temptable.converting = false
+                    temptable.act = temptable.act + 1
+                    task.wait(6)
+                    if kocmoc.toggles.autoant and not game.Workspace.Toys["Ant Challenge"].Busy.Value and rtsg().Eggs.AntPass > 0 then
+                        farmant()
+                    end
+                    if kocmoc.toggles.autoquest then
+                        makequests()
+                    end
+                    if kocmoc.toggles.autoplanters then
+                        collectplanters()
+                    end
+                    if kocmoc.toggles.autokillmobs then
+                        if temptable.act >= kocmoc.vars.monstertimer then
+                            temptable.started.monsters = true
+                            temptable.act = 0
+                            killmobs()
+                            temptable.started.monsters = false
+                        end
+                    end
+                    if kocmoc.vars.resetbeenergy then
+                        -- rconsoleprint("Act2:-"..tostring(temptable.act2))
+                        if temptable.act2 >= kocmoc.vars.resettimer then
+                            temptable.started.monsters = true
+                            temptable.act2 = 0
+                            repeat 
+                                wait()
+                            until workspace:FindFirstChild(player.Name) and workspace:FindFirstChild(player.Name):FindFirstChild("Humanoid") and workspace:FindFirstChild(player.Name):FindFirstChild("Humanoid").Health > 0
+                            workspace:FindFirstChild(game.Players.LocalPlayer.Name):BreakJoints()
+                            wait(6.5)
+                            repeat 
+                                wait()
+                            until workspace:FindFirstChild(player.Name)
+                            workspace:FindFirstChild(game.Players.LocalPlayer.Name):BreakJoints()
+                            wait(6.5)
+                            repeat
+                                wait()
+                            until workspace:FindFirstChild(player.Name)
+                            temptable.started.monsters = false
+                        end
+                    end
+                end
                 if tonumber(pollenpercentage) < tonumber(kocmoc.vars.convertat) or kocmoc.toggles.disableconversion then
                     if not temptable.tokensfarm then
                         api.tween(2, fieldpos)
@@ -2273,9 +2328,8 @@ task.spawn(function()
                         api.tween(2, player.SpawnPos.Value * CFrame.fromEulerAnglesXYZ(0, 110, 0) + Vector3.new(0, 0, 9))
                         task.wait(2)
                         temptable.converting = true
-                        repeat converthoney() until player
-                            .CoreStats.Pollen.Value == 0
-                        if kocmoc.toggles.convertballoons and gethiveballoon() then
+                        repeat converthoney() until player.CoreStats.Pollen.Value == 0
+                        if kocmoc.toggles.convertballoons and kocmoc.vars.convertballoonpercent == 0 and gethiveballoon() then
                             task.wait(6)
                             repeat
                                 task.wait()
@@ -2308,26 +2362,19 @@ task.spawn(function()
                             if temptable.act2 >= kocmoc.vars.resettimer then
                                 temptable.started.monsters = true
                                 temptable.act2 = 0
-                                repeat wait() until workspace:FindFirstChild(
-                                    player.Name) and
-                                    workspace:FindFirstChild(
-                                        player.Name)
-                                        :FindFirstChild("Humanoid") and
-                                    workspace:FindFirstChild(
-                                        player.Name)
-                                        :FindFirstChild("Humanoid").Health > 0
-                                workspace:FindFirstChild(game.Players
-                                                             .LocalPlayer.Name)
-                                    :BreakJoints()
+                                repeat 
+                                    wait()
+                                until workspace:FindFirstChild(player.Name) and workspace:FindFirstChild(player.Name):FindFirstChild("Humanoid") and workspace:FindFirstChild(player.Name):FindFirstChild("Humanoid").Health > 0
+                                workspace:FindFirstChild(game.Players.LocalPlayer.Name):BreakJoints()
                                 wait(6.5)
-                                repeat wait() until workspace:FindFirstChild(
-                                    player.Name)
-                                workspace:FindFirstChild(game.Players
-                                                             .LocalPlayer.Name)
-                                    :BreakJoints()
+                                repeat 
+                                    wait()
+                                until workspace:FindFirstChild(player.Name)
+                                workspace:FindFirstChild(game.Players.LocalPlayer.Name):BreakJoints()
                                 wait(6.5)
-                                repeat wait() until workspace:FindFirstChild(
-                                    player.Name)
+                                repeat
+                                    wait()
+                                until workspace:FindFirstChild(player.Name)
                                 temptable.started.monsters = false
                             end
                         end
@@ -2715,7 +2762,7 @@ end)
 
 game:GetService("RunService").Heartbeat:connect(function()
     if kocmoc.toggles.autoquest and player:FindFirstChild("PlayerGui") and player.PlayerGui:FindFirstChild("ScreenGui") and player.PlayerGui.ScreenGui:FindFirstChild("NPC") and player.PlayerGui.ScreenGui.NPC.Visible then
-        firesignal(player.PlayerGui.ScreenGui.NPC.ButtonOverlay.MouseButton1Click) end
+        firesignal(player.PlayerGui.ScreenGui.NPC.ButtonOverlay.MouseButton1Click)
     end
     if kocmoc.toggles.loopspeed and player.Character:FindFirstChild("Humanoid") then
         player.Character.Humanoid.WalkSpeed = kocmoc.vars.walkspeed
@@ -3050,10 +3097,7 @@ task.spawn(function()
                         if isUsable then
                             v:UpdateText(i .. ": Ready")
                         else
-                            v:UpdateText(i .. ": " ..
-                                             require(
-                                                 game.ReplicatedStorage
-                                                     .TimeString)(cooldown))
+                            v:UpdateText(i .. ": " .. require(game.ReplicatedStorage.TimeString)(cooldown))
                         end
                     end
                 end
@@ -3064,8 +3108,7 @@ end)
 
 if _G.autoload then
     if isfile("kocmoc/BSS_" .. _G.autoload .. ".json") then
-        kocmoc = game:service "HttpService":JSONDecode(
-                     readfile("kocmoc/BSS_" .. _G.autoload .. ".json"))
+        kocmoc = game:service "HttpService":JSONDecode(readfile("kocmoc/BSS_" .. _G.autoload .. ".json"))
     end
 end
 for _, part in next, workspace:FindFirstChild("FieldDecos"):GetDescendants() do
