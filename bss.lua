@@ -70,7 +70,7 @@ for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
 end
 
 getgenv().temptable = {
-    version = "4.0.3",
+    version = "4.0.4",
     blackfield = "Sunflower Field",
     redfields = {},
     bluefields = {},
@@ -638,10 +638,10 @@ function farmant()
                             end
                             
                             if player.Character:FindFirstChild("Humanoid") and smallest > 20 and smallest < 100 then
-                                local save = player.Character.HumanoidRootPart.CFrame
-                                player.Character.HumanoidRootPart.CFrame = CFrame.new(token.CFrame.p)
+                                local save = api.humanoidrootpart().CFrame
+                                api.humanoidrootpart().CFrame = CFrame.new(token.CFrame.p)
                                 task.wait(0.5)
-                                player.Character.HumanoidRootPart.CFrame = save
+                                api.humanoidrootpart().CFrame = save
                                 break
                             end
                         end
@@ -2385,13 +2385,12 @@ end)
 
 task.spawn(function()
     while task.wait() do
-        if kocmoc.toggles.killwindy and temptable.detected.windy and
-            not temptable.converting and not temptable.started.vicious and
-            not temptable.started.mondo and not temptable.started.monsters then
+        if kocmoc.toggles.killwindy and temptable.detected.windy and not temptable.converting and not temptable.started.vicious and not temptable.started.mondo and not temptable.started.monsters then
             temptable.started.windy = true
-            wlvl = ""
-            aw = false
-            awb = false -- some variable for autowindy, yk?
+            local windytokendb = false
+            local wlvl = ""
+            local aw = false
+            local awb = false -- some variable for autowindy, yk?
             disableall()
             while kocmoc.toggles.killwindy and temptable.detected.windy do
                 if not aw then
@@ -2422,8 +2421,28 @@ task.spawn(function()
                     awb = true
                 end
                 if awb and temptable.windy.Name == "Windy" then
-                    api.humanoidrootpart().CFrame = temptable.gacf(
-                                                        temptable.windy, 25)
+                    spawn(function()
+                        if not windytokendb then
+                            windytokendb = true
+                            for _,token in pairs(workspace.Collectibles:GetChildren()) do
+                                decal = token:FindFirstChildOfClass("Decal")
+                                if decal and decal.Texture then
+                                    if decal.Texture == "rbxassetid://1629547638" then
+                                        if player.Character:FindFirstChild("Humanoid") then
+                                            for i=0,10 do
+                                                api.humanoidrootpart().CFrame = CFrame.new(token.CFrame.p)
+                                                task.wait()
+                                            end
+                                            break
+                                        end
+                                    end
+                                end
+                            end
+                            task.wait(3)
+                            windytokendb = false
+                        end
+                    end)
+                    api.humanoidrootpart().CFrame = temptable.gacf(temptable.windy, 25)
                     temptable.float = true
                     task.wait()
                 end
@@ -2695,6 +2714,9 @@ task.spawn(function()
 end)
 
 game:GetService("RunService").Heartbeat:connect(function()
+    if kocmoc.toggles.autoquest and player:FindFirstChild("PlayerGui") and player.PlayerGui:FindFirstChild("ScreenGui") and player.PlayerGui.ScreenGui:FindFirstChild("NPC") and player.PlayerGui.ScreenGui.NPC.Visible then
+        firesignal(player.PlayerGui.ScreenGui.NPC.ButtonOverlay.MouseButton1Click) end
+    end
     if kocmoc.toggles.loopspeed and player.Character:FindFirstChild("Humanoid") then
         player.Character.Humanoid.WalkSpeed = kocmoc.vars.walkspeed
     end
@@ -2777,13 +2799,15 @@ end
 
 task.spawn(function()
     while task.wait() do
-        local pos = player.Character.HumanoidRootPart.Position
-        task.wait(0.00001)
-        local currentSpeed = (pos - player.Character.HumanoidRootPart.Position).magnitude
-        if currentSpeed > 0 then
-            temptable.running = true
-        else
-            temptable.running = false
+        if player.Character:FindFirstChild("HumanoidRootPart") then
+            local pos = player.Character.HumanoidRootPart.Position
+            task.wait(0.00001)
+            local currentSpeed = (pos - player.Character.HumanoidRootPart.Position).magnitude
+            if currentSpeed > 0 then
+                temptable.running = true
+            else
+                temptable.running = false
+            end
         end
     end
 end)
