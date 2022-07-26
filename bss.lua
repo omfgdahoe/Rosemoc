@@ -70,7 +70,7 @@ for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
 end
 
 getgenv().temptable = {
-    version = "4.0.6",
+    version = "4.0.7",
     blackfield = "Sunflower Field",
     redfields = {},
     bluefields = {},
@@ -2199,8 +2199,8 @@ task.spawn(function()
                     local commons = {}
 
                     local function isPuffInField(stem)
-                        if stem and fieldpos then
-                            return findField(stem.CFrame.p) == findField(fieldpos)
+                        if stem and player.Character:FindFirstChild("HumanoidRootPart") then
+                            return findField(stem.CFrame.p) == findField(player.Character.HumanoidRootPart.CFrame.p)
                         end
                         return false
                     end
@@ -2274,7 +2274,7 @@ task.spawn(function()
                                 break
                             end
                         end
-                    else
+                    elseif #commons ~= 0 then
                         fieldpos = api.getbiggestmodel(game.Workspace.Happenings.Puffshrooms):FindFirstChild("Puffball Stem").CFrame
                         for _,v in pairs(commons) do
                             local stem, infield = unpack(v)
@@ -2551,6 +2551,8 @@ task.spawn(function()
             local aw = false
             local awb = false -- some variable for autowindy, yk?
             disableall()
+            local oldmask = rtsg()["EquippedAccessories"]["Hat"]
+            maskequip("Demon Mask")
             while kocmoc.toggles.killwindy and temptable.detected.windy do
                 if not aw then
                     for i, v in pairs(workspace.Monsters:GetChildren()) do
@@ -2582,23 +2584,19 @@ task.spawn(function()
                 if awb and temptable.windy and temptable.windy.Name == "Windy" then
                     task.spawn(function()
                         if not windytokendb then
-                            windytokendb = true
                             for _,token in pairs(workspace.Collectibles:GetChildren()) do
                                 decal = token:FindFirstChildOfClass("Decal")
-                                if decal and decal.Texture then
-                                    if decal.Texture == "rbxassetid://1629547638" then
-                                        if player.Character:FindFirstChild("Humanoid") then
-                                            for i=0,10 do
-                                                api.humanoidrootpart().CFrame = CFrame.new(token.CFrame.p)
-                                                task.wait()
-                                            end
-                                            break
-                                        end
+                                if decal and decal.Texture == "rbxassetid://1629547638" and player.Character:FindFirstChild("HumanoidRootPart") then
+                                    windytokendb = true
+                                    for i=0,10 do
+                                        api.humanoidrootpart().CFrame = CFrame.new(token.CFrame.p)
+                                        task.wait()
                                     end
+                                    task.wait(3)
+                                    windytokendb = false
+                                    break
                                 end
                             end
-                            task.wait(3)
-                            windytokendb = false
                         end
                     end)
                     api.humanoidrootpart().CFrame = temptable.gacf(temptable.windy, 25)
@@ -2606,6 +2604,7 @@ task.spawn(function()
                     task.wait()
                 end
             end
+            maskequip(oldmask)
             enableall()
             temptable.float = false
             temptable.started.windy = false
