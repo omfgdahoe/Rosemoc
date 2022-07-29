@@ -5,7 +5,7 @@ All changes from kocmoc v3 will be documented here.
 ### Farming Section
 #### Changed
 - Changed `Autodig` to include both normal and steal at the same time instead of either or
-- Changed `Auto Do Quests` to do [ant challenges](https://github.com/RoseGoldIsntGay/Rosemoc#auto-ant-changes) and feed treats, also added [more config options](https://github.com/RoseGoldIsntGay/Rosemoc#added-1)
+- Changed `Auto Do Quests` to do [ant challenges](https://github.com/RoseGoldIsntGay/Rosemoc#auto-ant-changes) and feed treats, also added [more config options](https://github.com/RoseGoldIsntGay/Rosemoc#auto-quest-settings-section)
 - Changed `Auto Sprinker` to better detect when a sprinkler is needed
 - Changed `Auto Puffshrooms` to move around less to minimize downtime between puffshrooms
 
