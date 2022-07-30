@@ -1886,42 +1886,42 @@ local themes = guisettings:CreateDropdown("Image", {
 end)
 themes:SetOption("Default")
 local kocmocs = setttab:CreateSection("Configs")
-kocmocs:CreateTextBox("Config Name", "ex: stumpconfig", false,
-                      function(Value) temptable.configname = Value end)
+kocmocs:CreateTextBox("Config Name", "ex: stumpconfig", false, function(Value) temptable.configname = Value end)
 kocmocs:CreateButton("Load Config", function()
     if not isfile("kocmoc/BSS_" .. temptable.configname .. ".json") then
-        api.notify(Config.WindowName, "No such config file!", 2)
-    end
-    kocmoc = game:service("HttpService"):JSONDecode(readfile("kocmoc/BSS_" .. temptable.configname .. ".json"))
-    for i,v in pairs(guiElements) do
-        for j,k in pairs(v) do
-            local obj = k:GetObject()
-            local lastCharacters = obj.Name:reverse():sub(0, obj.Name:reverse():find(" ")):reverse()
-            if kocmoc[i][j] then
-                if lastCharacters == " Dropdown" then
-                    obj.Container.Value.Text = kocmoc[i][j]
-                elseif lastCharacters == " Slider" then
-                    task.spawn(function()
-                        local Tween = game:GetService("TweenService"):Create(
-                            obj.Slider.Bar,
-                            TweenInfo.new(1),
-                            {Size = UDim2.new((tonumber(kocmoc[i][j]) - k:GetMin()) / (k:GetMax() - k:GetMin()), 0, 1, 0)}
-                        )
-                        Tween:Play()
-                        local startStamp = tick()
-                        local startValue = tonumber(obj.Value.PlaceholderText)
-                        while tick() - startStamp < 1 do
-                            task.wait()
-                            local partial = tick() - startStamp
-                            local value = (startValue + ((tonumber(kocmoc[i][j]) - startValue) * partial))
-                            obj.Value.PlaceholderText = math.round(value * 100) / 100
-                        end
-                        obj.Value.PlaceholderText = tonumber(kocmoc[i][j])
-                    end)
-                elseif lastCharacters == " Toggle" then
-                    obj.Toggle.BackgroundColor3 = kocmoc[i][j] and Config.Color or Color3.fromRGB(50,50,50)
-                elseif lastCharacters == " TextBox" then
-                    obj.Background.Input.Text = kocmoc[i][j]
+        api.notify("Kocmoc " .. temptable.version, "No such config file!", 2)
+    else
+        kocmoc = game:service("HttpService"):JSONDecode(readfile("kocmoc/BSS_" .. temptable.configname .. ".json"))
+        for i,v in pairs(guiElements) do
+            for j,k in pairs(v) do
+                local obj = k:GetObject()
+                local lastCharacters = obj.Name:reverse():sub(0, obj.Name:reverse():find(" ")):reverse()
+                if kocmoc[i][j] then
+                    if lastCharacters == " Dropdown" then
+                        obj.Container.Value.Text = kocmoc[i][j]
+                    elseif lastCharacters == " Slider" then
+                        task.spawn(function()
+                            local Tween = game:GetService("TweenService"):Create(
+                                obj.Slider.Bar,
+                                TweenInfo.new(1),
+                                {Size = UDim2.new((tonumber(kocmoc[i][j]) - k:GetMin()) / (k:GetMax() - k:GetMin()), 0, 1, 0)}
+                            )
+                            Tween:Play()
+                            local startStamp = tick()
+                            local startValue = tonumber(obj.Value.PlaceholderText)
+                            while tick() - startStamp < 1 do
+                                task.wait()
+                                local partial = tick() - startStamp
+                                local value = (startValue + ((tonumber(kocmoc[i][j]) - startValue) * partial))
+                                obj.Value.PlaceholderText = math.round(value * 100) / 100
+                            end
+                            obj.Value.PlaceholderText = tonumber(kocmoc[i][j])
+                        end)
+                    elseif lastCharacters == " Toggle" then
+                        obj.Toggle.BackgroundColor3 = kocmoc[i][j] and Config.Color or Color3.fromRGB(50,50,50)
+                    elseif lastCharacters == " TextBox" then
+                        obj.Background.Input.Text = kocmoc[i][j]
+                    end
                 end
             end
         end
@@ -3364,21 +3364,21 @@ if _G.autoload then
             end
         end
     else
-        api.notify(Config.WindowName, "No such config file!", 2)
+        api.notify("Kocmoc " .. temptable.version, "No such config file!", 2)
     end
 
     local menuTabs = game.Players.LocalPlayer.PlayerGui.ScreenGui.Menus.ChildTabs
     local set_thread_identity = syn and syn.set_thread_identity or setthreadcontext or setidentity
 
     if not set_thread_identity then
-        api.notify(Config.WindowName, "your exploit only partially supports autoload!", 2)
-    end
-
-    for i,v in pairs(menuTabs:GetChildren()) do
-        if v:FindFirstChild("Icon") and v.Icon.Image == "rbxassetid://1436835355" then
-            set_thread_identity(2)
-            firesignal(v.MouseButton1Click)
-            set_thread_identity(7)
+        api.notify("Kocmoc " .. temptable.version, "your exploit only partially supports autoload!", 2)
+    else
+        for _,v in pairs(menuTabs:GetChildren()) do
+            if v:FindFirstChild("Icon") and v.Icon.Image == "rbxassetid://1436835355" then
+                set_thread_identity(2)
+                firesignal(v.MouseButton1Click)
+                set_thread_identity(7)
+            end
         end
     end
 end
