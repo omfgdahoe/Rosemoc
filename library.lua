@@ -439,30 +439,31 @@ function Library:CreateWindow(Config, Parent)
 						return Selected
 					end
 
-					if Name == "Auto Nectar [⭐]" then
-						local e = game:service("HttpService"):JSONDecode(readfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json"))
-
-						if e.toggles.autopl then
-							SetState(true)
-						end
-					end
-
-					if string.find(Name, "Blacklist") and string.find(Name, "Nectar") then
-						local e = game:service("HttpService"):JSONDecode(readfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json"))
-
-						for nectar,state in pairs(e.vars.tempblacklist) do
-							if state and string.find(Name, nectar) then
-								SetState(true)
-							end
-						end
-					end
-
 					return KeybindInit
 				end
 
                 function ToggleInit:GetObject()
                     return Toggle
                 end
+
+				if Name == "Auto Nectar [⭐]" then
+					local e = game:service("HttpService"):JSONDecode(readfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json"))
+
+					if e.toggles.autopl then
+						SetState(true)
+					end
+				end
+
+				if string.find(Name, "Blacklist") and string.find(Name, "Nectar") then
+					local e = game:service("HttpService"):JSONDecode(readfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json"))
+
+					for nectar,state in pairs(e.vars.tempblacklist) do
+						if state and string.find(Name, nectar) then
+							SetState(true)
+						end
+					end
+				end
+
 				return ToggleInit
 			end
 			function SectionInit:CreateSlider(Name, Min, Max, Default, Precise, Callback)
