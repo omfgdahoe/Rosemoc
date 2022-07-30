@@ -1,4 +1,4 @@
-repeat wait(0.1) until game:IsLoaded()
+repeat task.wait(0.1) until game:IsLoaded()
 
 getgenv().Star = "⭐"
 getgenv().Danger = "⚠️"
@@ -34,9 +34,10 @@ local playerstatsevent = game:GetService("ReplicatedStorage").Events.RetrievePla
 local statstable = playerstatsevent:InvokeServer()
 local monsterspawners = game.Workspace.MonsterSpawners
 local rarename
+local httpreq = (syn and syn.request) or http_request or (http and http.request) or request
 
 function rtsg()
-    return game.ReplicatedStorage.Events.RetrievePlayerStats:InvokeServer()
+    return playerstatsevent:InvokeServer()
 end
 
 function maskequip(mask)
@@ -63,7 +64,7 @@ for i = #hives, 1, -1 do
     end
 end
 
--- repeat wait() until game.Players.LocalPlayer.Honeycomb
+-- repeat task.wait() until game.Players.LocalPlayer.Honeycomb
 -- local plrhive = game.Players.LocalPlayer:FindFirstChild("Honeycomb")
 
 -- Script tables
@@ -172,7 +173,8 @@ getgenv().temptable = {
         return coordd
     end,
     lookat = nil,
-    currtool = rtsg()["EquippedCollector"]
+    currtool = rtsg()["EquippedCollector"],
+    starttime = tick()
 }
 local planterst = {plantername = {}, planterid = {}}
 
@@ -413,6 +415,153 @@ local defaultkocmoc = kocmoc
 getgenv().KocmocPremium = {}
 
 -- functions
+
+local function addcommas(num)
+    local str = tostring(num):reverse():gsub("(%d%d%d)", "%1,"):reverse()
+    if str:sub(1,1) == "," then
+        str = str:sub(2)
+    end
+    return str
+end
+
+local function truncatetime(sec)
+    local second = tostring(sec%60)
+    local minute = tostring(math.floor(sec / 60 - math.floor(sec / 3600) * 60))
+    local hour = tostring(math.floor(sec / 3600))
+    
+    return (#hour == 1 and "0"..hour or hour)..":"..(#minute == 1 and "0"..minute or minute)..":"..(#second == 1 and "0"..second or second)
+end
+
+local function truncate(num)
+    num = tonumber(math.round(num))
+    if num <= 0 then
+        return 0
+    end
+    local savenum = ""
+    local i = 0
+    local suff = ""
+    local suffixes = {"k","M","B","T","qd","Qn","sx","Sp","O","N"}
+    local length = math.floor(math.log10(num)+1)
+    while num > 999 do
+        i = i + 1
+        suff = suffixes[i] or "???"
+        num = num/1000
+        savenum = (math.floor(num*100)/100)..suff
+    end
+    if i == 0 then
+        return num
+    end
+    return savenum
+end
+
+local function disconnected(hook, discordid, reason)
+    if not discordid then discordid = "0" end
+
+    local timepassed = tick() - temptable.starttime
+    local honeygained = temptable.honeycurrent - temptable.honeystart
+
+    local totalhoneystring = addcommas(temptable.honeycurrent).." ("..truncate(temptable.honeycurrent)..")"
+    local honeygainedstring = addcommas(honeygained).." ("..truncate(honeygained)..")"
+    local honeyperhourstring = addcommas(math.floor(honeygained / timepassed) * 3600).." ("..truncate(math.floor(honeygained / timepassed) * 3600)..") Honey"
+    local uptimestring = truncatetime(timepassed)
+    local data = {
+        ["username"] = player.Name,
+        ["avatar_url"] = api.plrico(),
+        ["content"] = "<@"..discordid.."> "..(reason == "Server Timeout (Game Freeze)" and "Freeze" or "Kick"),
+        ["embeds"] = {{
+            ["title"] = "**Disconnect Detected**",
+            --["description"] = "description",
+            ["type"] = "rich",
+            ["color"] = tonumber(0xfff802),
+            ["fields"] = {
+                {
+                    ["name"] = "Reason:",
+                    ["value"] = reason,
+                    ["inline"] =  false
+                },
+                {
+                    ["name"] = "Total Honey:",
+                    ["value"] = totalhoneystring,
+                    ["inline"] =  false
+                },
+                {
+                    ["name"] = "Session Honey:",
+                    ["value"] = honeygainedstring,
+                    ["inline"] =  true
+                },
+                {
+                    ["name"] = "Session Uptime:",
+                    ["value"] = uptimestring,
+                    ["inline"] =  true
+                },
+                {
+                    ["name"] = "Session Honey Per Hour:",
+                    ["value"] = honeyperhourstring,
+                    ["inline"] =  true
+                },
+            },
+            ["footer"] = {
+                ["text"] = os.date("%x").." • "..os.date("%I")..":"..os.date("%M")..":"..os.date("%S").." "..os.date("%p")
+            }
+        }}
+    }
+    local headers = {
+        ["content-Type"] = "application/json"
+    }
+    httpreq({Url = _G.url, Body = game:GetService("HttpService"):JSONEncode(data), Method = "POST", Headers = headers})
+end
+
+local function hourly(ping, hook, discordid)
+    if not discordid then discordid = "0" end
+
+    local timepassed = tick() - temptable.starttime
+    local honeygained = temptable.honeycurrent - temptable.honeystart
+
+    local totalhoneystring = addcommas(temptable.honeycurrent).." ("..truncate(temptable.honeycurrent)..")"
+    local honeygainedstring = addcommas(honeygained).." ("..truncate(honeygained)..")"
+    local honeyperhourstring = addcommas(math.floor(honeygained / timepassed) * 3600).." ("..truncate(math.floor(honeygained / timepassed) * 3600)..") Honey"
+    local uptimestring = truncatetime(timepassed)
+    
+    local data = {
+        ["username"] = player.Name,
+        ["avatar_url"] = api.plrico(),
+        ["content"] = ping and "<@".._G.discordid.."> ".."Hourly Update" or "Hourly Update",
+        ["embeds"] = {{
+            ["title"] = "**Hourly Update**",
+            ["type"] = "rich",
+            ["color"] = tonumber(0xfff802),
+            ["fields"] = {
+                {
+                    ["name"] = "Total Honey:",
+                    ["value"] = totalhoneystring,
+                    ["inline"] =  false
+                },
+                {
+                    ["name"] = "Session Honey:",
+                    ["value"] = honeygainedstring,
+                    ["inline"] =  true
+                },
+                {
+                    ["name"] = "Session Uptime:",
+                    ["value"] = uptimestring,
+                    ["inline"] =  true
+                },
+                {
+                    ["name"] = "Session Honey Per Hour:",
+                    ["value"] = honeyperhourstring,
+                    ["inline"] =  true
+                },
+            },
+            ["footer"] = {
+                ["text"] = os.date("%x").." • "..os.date("%I")..":"..os.date("%M")..":"..os.date("%S").." "..os.date("%p")
+            }
+        }}
+    }
+    local headers = {
+        ["content-Type"] = "application/json"
+    }
+    httpreq({Url = _G.url, Body = game:GetService("HttpService"):JSONEncode(data), Method = "POST", Headers = headers})
+end
 
 local function findField(position)
     if not position then return nil end
@@ -1025,14 +1174,14 @@ local function donateToShrine(item, qnt)
     print(qnt)
     local s, e = pcall(function()
         game:GetService("ReplicatedStorage").Events.WindShrineDonation:InvokeServer(item, qnt)
-        wait(0.5)
+        task.wait(0.5)
         game.ReplicatedStorage.Events.WindShrineTrigger:FireServer()
 
         local UsePlatform = game.Workspace.NPCs["Wind Shrine"].Stage
         player.Character.HumanoidRootPart.CFrame = UsePlatform.CFrame + Vector3.new(0, 5, 0)
 
         for i = 1, 120 do
-            wait(0.05)
+            task.wait(0.05)
             for i, v in pairs(game.Workspace.Collectibles:GetChildren()) do
                 if (v.Position - UsePlatform.Position).magnitude < 60 and
                     v.CFrame.YVector.Y == 1 then
@@ -1186,7 +1335,7 @@ local setttab = Window:CreateTab("Settings")
 
 local loadingInfo = hometab:CreateSection("Startup")
 local loadingFunctions = loadingInfo:CreateLabel("Loading Functions..")
-wait(1)
+task.wait(1)
 loadingFunctions:UpdateText("Loaded Functions")
 local loadingBackend = loadingInfo:CreateLabel("Loading Backend..")
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxking776/kocmoc/main/functions/premium/loadperks.lua"))()
@@ -1216,7 +1365,6 @@ local loadingUI = loadingInfo:CreateLabel("Loading UI..")
 local information = hometab:CreateSection("Information")
 information:CreateLabel("Welcome, " .. api.nickname .. "!")
 information:CreateLabel("Script version: " .. temptable.version)
-information:CreateLabel("Place version: " .. game.PlaceVersion)
 information:CreateLabel("⚠️ - Not Safe Function")
 information:CreateLabel("⚙ - Configurable Function")
 information:CreateLabel("📜 - May be exploit specific")
@@ -1224,6 +1372,7 @@ information:CreateLabel("v4 by RoseGold#5441")
 information:CreateLabel("Script by Boxking776")
 information:CreateLabel("Originally by weuz_ and mrdevl")
 local gainedhoneylabel = information:CreateLabel("Gained Honey: 0")
+local uptimelabel = information:CreateLabel("Uptime: 0")
 information:CreateButton("Discord Invite", function()
     setclipboard("https://discord.gg/kTNMzbxUuZ")
 end)
@@ -1596,7 +1745,7 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
         if boool == true then
             booolholder = true
             repeat
-                wait(0.1)
+                task.wait(0.1)
                 syn.secure_call(function()
                     require(game.ReplicatedStorage.LocalFX.LocalFlames).AddFlame(
                         player.Character.Humanoid.RootPart.CFrame.p,
@@ -1615,7 +1764,7 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
         if boool == true then
             booolholder = true
             repeat
-                wait(0.1)
+                task.wait(0.1)
                 syn.secure_call(function()
                     require(game.ReplicatedStorage.LocalFX.LocalFlames).AddFlame(
                         player.Character.Humanoid.RootPart.CFrame.p,
@@ -1689,7 +1838,7 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
         alertText = "☢️ A nuke is incoming! ☢️"
         syn.secure_call(pushAlert, spoof)
         alertText = "☢️ Get somewhere high! ☢️"
-        wait(1.5)
+        task.wait(1.5)
         task.spawn(function()
             local Humanoid = player.Character.Humanoid
             for i = 1, 950 do
@@ -1994,7 +2143,7 @@ local loadingLoops = loadingInfo:CreateLabel("Loading Loops..")
 
 local honeytoggleouyfyt = false
 task.spawn(function()
-    while wait(1) do
+    while task.wait(1) do
         if kocmoc.toggles.honeymaskconv == true then
             if temptable.converting then
                 if honeytoggleouyfyt == false then
@@ -2020,7 +2169,7 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-    while wait(5) do
+    while task.wait(5) do
         local buffs = fetchBuffTable(buffTable)
         for i, v in pairs(buffTable) do
             if v["b"] == true then
@@ -2396,17 +2545,17 @@ task.spawn(function()
                             temptable.started.monsters = true
                             temptable.act2 = 0
                             repeat 
-                                wait()
+                                task.wait()
                             until workspace:FindFirstChild(player.Name) and workspace:FindFirstChild(player.Name):FindFirstChild("Humanoid") and workspace:FindFirstChild(player.Name):FindFirstChild("Humanoid").Health > 0
                             workspace:FindFirstChild(game.Players.LocalPlayer.Name):BreakJoints()
-                            wait(6.5)
+                            task.wait(6.5)
                             repeat 
-                                wait()
+                                task.wait()
                             until workspace:FindFirstChild(player.Name)
                             workspace:FindFirstChild(game.Players.LocalPlayer.Name):BreakJoints()
-                            wait(6.5)
+                            task.wait(6.5)
                             repeat
-                                wait()
+                                task.wait()
                             until workspace:FindFirstChild(player.Name)
                             temptable.started.monsters = false
                         end
@@ -2530,17 +2679,17 @@ task.spawn(function()
                                 temptable.started.monsters = true
                                 temptable.act2 = 0
                                 repeat 
-                                    wait()
+                                    task.wait()
                                 until workspace:FindFirstChild(player.Name) and workspace:FindFirstChild(player.Name):FindFirstChild("Humanoid") and workspace:FindFirstChild(player.Name):FindFirstChild("Humanoid").Health > 0
                                 workspace:FindFirstChild(game.Players.LocalPlayer.Name):BreakJoints()
-                                wait(6.5)
+                                task.wait(6.5)
                                 repeat 
-                                    wait()
+                                    task.wait()
                                 until workspace:FindFirstChild(player.Name)
                                 workspace:FindFirstChild(game.Players.LocalPlayer.Name):BreakJoints()
-                                wait(6.5)
+                                task.wait(6.5)
                                 repeat
-                                    wait()
+                                    task.wait()
                                 until workspace:FindFirstChild(player.Name)
                                 temptable.started.monsters = false
                             end
@@ -2837,7 +2986,7 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-    while task.wait(1) do
+    while task.wait(0.2) do
         temptable.runningfor = temptable.runningfor + 1
         temptable.honeycurrent = statsget().Totals.Honey
         if kocmoc.toggles.honeystorm then
@@ -2885,6 +3034,7 @@ task.spawn(function()
             game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer("Free Ant Pass Dispenser")
         end
         gainedhoneylabel:UpdateText("Gained Honey: " .. api.suffixstring(temptable.honeycurrent - temptable.honeystart))
+        uptimelabel:UpdateText("Uptime: " .. truncatetime(tick() - temptable.starttime))
     end
 end)
 
@@ -3170,11 +3320,64 @@ local function getToyCooldown(toy)
     return u, canBeUsed
 end
 
+if _G.supersecret then
+    game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
+        if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
+            if _G.url and httpreq then
+                disconnected(_G.url, _G.discordid, child.MessageArea.ErrorFrame.ErrorMessage.Text)
+            end
+            if _G.shutdownwhenkick then
+                game:Shutdown()
+            end
+        end
+    end)
+
+    task.spawn(function()
+        local timestamp = tick()
+        while task.wait(5) do
+            local timeout = false
+            task.spawn(function()
+                timeout = true
+                task.wait(10)
+                if timeout then
+                    if _G.url and httpreq then
+                        disconnected(_G.url, _G.discordid, "Server Timeout (Game Freeze)")
+                    end
+                    if _G.shutdownwhenkick then
+                        game:Shutdown()
+                    end
+                end
+            end)
+            local timestamp = tick()
+            local statstable = playerstatsevent:InvokeServer()
+            while task.wait() do
+                if timeout then
+                    print("server took "..tostring(tick() - timestamp).." seconds to respond")
+                    timeout = false
+                    break
+                end
+            end
+        end
+    end)
+
+    task.spawn(function()
+        local timestamp = tick()
+        while task.wait(0.1) do
+            if tick() - timestamp > 3600 then
+                if httpreq and _G.url and _G.hourly then
+                    hourly(_G.pinghourly, _G.url _G.discordid)
+                end
+                timestamp = tick()
+            end
+        end
+    end)
+end
+
 task.spawn(function()
     pcall(function()
         loadingInfo:CreateLabel("")
         loadingInfo:CreateLabel("Script loaded!")
-        wait(2)
+        task.wait(2)
         pcall(function()
             for i, v in pairs(game.CoreGui:GetDescendants()) do
                 if v.Name == "Startup Section" then
@@ -3274,7 +3477,7 @@ task.spawn(function()
             ["Wealth Clock"] = wcUpd,
             ["Mythic Meteor Shower"] = mmsUpd
         }
-        while wait(1) do
+        while task.wait(1) do
             if kocmoc.toggles.enablestatuspanel == true then
                 for i, v in pairs(statusTable) do
                     if v[1] and v[2] then
