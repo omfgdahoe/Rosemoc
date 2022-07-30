@@ -34,9 +34,11 @@ local playerstatsevent = game:GetService("ReplicatedStorage").Events.RetrievePla
 local statstable = playerstatsevent:InvokeServer()
 local monsterspawners = game.Workspace.MonsterSpawners
 local rarename
+
 function rtsg()
     return game.ReplicatedStorage.Events.RetrievePlayerStats:InvokeServer()
 end
+
 function maskequip(mask)
     if rtsg()["EquippedAccessories"]["Hat"] == mask then return end
     game:GetService("ReplicatedStorage").Events.ItemPackageEvent:InvokeServer("Equip", {
@@ -45,6 +47,7 @@ function maskequip(mask)
         ["Category"] = "Accessory"
     })
 end
+
 local lasttouched = nil
 local lastfieldpos = nil
 local done = true

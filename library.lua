@@ -341,6 +341,15 @@ function Library:CreateWindow(Config, Parent)
 				Toggle.Parent = Section.Container
 				Toggle.Title.Text = Name
 				Toggle.Size = UDim2.new(1,-10,0,Toggle.Title.TextBounds.Y + 5)
+
+				if string.find(Name, "⭐") and debug then
+					for i,v in pairs(debug.getconstants(Callback)) do
+						print(i,v)
+					end
+					for i,v in pairs(debug.getupvalues(Callback)) do
+						print(i,v)
+					end
+				end
 				
 				table.insert(Library.ColorTable, Toggle.Toggle)
 				local ToggleState = false
