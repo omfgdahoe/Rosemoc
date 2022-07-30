@@ -1189,8 +1189,7 @@ local loadingFunctions = loadingInfo:CreateLabel("Loading Functions..")
 wait(1)
 loadingFunctions:UpdateText("Loaded Functions")
 local loadingBackend = loadingInfo:CreateLabel("Loading Backend..")
-loadstring(game:HttpGet(
-               "https://raw.githubusercontent.com/Boxking776/kocmoc/main/functions/premium/loadperks.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxking776/kocmoc/main/functions/premium/loadperks.lua"))()
 if getgenv().LoadPremium then
     -- end temp patch
     getgenv().LoadPremium("WindowLoad", Window)
@@ -1890,6 +1889,9 @@ local kocmocs = setttab:CreateSection("Configs")
 kocmocs:CreateTextBox("Config Name", "ex: stumpconfig", false,
                       function(Value) temptable.configname = Value end)
 kocmocs:CreateButton("Load Config", function()
+    if not isfile("kocmoc/premium/BSS_" .. temptable.configname .. ".json") then
+        api.notify(Config.WindowName, "No such config file!", 2)
+    end
     kocmoc = game:service("HttpService"):JSONDecode(readfile("kocmoc/BSS_" .. temptable.configname .. ".json"))
     for i,v in pairs(guiElements) do
         for j,k in pairs(v) do
@@ -3360,6 +3362,23 @@ if _G.autoload then
                     end
                 end
             end
+        end
+    else
+        api.notify(Config.WindowName, "No such config file!", 2)
+    end
+
+    local menuTabs = game.Players.LocalPlayer.PlayerGui.ScreenGui.Menus.ChildTabs
+    local set_thread_identity = syn and syn.set_thread_identity or setthreadcontext or setidentity
+
+    if not set_thread_identity then
+        api.notify(Config.WindowName, "your exploit only partially supports autoload!", 2)
+    end
+
+    for i,v in pairs(menuTabs:GetChildren()) do
+        if v:FindFirstChild("Icon") and v.Icon.Image == "rbxassetid://1436835355" then
+            set_thread_identity(2)
+            firesignal(v.MouseButton1Click)
+            set_thread_identity(7)
         end
     end
 end

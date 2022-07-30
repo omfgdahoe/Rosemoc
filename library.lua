@@ -446,7 +446,7 @@ function Library:CreateWindow(Config, Parent)
                     return Toggle
                 end
 
-				if Name == "Auto Nectar [⭐]" then
+				if Name == "Auto Nectar [⭐]" and isfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json") then
 					local e = game:service("HttpService"):JSONDecode(readfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json"))
 
 					if e.toggles.autopl then
@@ -454,7 +454,7 @@ function Library:CreateWindow(Config, Parent)
 					end
 				end
 
-				if string.find(Name, "Blacklist") and string.find(Name, "Nectar") then
+				if string.find(Name, "Blacklist") and string.find(Name, "Nectar") and isfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json") then
 					local e = game:service("HttpService"):JSONDecode(readfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json"))
 
 					for nectar,state in pairs(e.vars.tempblacklist) do
