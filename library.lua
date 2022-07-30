@@ -341,15 +341,6 @@ function Library:CreateWindow(Config, Parent)
 				Toggle.Parent = Section.Container
 				Toggle.Title.Text = Name
 				Toggle.Size = UDim2.new(1,-10,0,Toggle.Title.TextBounds.Y + 5)
-
-				if string.find(Name, "⭐") and debug then
-					for i,v in pairs(debug.getconstants(Callback)) do
-						print(i,v)
-					end
-					for i,v in pairs(debug.getupvalues(Callback)) do
-						print(i,v)
-					end
-				end
 				
 				table.insert(Library.ColorTable, Toggle.Toggle)
 				local ToggleState = false
@@ -446,6 +437,24 @@ function Library:CreateWindow(Config, Parent)
 
 					function KeybindInit:GetBind()
 						return Selected
+					end
+
+					if Name == "Auto Nectar [⭐]" then
+						local e = game:service("HttpService"):JSONDecode(readfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json"))
+
+						if e.toggles.autopl then
+							SetState(true)
+						end
+					end
+
+					if string.find(Name, "Blacklist") and string.find(Name, "Nectar") then
+						local e = game:service("HttpService"):JSONDecode(readfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json"))
+
+						for nectar,state in pairs(e.vars.tempblacklist) do
+							if state and string.find(Name, nectar) then
+								SetState(true)
+							end
+						end
 					end
 
 					return KeybindInit

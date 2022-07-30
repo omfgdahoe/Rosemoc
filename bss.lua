@@ -3363,6 +3363,7 @@ if _G.autoload then
         end
     end
 end
+
 for _, part in next, workspace:FindFirstChild("FieldDecos"):GetDescendants() do
     if part:IsA("BasePart") then
         part.CanCollide = false
