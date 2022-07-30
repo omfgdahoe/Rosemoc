@@ -556,10 +556,10 @@ function domob(place)
         local point = Vector3.new((place.CFrame.p.X + monsterpart.CFrame.p.X) / 2, monsterpart.CFrame.p.Y, (place.CFrame.p.Z + monsterpart.CFrame.p.Z) / 2)
 
         while not place:FindFirstChild("TimerLabel", true).Visible and tick() - timestamp < 45 do
-            if tick() - secondstamp > 3 then
+            if tick() - secondstamp > 2 then
                 api.humanoidrootpart().CFrame = CFrame.new(point + Vector3.new(0, 30, 0))
                 api.humanoidrootpart().Velocity = Vector3.new(0, 0, 0)
-                task.wait(2)
+                task.wait(1)
                 secondstamp = tick()
             end
             task.wait()
@@ -3325,6 +3325,39 @@ end)
 if _G.autoload then
     if isfile("kocmoc/BSS_" .. _G.autoload .. ".json") then
         kocmoc = game:service "HttpService":JSONDecode(readfile("kocmoc/BSS_" .. _G.autoload .. ".json"))
+        for i,v in pairs(guiElements) do
+            for j,k in pairs(v) do
+                local obj = k:GetObject()
+                local lastCharacters = obj.Name:reverse():sub(0, obj.Name:reverse():find(" ")):reverse()
+                if kocmoc[i][j] then
+                    if lastCharacters == " Dropdown" then
+                        obj.Container.Value.Text = kocmoc[i][j]
+                    elseif lastCharacters == " Slider" then
+                        task.spawn(function()
+                            local Tween = game:GetService("TweenService"):Create(
+                                obj.Slider.Bar,
+                                TweenInfo.new(1),
+                                {Size = UDim2.new((tonumber(kocmoc[i][j]) - k:GetMin()) / (k:GetMax() - k:GetMin()), 0, 1, 0)}
+                            )
+                            Tween:Play()
+                            local startStamp = tick()
+                            local startValue = tonumber(obj.Value.PlaceholderText)
+                            while tick() - startStamp < 1 do
+                                task.wait()
+                                local partial = tick() - startStamp
+                                local value = (startValue + ((tonumber(kocmoc[i][j]) - startValue) * partial))
+                                obj.Value.PlaceholderText = math.round(value * 100) / 100
+                            end
+                            obj.Value.PlaceholderText = tonumber(kocmoc[i][j])
+                        end)
+                    elseif lastCharacters == " Toggle" then
+                        obj.Toggle.BackgroundColor3 = kocmoc[i][j] and Config.Color or Color3.fromRGB(50,50,50)
+                    elseif lastCharacters == " TextBox" then
+                        obj.Background.Input.Text = kocmoc[i][j]
+                    end
+                end
+            end
+        end
     end
 end
 for _, part in next, workspace:FindFirstChild("FieldDecos"):GetDescendants() do
