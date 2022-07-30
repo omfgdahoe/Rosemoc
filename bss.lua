@@ -1889,7 +1889,7 @@ local kocmocs = setttab:CreateSection("Configs")
 kocmocs:CreateTextBox("Config Name", "ex: stumpconfig", false,
                       function(Value) temptable.configname = Value end)
 kocmocs:CreateButton("Load Config", function()
-    if not isfile("kocmoc/premium/BSS_" .. temptable.configname .. ".json") then
+    if not isfile("kocmoc/BSS_" .. temptable.configname .. ".json") then
         api.notify(Config.WindowName, "No such config file!", 2)
     end
     kocmoc = game:service("HttpService"):JSONDecode(readfile("kocmoc/BSS_" .. temptable.configname .. ".json"))
