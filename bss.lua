@@ -9,10 +9,13 @@ getgenv().ExploitSpecific = "📜"
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RoseGoldIsntGay/Rosemoc/main/library.lua"))()
 getgenv().api = loadstring(game:HttpGet("https://raw.githubusercontent.com/RoseGoldIsntGay/Rosemoc/main/api.lua"))()
 local bssapi = loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxking776/kocmoc/main/bssapi.lua"))()
+local httpreq = (syn and syn.request) or http_request or (http and http.request) or request
+
 if not isfolder("kocmoc") then makefolder("kocmoc") end
 if not isfolder("kocmoc/premium") then makefolder("kocmoc/premium") end
+
 if isfile("kocmoc.txt") == false then
-    (syn and syn.request or http_request or request)({
+    httpreq({
         Url = "http://127.0.0.1:6463/rpc?v=1",
         Method = "POST",
         Headers = {
@@ -34,7 +37,6 @@ local playerstatsevent = game:GetService("ReplicatedStorage").Events.RetrievePla
 local statstable = playerstatsevent:InvokeServer()
 local monsterspawners = game.Workspace.MonsterSpawners
 local rarename
-local httpreq = (syn and syn.request) or http_request or (http and http.request) or request
 
 function rtsg()
     return playerstatsevent:InvokeServer()
@@ -2511,6 +2513,8 @@ task.spawn(function()
                     temptable.tokensfarm = false
                     api.tween(2, player.SpawnPos.Value * CFrame.fromEulerAnglesXYZ(0, 110, 0) + Vector3.new(0, 0, 9))
                     task.wait(2)
+                    api.humanoidrootpart().Velocity = Vector3.new(0, 0, 0)
+                    api.tween(0.1, player.SpawnPos.Value * CFrame.fromEulerAnglesXYZ(0, 110, 0) + Vector3.new(0, 0, 9))
                     temptable.converting = true
                     repeat converthoney() until player.CoreStats.Pollen.Value == 0
                     if kocmoc.toggles.convertballoons and gethiveballoon() then
@@ -2645,6 +2649,8 @@ task.spawn(function()
                         temptable.tokensfarm = false
                         api.tween(2, player.SpawnPos.Value * CFrame.fromEulerAnglesXYZ(0, 110, 0) + Vector3.new(0, 0, 9))
                         task.wait(2)
+                        api.humanoidrootpart().Velocity = Vector3.new(0, 0, 0)
+                        api.tween(0.1, player.SpawnPos.Value * CFrame.fromEulerAnglesXYZ(0, 110, 0) + Vector3.new(0, 0, 9))
                         temptable.converting = true
                         repeat converthoney() until player.CoreStats.Pollen.Value == 0
                         if kocmoc.toggles.convertballoons and kocmoc.vars.convertballoonpercent == 0 and gethiveballoon() then
