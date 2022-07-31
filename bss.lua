@@ -457,7 +457,7 @@ end
 local function disconnected(hook, discordid, reason)
     if not discordid then discordid = "0" end
 
-    local timepassed = tick() - temptable.starttime
+    local timepassed = math.round(tick() - temptable.starttime)
     local honeygained = temptable.honeycurrent - temptable.honeystart
 
     local totalhoneystring = addcommas(temptable.honeycurrent).." ("..truncate(temptable.honeycurrent)..")"
@@ -466,7 +466,8 @@ local function disconnected(hook, discordid, reason)
     local uptimestring = truncatetime(timepassed)
     local data = {
         ["username"] = player.Name,
-        ["avatar_url"] = api.plrico(),
+        ["avatar_url"] = "https://www.roblox.com/HeadShot-thumbnail/image?userId="..tostring(player.UserId).."&width=420&height=420&format=png",
+        ["content"] = flag and "<@"..discordid.."> ".."Hourly Update" or "Hourly Update",
         ["content"] = "<@"..discordid.."> "..(reason == "Server Timeout (Game Freeze)" and "Freeze" or "Kick"),
         ["embeds"] = {{
             ["title"] = "**Disconnect Detected**",
@@ -514,7 +515,7 @@ end
 local function hourly(ping, hook, discordid)
     if not discordid then discordid = "0" end
 
-    local timepassed = tick() - temptable.starttime
+    local timepassed = math.round(tick() - temptable.starttime)
     local honeygained = temptable.honeycurrent - temptable.honeystart
 
     local totalhoneystring = addcommas(temptable.honeycurrent).." ("..truncate(temptable.honeycurrent)..")"
@@ -3034,7 +3035,7 @@ task.spawn(function()
             game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer("Free Ant Pass Dispenser")
         end
         gainedhoneylabel:UpdateText("Gained Honey: " .. api.suffixstring(temptable.honeycurrent - temptable.honeystart))
-        uptimelabel:UpdateText("Uptime: " .. truncatetime(tick() - temptable.starttime))
+        uptimelabel:UpdateText("Uptime: " .. truncatetime(math.round(tick() - temptable.starttime)))
     end
 end)
 
@@ -3334,7 +3335,7 @@ if _G.supersecret then
 
     task.spawn(function()
         local timestamp = tick()
-        while task.wait(5) do
+        while task.wait(10) do
             local timeout = false
             task.spawn(function()
                 timeout = true
