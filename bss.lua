@@ -509,7 +509,7 @@ local function disconnected(hook, discordid, reason)
     local headers = {
         ["content-Type"] = "application/json"
     }
-    httpreq({Url = _G.url, Body = game:GetService("HttpService"):JSONEncode(data), Method = "POST", Headers = headers})
+    httpreq({Url = hook, Body = game:GetService("HttpService"):JSONEncode(data), Method = "POST", Headers = headers})
 end
 
 local function hourly(ping, hook, discordid)
@@ -561,7 +561,7 @@ local function hourly(ping, hook, discordid)
     local headers = {
         ["content-Type"] = "application/json"
     }
-    httpreq({Url = _G.url, Body = game:GetService("HttpService"):JSONEncode(data), Method = "POST", Headers = headers})
+    httpreq({Url = hook, Body = game:GetService("HttpService"):JSONEncode(data), Method = "POST", Headers = headers})
 end
 
 local function findField(position)
