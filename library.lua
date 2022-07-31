@@ -588,6 +588,14 @@ function Library:CreateWindow(Config, Parent)
                     return Slider
                 end
 
+				if Name == "Planter Harvest Percentage" and isfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json") then
+					local e = game:service("HttpService"):JSONDecode(readfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json"))
+
+					if e.vars.harvestpercent then
+						SetValue(e.vars.harvestpercent)
+					end
+				end
+
 				return SliderInit
 			end
 			function SectionInit:CreateDropdown(Name, OptionTable, Callback, InitialValue)
