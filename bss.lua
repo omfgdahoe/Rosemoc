@@ -3365,7 +3365,7 @@ if _G.supersecret then
         while task.wait(0.1) do
             if tick() - timestamp > 3600 then
                 if httpreq and _G.url and _G.hourly then
-                    hourly(_G.pinghourly, _G.url _G.discordid)
+                    hourly(_G.pinghourly, _G.url, _G.discordid)
                 end
                 timestamp = tick()
             end
