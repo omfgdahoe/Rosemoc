@@ -525,7 +525,7 @@ local function hourly(ping, hook, discordid)
     
     local data = {
         ["username"] = player.Name,
-        ["avatar_url"] = api.plrico(),
+        ["avatar_url"] = "https://www.roblox.com/HeadShot-thumbnail/image?userId="..tostring(player.UserId).."&width=420&height=420&format=png",
         ["content"] = ping and "<@".._G.discordid.."> ".."Hourly Update" or "Hourly Update",
         ["embeds"] = {{
             ["title"] = "**Hourly Update**",
