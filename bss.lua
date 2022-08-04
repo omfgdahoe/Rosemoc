@@ -2212,15 +2212,15 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
                 task.wait()
                 api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
             end
-        elseif string.find(v.Name, "Bubble") and not currentbubble and getBuffTime("5101328809") > 0 and kocmoc.toggles.farmbubbles and dist < temptable.magnitude / 1.4 then
-            currentbubble = v
+        elseif string.find(v.Name, "Bubble") and not temptable.currentbubble and getBuffTime("5101328809") > 0 and kocmoc.toggles.farmbubbles and dist < temptable.magnitude / 1.4 then
+            temptable.currentbubble = v
             if temptable.lookat then
                 api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
             else
                 api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
             end
             task.wait(0.5)
-            currentbubble = nil
+            temptable.currentbubble = nil
         end
     end
 end)
