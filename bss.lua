@@ -1253,7 +1253,7 @@ local function getBuffTime(decalID)
             if v.Name == "TileGrid" then
                 for j,k in pairs(v:GetChildren()) do
                     if k:FindFirstChild("BG") and k.BG:FindFirstChild("Icon") then
-                        if k.BG.Icon.Image == "rbxassetid://" .. decalID then
+                        if string.find(tostring(k.BG.Icon.Image), decalID) then
                             return k.BG.Bar.Size.Y.Scale
                         end
                     end
