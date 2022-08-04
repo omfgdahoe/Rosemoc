@@ -2213,14 +2213,16 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
                 api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
             end
         elseif string.find(v.Name, "Bubble") and not temptable.currentbubble and getBuffTime("5101328809") > 0.2 and kocmoc.toggles.farmbubbles and dist <= 100 then
-            temptable.currentbubble = v
-            if temptable.lookat then
-                api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
-            else
-                api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+            if not kocmoc.toggles.farmpuffshrooms or (kocmoc.toggles.farmpuffshrooms and not game.Workspace.Happenings.Puffshrooms:FindFirstChildOfClass("Model")) then
+                temptable.currentbubble = v
+                if temptable.lookat then
+                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
+                else
+                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+                end
+                task.wait(0.5)
+                temptable.currentbubble = nil
             end
-            task.wait(0.5)
-            temptable.currentbubble = nil
         end
     end
 end)
