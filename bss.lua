@@ -176,7 +176,8 @@ getgenv().temptable = {
     end,
     lookat = nil,
     currtool = rtsg()["EquippedCollector"],
-    starttime = tick()
+    starttime = tick(),
+    currentbubble = nil
 }
 local planterst = {plantername = {}, planterid = {}}
 
@@ -594,8 +595,7 @@ function farm(trying)
         player.Character.Humanoid.WalkSpeed = kocmoc.vars.farmspeed
     end
     api.humanoid():MoveTo(trying.Position)
-    repeat task.wait() until (trying.Position - api.humanoidrootpart().Position).magnitude <=
-        4 or not IsToken(trying) or not temptable.running
+    repeat task.wait() until (trying.Position - api.humanoidrootpart().Position).magnitude <= 4 or not IsToken(trying) or not temptable.running
 end
 
 function disableall()
@@ -984,18 +984,6 @@ function closestleaf()
                                                            .HumanoidRootPart
                                                            .Position).magnitude) <
             temptable.magnitude / 1.4 then
-            farm(v)
-            break
-        end
-    end
-end
-
-function getbubble()
-    for i, v in next, game.workspace.Particles:GetChildren() do
-        if string.find(v.Name, "Bubble") and temptable.running == false and
-            tonumber((v.Position -
-                         player.Character.HumanoidRootPart
-                             .Position).magnitude) < temptable.magnitude / 1.4 then
             farm(v)
             break
         end
@@ -2199,8 +2187,9 @@ task.spawn(function()
 end)
 
 game.Workspace.Particles.ChildAdded:Connect(function(v)
-    if (v.Name == "WarningDisk" or v.Name == "Crosshair") and not temptable.started.ant and not temptable.started.vicious and kocmoc.toggles.autofarm and not temptable.converting then
+    if not temptable.started.ant and not temptable.started.vicious and kocmoc.toggles.autofarm and not temptable.converting then
         local dist = (v.Position - api.humanoidrootpart().Position).magnitude
+
         if v.Name == "WarningDisk" and kocmoc.toggles.farmcoco and dist <= 100 then
             task.wait(1.7)
             if temptable.lookat then
@@ -2212,7 +2201,7 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
                 task.wait()
                 api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
             end
-        elseif v.Name == "Crosshair" and v and v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") and kocmoc.toggles.collectcrosshairs and dist <= 100 then
+        elseif v and v.Name == "Crosshair" and v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") and kocmoc.toggles.collectcrosshairs and dist <= 100 then
             task.wait(1)
             if temptable.lookat then
                 api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
@@ -2223,6 +2212,15 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
                 task.wait()
                 api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
             end
+        elseif string.find(v.Name, "Bubble") and not currentbubble and getBuffTime("5101328809") > 0 and kocmoc.toggles.farmbubbles and dist < temptable.magnitude / 1.4 then
+            currentbubble = v
+            if temptable.lookat then
+                api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
+            else
+                api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+            end
+            task.wait(0.5)
+            currentbubble = nil
         end
     end
 end)
@@ -2624,9 +2622,6 @@ task.spawn(function()
                         end
                         if kocmoc.toggles.farmclosestleaf then
                             closestleaf()
-                        end
-                        if kocmoc.toggles.farmbubbles then
-                            getbubble()
                         end
                         if kocmoc.toggles.farmclouds then
                             getcloud()
