@@ -2187,7 +2187,7 @@ task.spawn(function()
 end)
 
 game.Workspace.Particles.ChildAdded:Connect(function(v)
-    if not temptable.started.ant and not temptable.started.vicious and kocmoc.toggles.autofarm and not temptable.converting then
+    if v:IsA("Part") and not temptable.started.ant and not temptable.started.vicious and kocmoc.toggles.autofarm and not temptable.converting then
         local dist = (v.Position - api.humanoidrootpart().Position).magnitude
 
         if v.Name == "WarningDisk" and kocmoc.toggles.farmcoco and dist <= 100 then
