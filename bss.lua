@@ -2212,7 +2212,7 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
                 task.wait()
                 api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
             end
-        elseif string.find(v.Name, "Bubble") and not temptable.currentbubble and getBuffTime("5101328809") > 0 and kocmoc.toggles.farmbubbles and dist <= 100 then
+        elseif string.find(v.Name, "Bubble") and not temptable.currentbubble and getBuffTime("5101328809") > 0.2 and kocmoc.toggles.farmbubbles and dist <= 100 then
             temptable.currentbubble = v
             print("lets go to bubble")
             if temptable.lookat then
