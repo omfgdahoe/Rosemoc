@@ -2180,10 +2180,9 @@ end)
 
 game.Workspace.Particles.ChildAdded:Connect(function(v)
     if v:IsA("Part") and not temptable.started.ant and not temptable.started.vicious and kocmoc.toggles.autofarm and not temptable.converting then
-        local dist = (v.Position - api.humanoidrootpart().Position).magnitude
-
-        if v.Name == "WarningDisk" and kocmoc.toggles.farmcoco and dist <= 100 then
+        if v.Name == "WarningDisk" and kocmoc.toggles.farmcoco then
             task.wait(1.7)
+            if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
             if temptable.lookat then
                 api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
                 task.wait()
@@ -2193,8 +2192,9 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
                 task.wait()
                 api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
             end
-        elseif v and v.Name == "Crosshair" and v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") and kocmoc.toggles.collectcrosshairs and dist <= 100 then
+        elseif v and v.Name == "Crosshair" and v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") and kocmoc.toggles.collectcrosshairs then
             task.wait(1)
+            if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
             if temptable.lookat then
                 api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
                 task.wait()
@@ -2204,8 +2204,9 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
                 task.wait()
                 api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
             end
-        elseif string.find(v.Name, "Bubble") and not temptable.currentbubble and getBuffTime("5101328809") > 0.2 and kocmoc.toggles.farmbubbles and dist <= 100 then
+        elseif string.find(v.Name, "Bubble") and not temptable.currentbubble and getBuffTime("5101328809") > 0.2 and kocmoc.toggles.farmbubbles then
             if not kocmoc.toggles.farmpuffshrooms or (kocmoc.toggles.farmpuffshrooms and not game.Workspace.Happenings.Puffshrooms:FindFirstChildOfClass("Model")) then
+                if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
                 temptable.currentbubble = v
                 if temptable.lookat then
                     api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
