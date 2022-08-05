@@ -188,10 +188,10 @@ for i, v in next, temptable.blacklist do
 end
 if temptable.honeystart == 0 then temptable.honeystart = statstable.Totals.Honey end
 
-for i, v in next, game.Workspace.MonsterSpawners:GetDescendants() do
+for i, v in next, monsterspawners:GetDescendants() do
     if v.Name == "TimerAttachment" then v.Name = "Attachment" end
 end
-for i, v in next, game.Workspace.MonsterSpawners:GetChildren() do
+for i, v in next, monsterspawners:GetChildren() do
     if v.Name == "RoseBush" then
         v.Name = "ScorpionBush"
     elseif v.Name == "RoseBush2" then
@@ -231,7 +231,7 @@ for _, v in next, game.Workspace.Toys:GetChildren() do
     table.insert(toystable, v.Name)
 end
 local spawnerstable = {}
-for _, v in next, game.Workspace.MonsterSpawners:GetChildren() do
+for _, v in next, monsterspawners:GetChildren() do
     table.insert(spawnerstable, v.Name)
 end
 local accesoriestable = {}
@@ -729,24 +729,23 @@ function domob(place)
 end
 
 function killmobs()
-    local monsters = game.Workspace.MonsterSpawners
-    domob(monsters:FindFirstChild("Rhino Bush")) -- Clover Field
-    domob(monsters:FindFirstChild("Ladybug Bush")) -- Clover Field
-    domob(monsters:FindFirstChild("Rhino Cave 1")) -- Blue Flower Field
-    domob(monsters:FindFirstChild("Rhino Cave 2")) -- Bamboo Field
-    domob(monsters:FindFirstChild("Rhino Cave 3")) -- Bamboo Field
-    domob(monsters:FindFirstChild("PineappleMantis1")) -- Pineapple Field
-    domob(monsters:FindFirstChild("PineappleBeetle")) -- Pineapple Field
-    domob(monsters:FindFirstChild("Spider Cave")) -- Spider Field
-    domob(monsters:FindFirstChild("MushroomBush")) -- Mushroom Field
-    domob(monsters:FindFirstChild("Spider Cave")) -- Spider Field
-    domob(monsters:FindFirstChild("Ladybug Bush 2")) -- Strawberry Field
-    domob(monsters:FindFirstChild("Ladybug Bush 3")) -- Strawberry Field
-    domob(monsters:FindFirstChild("ScorpionBush")) -- Rose Field
-    domob(monsters:FindFirstChild("ScorpionBush2")) -- Rose Field
-    domob(monsters:FindFirstChild("WerewolfCave")) -- Werewolf
-    domob(monsters:FindFirstChild("ForestMantis1")) -- Pine Tree Field
-    domob(monsters:FindFirstChild("ForestMantis2")) -- Pine Tree Field
+    domob(monsterspawners:FindFirstChild("Rhino Bush")) -- Clover Field
+    domob(monsterspawners:FindFirstChild("Ladybug Bush")) -- Clover Field
+    domob(monsterspawners:FindFirstChild("Rhino Cave 1")) -- Blue Flower Field
+    domob(monsterspawners:FindFirstChild("Rhino Cave 2")) -- Bamboo Field
+    domob(monsterspawners:FindFirstChild("Rhino Cave 3")) -- Bamboo Field
+    domob(monsterspawners:FindFirstChild("PineappleMantis1")) -- Pineapple Field
+    domob(monsterspawners:FindFirstChild("PineappleBeetle")) -- Pineapple Field
+    domob(monsterspawners:FindFirstChild("Spider Cave")) -- Spider Field
+    domob(monsterspawners:FindFirstChild("MushroomBush")) -- Mushroom Field
+    domob(monsterspawners:FindFirstChild("Spider Cave")) -- Spider Field
+    domob(monsterspawners:FindFirstChild("Ladybug Bush 2")) -- Strawberry Field
+    domob(monsterspawners:FindFirstChild("Ladybug Bush 3")) -- Strawberry Field
+    domob(monsterspawners:FindFirstChild("ScorpionBush")) -- Rose Field
+    domob(monsterspawners:FindFirstChild("ScorpionBush2")) -- Rose Field
+    domob(monsterspawners:FindFirstChild("WerewolfCave")) -- Werewolf
+    domob(monsterspawners:FindFirstChild("ForestMantis1")) -- Pine Tree Field
+    domob(monsterspawners:FindFirstChild("ForestMantis2")) -- Pine Tree Field
 end
 
 function IsToken(token)
@@ -775,8 +774,7 @@ end
 function getplanters()
     table.clear(planterst.plantername)
     table.clear(planterst.planterid)
-    for i, v in pairs(debug.getupvalues(require(game:GetService(
-                                                    "ReplicatedStorage").LocalPlanters).LoadPlanter)[4]) do
+    for i, v in pairs(debug.getupvalues(require(game:GetService("ReplicatedStorage").LocalPlanters).LoadPlanter)[4]) do
         if v.GrowthPercent == 1 and v.IsMine then
             table.insert(planterst.plantername, v.Type)
             table.insert(planterst.planterid, v.ActorID)
@@ -874,18 +872,12 @@ end
 function collectplanters()
     getplanters()
     for i, v in pairs(planterst.plantername) do
-        if api.partwithnamepart(v, game.Workspace.Planters) and
-            api.partwithnamepart(v, game.Workspace.Planters):FindFirstChild(
-                "Soil") then
-            soil =
-                api.partwithnamepart(v, game.Workspace.Planters)
-                    .Soil
+        if api.partwithnamepart(v, game.Workspace.Planters) and api.partwithnamepart(v, game.Workspace.Planters):FindFirstChild("Soil") then
+            local soil = api.partwithnamepart(v, game.Workspace.Planters).Soil
             api.humanoidrootpart().CFrame = soil.CFrame
-            game:GetService("ReplicatedStorage").Events.PlanterModelCollect:FireServer(
-                planterst.planterid[i])
+            game:GetService("ReplicatedStorage").Events.PlanterModelCollect:FireServer(planterst.planterid[i])
             task.wait(.5)
-            game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer(
-                {["Name"] = v .. " Planter"})
+            game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = v .. " Planter"})
             for i = 1, 5 do gettoken(soil.Position) end
             task.wait(2)
         end
@@ -1522,7 +1514,7 @@ wayp:CreateDropdown("Field Teleports", fieldstable, function(Option)
     player.Character.HumanoidRootPart.CFrame = game.Workspace.FlowerZones:FindFirstChild(Option).CFrame
 end)
 wayp:CreateDropdown("Monster Teleports", spawnerstable, function(Option)
-    local d = game.Workspace.MonsterSpawners:FindFirstChild(Option)
+    local d = monsterspawners:FindFirstChild(Option)
     player.Character.HumanoidRootPart.CFrame = CFrame.new(
         d.Position.X,
         d.Position.Y + 3,
@@ -3255,6 +3247,7 @@ local function getMonsterName(name)
     for i, v in pairs(keywords) do
         if string.find(string.upper(name), string.upper(i)) then
             newName = v
+            break
         end
     end
     if newName == nil then newName = name end
@@ -3282,27 +3275,16 @@ end
 local function fetchVisualMonsterString(v)
     local mobText = nil
     if v:FindFirstChild("Attachment") then
-        if v:FindFirstChild("Attachment"):FindFirstChild("TimerGui") then
-            if v:FindFirstChild("Attachment"):FindFirstChild("TimerGui")
-                :FindFirstChild("TimerLabel") then
-                if v:FindFirstChild("Attachment"):FindFirstChild("TimerGui")
-                    :FindFirstChild("TimerLabel").Visible == true then
-                    local splitTimer = string.split(v:FindFirstChild(
-                                                        "Attachment")
-                                                        :FindFirstChild(
-                                                            "TimerGui")
-                                                        :FindFirstChild(
-                                                            "TimerLabel").Text,
-                                                    " ")
+        if v.Attachment:FindFirstChild("TimerGui") then
+            if v.Attachment.TimerGui:FindFirstChild("TimerLabel") then
+                if v.Attachment.TimerGui.TimerLabel.Visible then
+                    local splitTimer = string.split(v.Attachment.TimerGui.TimerLabel.Text, " ")
                     if splitTimer[3] ~= nil then
-                        mobText = getMonsterName(v.Name) .. ": " ..
-                                      splitTimer[3]
+                        mobText = getMonsterName(v.Name) .. ": " .. splitTimer[3]
                     elseif splitTimer[2] ~= nil then
-                        mobText = getMonsterName(v.Name) .. ": " ..
-                                      splitTimer[2]
+                        mobText = getMonsterName(v.Name) .. ": " .. splitTimer[2]
                     else
-                        mobText = getMonsterName(v.Name) .. ": " ..
-                                      splitTimer[1]
+                        mobText = getMonsterName(v.Name) .. ": " .. splitTimer[1]
                     end
                 else
                     mobText = getMonsterName(v.Name) .. ": Ready"
@@ -3328,6 +3310,7 @@ if _G.supersecret then
     game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
         if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
             if _G.url and httpreq then
+                task.wait(1)
                 disconnected(_G.url, _G.discordid, child.MessageArea.ErrorFrame.ErrorMessage.Text)
             end
             if _G.shutdownwhenkick then
@@ -3391,8 +3374,7 @@ task.spawn(function()
         end)
         local panel = hometab:CreateSection("Mob Panel")
         local statusTable = {}
-        for i, v in pairs(
-                        game.Workspace.MonsterSpawners:GetChildren()) do
+        for i, v in pairs(monsterspawners:GetChildren()) do
             if not string.find(v.Name, "CaveMonster") then
                 local mobText = nil
                 mobText = fetchVisualMonsterString(v)
@@ -3481,7 +3463,7 @@ task.spawn(function()
             ["Mythic Meteor Shower"] = mmsUpd
         }
         while task.wait(1) do
-            if kocmoc.toggles.enablestatuspanel == true then
+            if kocmoc.toggles.enablestatuspanel then
                 for i, v in pairs(statusTable) do
                     if v[1] and v[2] then
                         v[1]:UpdateText(fetchVisualMonsterString(v[2]))
@@ -3490,18 +3472,10 @@ task.spawn(function()
                 if workspace:FindFirstChild("Clock") then
                     if workspace.Clock:FindFirstChild("SurfaceGui") then
                         if workspace.Clock.SurfaceGui:FindFirstChild("TextLabel") then
-                            if workspace.Clock.SurfaceGui:FindFirstChild(
-                                "TextLabel").Text == "! ! !" then
+                            if workspace.Clock.SurfaceGui:FindFirstChild("TextLabel").Text == "! ! !" then
                                 mob2:UpdateText("Mondo Chick: Ready")
                             else
-                                mob2:UpdateText("Mondo Chick: " ..
-                                                    string.gsub(
-                                                        string.gsub(
-                                                            workspace.Clock
-                                                                .SurfaceGui:FindFirstChild(
-                                                                "TextLabel")
-                                                                .Text, "\n", ""),
-                                                        "Mondo Chick:", ""))
+                                mob2:UpdateText("Mondo Chick: " .. string.gsub(string.gsub(workspace.Clock.SurfaceGui:FindFirstChild("TextLabel").Text, "\n", ""), "Mondo Chick:", ""))
                             end
                         end
                     end
