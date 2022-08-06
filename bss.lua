@@ -375,7 +375,12 @@ getgenv().kocmoc = {
         resetbeenergy = false,
         enablestatuspanel = false,
         autoequipmask = false,
-        followplayer = false
+        followplayer = false,
+        buckobeequests = false,
+        brownbearquests = false,
+        rileybeequests = false,
+        polarbearquests = false,
+        allquests = false
     },
     vars = {
         field = "Ant Field",
@@ -2060,31 +2065,25 @@ end)
 guiElements["bestfields"]["blue"] = fieldsettings:CreateDropdown("Best Blue Field", temptable.bluefields, function(Option)
     kocmoc.bestfields.blue = Option
 end)
-fieldsettings:CreateDropdown("Field", fieldstable,
-                             function(Option) temptable.blackfield = Option end)
+fieldsettings:CreateDropdown("Field", fieldstable, function(Option) temptable.blackfield = Option end)
 fieldsettings:CreateButton("Add Field To Blacklist", function()
     table.insert(kocmoc.blacklistedfields, temptable.blackfield)
-    game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild(
-        "Blacklisted Fields Dropdown", true):Destroy()
-    fieldsettings:CreateDropdown("Blacklisted Fields", kocmoc.blacklistedfields,
-                                 function(Option) end)
+    game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild("Blacklisted Fields Dropdown", true):Destroy()
+    fieldsettings:CreateDropdown("Blacklisted Fields", kocmoc.blacklistedfields, function(Option) end)
 end)
 fieldsettings:CreateButton("Remove Field From Blacklist", function()
-    table.remove(kocmoc.blacklistedfields,
-                 api.tablefind(kocmoc.blacklistedfields, temptable.blackfield))
-    game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild(
-        "Blacklisted Fields Dropdown", true):Destroy()
-    fieldsettings:CreateDropdown("Blacklisted Fields", kocmoc.blacklistedfields,
-                                 function(Option) end)
+    table.remove(kocmoc.blacklistedfields, api.tablefind(kocmoc.blacklistedfields, temptable.blackfield))
+    game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild("Blacklisted Fields Dropdown", true):Destroy()
+    fieldsettings:CreateDropdown("Blacklisted Fields", kocmoc.blacklistedfields, function(Option) end)
 end)
-fieldsettings:CreateDropdown("Blacklisted Fields", kocmoc.blacklistedfields,
-                             function(Option) end)
+fieldsettings:CreateDropdown("Blacklisted Fields", kocmoc.blacklistedfields, function(Option) end)
 local aqs = setttab:CreateSection("Auto Quest Settings")
-guiElements["vars"]["npcprefer"] = aqs:CreateDropdown("Do NPC Quests", {
-    "All Quests", "Bucko Bee", "Brown Bear", "Riley Bee", "Polar Bear"
-}, function(Option) 
-    kocmoc.vars.npcprefer = Option
-end)
+
+guiElements["toggles"]["allquests"] = aqs:CreateToggle("All Quests", nil, function(State) kocmoc.toggles.allquests = State end)
+guiElements["toggles"]["buckobeequests"] = aqs:CreateToggle("Do Bucko Bee Quests", nil, function(State) kocmoc.toggles.buckobeequests = State end)
+guiElements["toggles"]["rileybeequests"] = aqs:CreateToggle("Do Riley Bee Quests", nil, function(State) kocmoc.toggles.rileybeequests = State end)
+guiElements["toggles"]["brownbearquests"] = aqs:CreateToggle("Do Brown Bear Quests", nil, function(State) kocmoc.toggles.brownbearquests = State end)
+guiElements["toggles"]["polarbearquests"] = aqs:CreateToggle("Do Polar Bear Quests", nil, function(State) kocmoc.toggles.polarbearquests = State end)
 guiElements["vars"]["questcolorprefer"] = aqs:CreateDropdown("Only Farm Ants From NPC", {
     "Any NPC", "Bucko Bee", "Riley Bee"
 }, function(Option) 
@@ -2240,54 +2239,10 @@ task.spawn(function()
                             local text = v.Text
                             local questName = v.Parent.Parent.TitleBar.Text
                             local pollentypes = {
-                                "White Pollen", "Red Pollen", "Blue Pollen",
-                                "Blue Flowers", "Red Flowers",
-                                "White Flowers"
+                                "White Pollen", "Red Pollen", "Blue Pollen", "Blue Flowers", "Red Flowers", "White Flowers"
                             }
-                            if kocmoc.vars.npcprefer == "No Brown Bear" then
-                                if not string.match(questName, "Brown Bear") then
-                                    if api.returnvalue(fieldstable, text) and not string.find(v.Text, "Complete!") and not api.findvalue(kocmoc.blacklistedfields, api.returnvalue( fieldstable, text)) then
-                                        d = api.returnvalue(fieldstable, text)
-                                        fieldselected = game.Workspace.FlowerZones[d]
-                                        break
-                                    elseif api.returnvalue(pollentypes, text) and not string.find(v.Text, "Complete!") then
-                                        d = api.returnvalue(pollentypes, text)
-                                        if d == "Blue Flowers" or d == "Blue Pollen" then
-                                            fieldselected = game.Workspace.FlowerZones[kocmoc.bestfields.blue]
-                                            break
-                                        elseif d == "White Flowers" or d == "White Pollen" then
-                                            fieldselected = game.Workspace.FlowerZones[kocmoc.bestfields.white]
-                                            break
-                                        elseif d == "Red Flowers" or d == "Red Pollen" then
-                                            fieldselected = game.Workspace.FlowerZones[kocmoc.bestfields.red]
-                                            break
-                                        end
-                                    elseif string.find(questName, "Bee") and string.find(text, "Feed") and not string.find(text, "Complete!") and not v:FindFirstChild("done") then
-                                        local amount, kind = unpack((text:sub(6, text:find("to")-2)):split(" "))
-                                        if amount and kind then
-                                            if kind == "Blueberries" then
-                                                game:GetService("ReplicatedStorage").Events.ConstructHiveCellFromEgg:InvokeServer(5, 3, "Blueberry", amount, false)
-                                            elseif kind == "Strawberries" then
-                                                game:GetService("ReplicatedStorage").Events.ConstructHiveCellFromEgg:InvokeServer(5, 3, "Strawberry", amount, false)
-                                            end                                            
-                                            local done = Instance.new("BoolValue", v)
-                                            done.Name = "done"
-                                            break
-                                        end
-                                    elseif string.find(text, "Ants.") and not string.find(text, "Complete!") then
-                                        if not game.Workspace.Toys["Ant Challenge"].Busy.Value and rtsg().Eggs.AntPass > 0 then
-                                            if kocmoc.vars.questcolorprefer == "Any NPC" then
-                                                farmant()
-                                            else
-                                                if string.find(questName, kocmoc.vars.questcolorprefer) then
-                                                    farmant()
-                                                end
-                                            end
-                                        end
-                                    end
-                                end
-                            else
-                                if string.match(questName, kocmoc.vars.npcprefer) or kocmoc.vars.npcprefer == "All Quests" and not string.find(v.Text, "Puffshroom") then
+                            if (kocmoc.toggles.buckobeequests and string.find(questName, "Bucko Bee")) or (kocmoc.toggles.rileybeequests and string.find(questName, "Riley Bee")) or (kocmoc.toggles.polarbearquests and string.find(questName, "Polar Bear")) or (kocmoc.toggles.brownbearquests and string.find(questName, "Brown Bear")) or kocmoc.toggles.allquests then
+                                if not string.find(v.Text, "Puffshroom") then
                                     if api.returnvalue(fieldstable, text) and not string.find(v.Text, "Complete!") and not api.findvalue(kocmoc.blacklistedfields, api.returnvalue( fieldstable, text)) then
                                         d = api.returnvalue(fieldstable, text)
                                         fieldselected = game.Workspace.FlowerZones[d]
