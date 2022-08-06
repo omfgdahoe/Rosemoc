@@ -2557,7 +2557,9 @@ task.spawn(function()
                         end
                     else
                         while not game.Workspace.MonsterSpawners.CoconutCrab.Attachment.TimerGui.TimerLabel.Visible and not temptable.started.vicious and not temptable.started.monsters and findField(fieldposition) == "Coconut Field" do
-                            api.humanoidrootpart() and api.humanoidrootpart().CFrame = CFrame.new(-307.52117919922, 110.11863250732, 467.86791992188)
+                            if api.humanoidrootpart() then
+                                api.humanoidrootpart().CFrame = CFrame.new(-307.52117919922, 110.11863250732, 467.86791992188)
+                            end
                         end
                         if kocmoc.toggles.killmondo then
                             while kocmoc.toggles.killmondo and game.Workspace.Monsters:FindFirstChild("Mondo Chick (Lvl 8)") and not temptable.started.vicious and not temptable.started.monsters do
