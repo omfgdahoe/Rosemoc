@@ -293,8 +293,7 @@ cocopad.Name = "Coconut Part"
 cocopad.Anchored = true
 cocopad.Transparency = 1
 cocopad.Size = Vector3.new(10, 1, 10)
-cocopad.Position = Vector3.new(-307.52117919922, 105.91863250732,
-                               467.86791992188)
+cocopad.Position = Vector3.new(-307.52117919922, 105.91863250732, 467.86791992188)
 
 -- antfarm
 
@@ -1034,19 +1033,6 @@ function getcloud()
             api.walkTo(e.Position)
         end
     end
-end
-
-function getcoco(v)
-    if temptable.coconut then repeat task.wait() until not temptable.coconut end
-    temptable.coconut = true
-    api.tween(.1, v.CFrame)
-    repeat
-        task.wait()
-        api.walkTo(v.Position)
-    until not v.Parent
-    task.wait(.1)
-    temptable.coconut = false
-    table.remove(temptable.coconuts, table.find(temptable.coconuts, v))
 end
 
 function getfuzzy()
@@ -2570,6 +2556,9 @@ task.spawn(function()
                             game.ReplicatedStorage.Events.PlayerActivesCommand:FireServer({["Name"] = "Sprinkler Builder"})
                         end
                     else
+                        while not game.Workspace.MonsterSpawners.CoconutCrab.Attachment.TimerGui.TimerLabel.Visible and not temptable.started.vicious and not temptable.started.monsters and findField(fieldposition) == "Coconut Field" then
+                            api.humanoidrootpart() and api.humanoidrootpart().CFrame = CFrame.new(-307.52117919922, 110.11863250732, 467.86791992188)
+                        end
                         if kocmoc.toggles.killmondo then
                             while kocmoc.toggles.killmondo and game.Workspace.Monsters:FindFirstChild("Mondo Chick (Lvl 8)") and not temptable.started.vicious and not temptable.started.monsters do
                                 temptable.started.mondo = true
