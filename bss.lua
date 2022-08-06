@@ -95,7 +95,8 @@ getgenv().temptable = {
         mondo = false,
         windy = false,
         ant = false,
-        monsters = false
+        monsters = false,
+        crab = false
     },
     detected = {vicious = false, windy = false},
     tokensfarm = false,
@@ -646,7 +647,7 @@ function gettoken(v3)
                 itb = true
             end
         end
-        if tonumber((r.Position - player.Character.HumanoidRootPart.Position).magnitude) <= temptable.magnitude / 1.4 and not itb and (v3 - r.Position).magnitude <= temptable.magnitude then
+        if tonumber((r.Position - api.humanoidrootpart().Position).magnitude) <= temptable.magnitude / 1.4 and not itb and (v3 - r.Position).magnitude <= temptable.magnitude then
             farm(r)
         end
     end
@@ -956,10 +957,10 @@ end
 function converthoney()
     task.wait(0)
     if temptable.converting then
-        if player.PlayerGui.ScreenGui.ActivateButton.TextBox.Text ~= "Stop Making Honey" and player.PlayerGui.ScreenGui.ActivateButton.BackgroundColor3 ~= Color3.new(201, 39, 28) or (player.SpawnPos.Value.Position - player.Character.HumanoidRootPart.Position).magnitude > 13 then
+        if player.PlayerGui.ScreenGui.ActivateButton.TextBox.Text ~= "Stop Making Honey" and player.PlayerGui.ScreenGui.ActivateButton.BackgroundColor3 ~= Color3.new(201, 39, 28) or (player.SpawnPos.Value.Position - api.humanoidrootpart().Position).magnitude > 13 then
             api.tween(1, player.SpawnPos.Value * CFrame.fromEulerAnglesXYZ(0, 110, 0) + Vector3.new(0, 0, 9))
             task.wait(.9)
-            if player.PlayerGui.ScreenGui.ActivateButton.TextBox.Text ~= "Stop Making Honey" and player.PlayerGui.ScreenGui.ActivateButton.BackgroundColor3 ~= Color3.new(201, 39, 28) or (player.SpawnPos.Value.Position - player.Character.HumanoidRootPart.Position).magnitude > 13 then
+            if player.PlayerGui.ScreenGui.ActivateButton.TextBox.Text ~= "Stop Making Honey" and player.PlayerGui.ScreenGui.ActivateButton.BackgroundColor3 ~= Color3.new(201, 39, 28) or (player.SpawnPos.Value.Position - api.humanoidrootpart().Position).magnitude > 13 then
                 game:GetService("ReplicatedStorage").Events.PlayerHiveCommand:FireServer("ToggleHoneyMaking")
             end
             task.wait(.1)
@@ -985,7 +986,7 @@ function getballoons()
     for i, v in next, game.Workspace.Balloons.FieldBalloons:GetChildren() do
         if v:FindFirstChild("BalloonRoot") and v:FindFirstChild("PlayerName") then
             if v:FindFirstChild("PlayerName").Value == player.Name then
-                if tonumber((v.BalloonRoot.Position - player.Character.HumanoidRootPart.Position).magnitude) < temptable.magnitude / 1.4 then
+                if tonumber((v.BalloonRoot.Position - api.humanoidrootpart().Position).magnitude) < temptable.magnitude / 1.4 then
                     api.walkTo(v.BalloonRoot.Position)
                 end
             end
@@ -999,7 +1000,7 @@ function getpuff()
     for _,puffshroom in pairs(game.Workspace.Happenings.Puffshrooms:GetChildren()) do
         local stem = puffshroom:FindFirstChild("Puffball Stem")
         if stem and player.Character:FindFirstChild("HumanoidRootPart") then
-            local dist = (player.Character.HumanoidRootPart.CFrame.p - stem.CFrame.p).magnitude
+            local dist = (api.humanoidrootpart().CFrame.p - stem.CFrame.p).magnitude
             if dist < smallest then
                 smallest = dist
                 closestPuffStem = stem
@@ -1014,7 +1015,7 @@ end
 
 function getflower()
     flowerrrr = flowertable[math.random(#flowertable)]
-    if tonumber((flowerrrr - player.Character.HumanoidRootPart.Position).magnitude) <=
+    if tonumber((flowerrrr - api.humanoidrootpart().Position).magnitude) <=
         temptable.magnitude / 1.4 and
         tonumber((flowerrrr - fieldposition).magnitude) <= temptable.magnitude / 1.4 then
         if temptable.running == false then
@@ -1029,7 +1030,7 @@ end
 function getcloud()
     for i, v in next, game.Workspace.Clouds:GetChildren() do
         e = v:FindFirstChild("Plane")
-        if e and tonumber((e.Position - player.Character.HumanoidRootPart.Position).magnitude) < temptable.magnitude / 1.4 then
+        if e and tonumber((e.Position - api.humanoidrootpart().Position).magnitude) < temptable.magnitude / 1.4 then
             api.walkTo(e.Position)
         end
     end
@@ -1040,7 +1041,7 @@ function getfuzzy()
         for i, v in next, game.workspace.Particles:GetChildren() do
             if v.Name == "DustBunnyInstance" and temptable.running == false and
                 tonumber((v.Plane.Position -
-                             player.Character.HumanoidRootPart
+                             api.humanoidrootpart()
                                  .Position).magnitude) < temptable.magnitude /
                 1.4 then
                 if v:FindFirstChild("Plane") then
@@ -1055,7 +1056,7 @@ end
 function getflame()
     for i, v in next, game.Workspace.PlayerFlames:GetChildren() do
         if tonumber((v.Position -
-                        player.Character.HumanoidRootPart
+                        api.humanoidrootpart()
                             .Position).magnitude) < temptable.magnitude / 1.4 then
             farm(v)
             break
@@ -1066,7 +1067,7 @@ end
 function avoidmob()
     for i, v in next, game.Workspace.Monsters:GetChildren() do
         if v:FindFirstChild("Head") then
-            if (v.Head.Position - player.Character.HumanoidRootPart.Position).magnitude < 30 and api.humanoid():GetState() ~= Enum.HumanoidStateType.Freefall then
+            if (v.Head.Position - api.humanoidrootpart().Position).magnitude < 30 and api.humanoid():GetState() ~= Enum.HumanoidStateType.Freefall then
                 player.Character.Humanoid.Jump = true
             end
         end
@@ -1104,7 +1105,7 @@ function makequests()
                             button = player.PlayerGui.ScreenGui.ActivateButton.MouseButton1Click
                             if image.ImageTransparency == 0 then
                                 if kocmoc.toggles.tptonpc then
-                                    player.Character.HumanoidRootPart.CFrame = CFrame.new(
+                                    api.humanoidrootpart().CFrame = CFrame.new(
                                         v.Platform.Position.X,
                                         v.Platform.Position.Y + 3,
                                         v.Platform.Position.Z
@@ -1147,14 +1148,14 @@ local function donateToShrine(item, qnt)
         game.ReplicatedStorage.Events.WindShrineTrigger:FireServer()
 
         local UsePlatform = game.Workspace.NPCs["Wind Shrine"].Stage
-        player.Character.HumanoidRootPart.CFrame = UsePlatform.CFrame + Vector3.new(0, 5, 0)
+        api.humanoidrootpart().CFrame = UsePlatform.CFrame + Vector3.new(0, 5, 0)
 
         for i = 1, 120 do
             task.wait(0.05)
             for i, v in pairs(game.Workspace.Collectibles:GetChildren()) do
                 if (v.Position - UsePlatform.Position).magnitude < 60 and
                     v.CFrame.YVector.Y == 1 then
-                    player.Character.HumanoidRootPart.CFrame = v.CFrame
+                    api.humanoidrootpart().CFrame = v.CFrame
                 end
             end
         end
@@ -1497,11 +1498,11 @@ end)
 
 local wayp = misctab:CreateSection("Waypoints")
 wayp:CreateDropdown("Field Teleports", fieldstable, function(Option)
-    player.Character.HumanoidRootPart.CFrame = game.Workspace.FlowerZones:FindFirstChild(Option).CFrame
+    api.humanoidrootpart().CFrame = game.Workspace.FlowerZones:FindFirstChild(Option).CFrame
 end)
 wayp:CreateDropdown("Monster Teleports", spawnerstable, function(Option)
     local d = monsterspawners:FindFirstChild(Option)
-    player.Character.HumanoidRootPart.CFrame = CFrame.new(
+    api.humanoidrootpart().CFrame = CFrame.new(
         d.Position.X,
         d.Position.Y + 3,
         d.Position.Z
@@ -1509,14 +1510,14 @@ wayp:CreateDropdown("Monster Teleports", spawnerstable, function(Option)
 end)
 wayp:CreateDropdown("Toys Teleports", toystable, function(Option)
     d = game.Workspace.Toys:FindFirstChild(Option).Platform
-    player.Character.HumanoidRootPart.CFrame = CFrame.new(
+    api.humanoidrootpart().CFrame = CFrame.new(
         d.Position.X,
         d.Position.Y + 3,
         d.Position.Z
     )
 end)
 wayp:CreateButton("Teleport to hive", function()
-    player.Character.HumanoidRootPart.CFrame =
+    api.humanoidrootpart().CFrame =
         player.SpawnPos.Value
 end)
 
@@ -1542,7 +1543,7 @@ miscc:CreateButton("Ant Challenge Semi-Godmode", function()
     api.tween(1, CFrame.new(93.4228, 32.3983, 553.128))
     task.wait(1)
     game.ReplicatedStorage.Events.ToyEvent:FireServer("Ant Challenge")
-    player.Character.HumanoidRootPart.Position = Vector3.new(93.4228, 42.3983, 553.128)
+    api.humanoidrootpart().Position = Vector3.new(93.4228, 42.3983, 553.128)
     task.wait(2)
     player.Character.Humanoid.Name = 1
     local l = player.Character["1"]:Clone()
@@ -1672,7 +1673,7 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
                 local field = game.Workspace.FlowerZones:GetChildren()[math.random(1, #game.Workspace.FlowerZones:GetChildren())]
                 local pos = field.CFrame.p
                 require(game.ReplicatedStorage.LocalFX.PuffshroomSporeThrow)({
-                    Start = player.Character.HumanoidRootPart.CFrame.p,
+                    Start = api.humanoidrootpart().CFrame.p,
                     End = pos
                 })
             end, player.PlayerScripts.ClientInit)
@@ -2391,7 +2392,7 @@ task.spawn(function()
 
                     local function isPuffInField(stem)
                         if stem and player.Character:FindFirstChild("HumanoidRootPart") then
-                            return findField(stem.CFrame.p) == findField(player.Character.HumanoidRootPart.CFrame.p)
+                            return findField(stem.CFrame.p) == findField(api.humanoidrootpart().CFrame.p)
                         end
                         return false
                     end
@@ -2556,12 +2557,14 @@ task.spawn(function()
                             game.ReplicatedStorage.Events.PlayerActivesCommand:FireServer({["Name"] = "Sprinkler Builder"})
                         end
                     else
-                        while not game.Workspace.MonsterSpawners.CoconutCrab.Attachment.TimerGui.TimerLabel.Visible and not temptable.started.vicious and not temptable.started.monsters and findField(fieldposition).Name == "Coconut Field" do
+                        while not game.Workspace.MonsterSpawners.CoconutCrab.Attachment.TimerGui.TimerLabel.Visible and not temptable.started.vicious and not temptable.started.monsters and not temptable.started.windy and findField(fieldposition).Name == "Coconut Field" do
+                            temptable.started.crab = true
                             task.wait()
                             if api.humanoidrootpart() then
                                 api.humanoidrootpart().CFrame = CFrame.new(-307.52117919922, 110.11863250732, 467.86791992188)
                             end
                         end
+                        temptable.started.crab = false
                         if kocmoc.toggles.killmondo then
                             while kocmoc.toggles.killmondo and game.Workspace.Monsters:FindFirstChild("Mondo Chick (Lvl 8)") and not temptable.started.vicious and not temptable.started.monsters do
                                 temptable.started.mondo = true
@@ -2594,7 +2597,7 @@ task.spawn(function()
                             task.wait(0.5)
                             gettoken()
                         end
-                        if (fieldposition - player.Character.HumanoidRootPart.Position).magnitude > temptable.magnitude then
+                        if (fieldposition - api.humanoidrootpart().Position).magnitude > temptable.magnitude then
                             api.tween(0.1, fieldpos)
                             task.spawn(function()
                                 task.wait(0.5)
@@ -2697,7 +2700,7 @@ task.spawn(function()
             temptable.converting == false and not temptable.started.monsters and not game.Workspace.Toys["Ant Challenge"].Busy.Value then
             temptable.started.vicious = true
             disableall()
-            local vichumanoid = player.Character.HumanoidRootPart
+            local vichumanoid = api.humanoidrootpart()
             for i, v in next, game.workspace.Particles:GetChildren() do
                 for x in string.gmatch(v.Name, "Vicious") do
                     if string.find(v.Name, "Vicious") then
@@ -2828,14 +2831,14 @@ task.spawn(function()
                 fd.Position.Z
             )
         end
-        if kocmoc.toggles.farmrares then
+        if kocmoc.toggles.farmrares and not temptable.started.crab then
             for k, v in next, game.workspace.Collectibles:GetChildren() do
                 if v.CFrame.YVector.Y == 1 then
                     if v.Transparency == 0 then
                         decal = v:FindFirstChildOfClass("Decal")
                         for e, r in next, kocmoc.rares do
                             if decal.Texture == r or decal.Texture == "rbxassetid://" .. r then
-                                player.Character.HumanoidRootPart.CFrame = v.CFrame
+                                api.humanoidrootpart().CFrame = v.CFrame
                                 break
                             end
                         end
@@ -3074,9 +3077,9 @@ game:GetService("RunService").Heartbeat:connect(function()
         player.Character.Humanoid.BodyTypeScale.Value = 0
         floatpad.CanCollide = true
         floatpad.CFrame = CFrame.new(
-            player.Character.HumanoidRootPart.Position.X,
-            player.Character.HumanoidRootPart.Position.Y - 3.75,
-            player.Character.HumanoidRootPart.Position.Z
+            api.humanoidrootpart().Position.X,
+            api.humanoidrootpart().Position.Y - 3.75,
+            api.humanoidrootpart().Position.Z
         )
         task.wait(0)
     else
@@ -3134,9 +3137,9 @@ end
 task.spawn(function()
     while task.wait() do
         if player.Character:FindFirstChild("HumanoidRootPart") then
-            local pos = player.Character.HumanoidRootPart.Position
+            local pos = api.humanoidrootpart().Position
             task.wait(0.00001)
-            local currentSpeed = (pos - player.Character.HumanoidRootPart.Position).magnitude
+            local currentSpeed = (pos - api.humanoidrootpart().Position).magnitude
             if currentSpeed > 0 then
                 temptable.running = true
             else
