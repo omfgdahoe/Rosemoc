@@ -380,6 +380,7 @@ getgenv().kocmoc = {
         brownbearquests = false,
         rileybeequests = false,
         polarbearquests = false,
+        blackbearquests = false,
         allquests = false
     },
     vars = {
@@ -2080,10 +2081,12 @@ fieldsettings:CreateDropdown("Blacklisted Fields", kocmoc.blacklistedfields, fun
 local aqs = setttab:CreateSection("Auto Quest Settings")
 
 guiElements["toggles"]["allquests"] = aqs:CreateToggle("All Quests", nil, function(State) kocmoc.toggles.allquests = State end)
-guiElements["toggles"]["buckobeequests"] = aqs:CreateToggle("Do Bucko Bee Quests", nil, function(State) kocmoc.toggles.buckobeequests = State end)
-guiElements["toggles"]["rileybeequests"] = aqs:CreateToggle("Do Riley Bee Quests", nil, function(State) kocmoc.toggles.rileybeequests = State end)
-guiElements["toggles"]["brownbearquests"] = aqs:CreateToggle("Do Brown Bear Quests", nil, function(State) kocmoc.toggles.brownbearquests = State end)
-guiElements["toggles"]["polarbearquests"] = aqs:CreateToggle("Do Polar Bear Quests", nil, function(State) kocmoc.toggles.polarbearquests = State end)
+guiElements["toggles"]["buckobeequests"] = aqs:CreateToggle("Bucko Bee Quests", nil, function(State) kocmoc.toggles.buckobeequests = State end)
+guiElements["toggles"]["rileybeequests"] = aqs:CreateToggle("Riley Bee Quests", nil, function(State) kocmoc.toggles.rileybeequests = State end)
+guiElements["toggles"]["blackbearquests"] = aqs:CreateToggle("Black Bear Quests", nil, function(State) kocmoc.toggles.blackbearquests = State end)
+guiElements["toggles"]["brownbearquests"] = aqs:CreateToggle("Brown Bear Quests", nil, function(State) kocmoc.toggles.brownbearquests = State end)
+guiElements["toggles"]["polarbearquests"] = aqs:CreateToggle("Polar Bear Quests", nil, function(State) kocmoc.toggles.polarbearquests = State end)
+
 guiElements["vars"]["questcolorprefer"] = aqs:CreateDropdown("Only Farm Ants From NPC", {
     "Any NPC", "Bucko Bee", "Riley Bee"
 }, function(Option) 
@@ -2241,7 +2244,7 @@ task.spawn(function()
                             local pollentypes = {
                                 "White Pollen", "Red Pollen", "Blue Pollen", "Blue Flowers", "Red Flowers", "White Flowers"
                             }
-                            if (kocmoc.toggles.buckobeequests and string.find(questName, "Bucko Bee")) or (kocmoc.toggles.rileybeequests and string.find(questName, "Riley Bee")) or (kocmoc.toggles.polarbearquests and string.find(questName, "Polar Bear")) or (kocmoc.toggles.brownbearquests and string.find(questName, "Brown Bear")) or kocmoc.toggles.allquests then
+                            if (kocmoc.toggles.buckobeequests and string.find(questName, "Bucko Bee")) or (kocmoc.toggles.rileybeequests and string.find(questName, "Riley Bee")) or (kocmoc.toggles.polarbearquests and string.find(questName, "Polar Bear")) or (kocmoc.toggles.brownbearquests and string.find(questName, "Brown Bear")) or (kocmoc.toggles.blackbearquests and string.find(questName, "Black Bear")) or kocmoc.toggles.allquests then
                                 if not string.find(v.Text, "Puffshroom") then
                                     if api.returnvalue(fieldstable, text) and not string.find(v.Text, "Complete!") and not api.findvalue(kocmoc.blacklistedfields, api.returnvalue( fieldstable, text)) then
                                         d = api.returnvalue(fieldstable, text)
