@@ -2557,7 +2557,8 @@ task.spawn(function()
                         end
                     else
                         while not game.Workspace.MonsterSpawners.CoconutCrab.Attachment.TimerGui.TimerLabel.Visible and not temptable.started.vicious and not temptable.started.monsters and findField(fieldposition).Name == "Coconut Field" do
-                            if api.humanoidrootpart() and task.wait() then
+                            task.wait()
+                            if api.humanoidrootpart() then
                                 api.humanoidrootpart().CFrame = CFrame.new(-307.52117919922, 110.11863250732, 467.86791992188)
                             end
                         end
