@@ -2169,7 +2169,7 @@ end)
 
 game.Workspace.Particles.ChildAdded:Connect(function(v)
     if v:IsA("Part") and not temptable.started.ant and not temptable.started.vicious and kocmoc.toggles.autofarm and not temptable.converting then
-        if v.Name == "WarningDisk" and kocmoc.toggles.farmcoco then
+        if v.Name == "WarningDisk" and v.BrickColor == BrickColor.new("Lime green") and kocmoc.toggles.farmcoco then
             task.wait(1.7)
             if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
             if temptable.lookat then
