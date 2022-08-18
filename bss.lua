@@ -14,7 +14,7 @@ local httpreq = (syn and syn.request) or http_request or (http and http.request)
 if not isfolder("kocmoc") then makefolder("kocmoc") end
 if not isfolder("kocmoc/premium") then makefolder("kocmoc/premium") end
 
-if isfile("kocmoc.txt") == false then
+if isfile("rosemoc.txt") == false then
     httpreq({
         Url = "http://127.0.0.1:6463/rpc?v=1",
         Method = "POST",
@@ -24,10 +24,10 @@ if isfile("kocmoc.txt") == false then
         },
         Body = game:GetService("HttpService"):JSONEncode({
             cmd = "INVITE_BROWSER",
-            args = {code = "kTNMzbxUuZ"},
+            args = {code = "BeF364YJS5"},
             nonce = game:GetService("HttpService"):GenerateGUID(false)
         }),
-        writefile("kocmoc.txt", "discord")
+        writefile("rosemoc.txt", "discord")
     })
 end
 
