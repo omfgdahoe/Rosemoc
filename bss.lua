@@ -2169,17 +2169,20 @@ end)
 
 game.Workspace.Particles.ChildAdded:Connect(function(v)
     if v:IsA("Part") and not temptable.started.ant and not temptable.started.vicious and kocmoc.toggles.autofarm and not temptable.converting then
-        if v.Name == "WarningDisk" and v.BrickColor == BrickColor.new("Lime green") and kocmoc.toggles.farmcoco then
-            task.wait(1.7)
-            if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
-            if temptable.lookat then
-                api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
-                task.wait()
-                api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
-            else
-                api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
-                task.wait()
-                api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+        if v.Name == "WarningDisk" and kocmoc.toggles.farmcoco then
+            task.wait(0.5)
+            if v.BrickColor == BrickColor.new("Lime green") then
+                task.wait(1.2)
+                if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
+                if temptable.lookat then
+                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
+                    task.wait()
+                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
+                else
+                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+                    task.wait()
+                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+                end
             end
         elseif v and v.Name == "Crosshair" and v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") and kocmoc.toggles.collectcrosshairs then
             task.wait(1)
