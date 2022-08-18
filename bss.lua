@@ -1,4 +1,4 @@
-repeat task.wait(0.1) until game:IsLoaded()
+repeat task.wait() until game:IsLoaded()
 
 getgenv().Star = "⭐"
 getgenv().Danger = "⚠️"
