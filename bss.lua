@@ -12,7 +12,6 @@ local bssapi = loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxkin
 local httpreq = (syn and syn.request) or http_request or (http and http.request) or request
 
 if not isfolder("kocmoc") then makefolder("kocmoc") end
-if not isfolder("kocmoc/premium") then makefolder("kocmoc/premium") end
 
 if isfile("rosemoc.txt") == false then
     httpreq({
@@ -381,7 +380,19 @@ getgenv().kocmoc = {
         rileybeequests = false,
         polarbearquests = false,
         blackbearquests = false,
-        allquests = false
+        allquests = false,
+        blacklistinvigorating = false,
+        blacklistcomforting = false,
+        blacklistmotivating = false,
+        blacklistrefreshing = false,
+        blacklistsatisfying = false,
+        plasticplanter = true,
+        candyplanter = true,
+        redclayplanter = true,
+        blueclayplanter = true,
+        tackyplanter = true,
+        pesticideplanter = true,
+        petalplanter = true
     },
     vars = {
         field = "Ant Field",
@@ -404,7 +415,8 @@ getgenv().kocmoc = {
         resettimer = 3,
         questcolorprefer = "Any NPC",
         playertofollow = "",
-        convertballoonpercent = 50
+        convertballoonpercent = 50,
+        planterharvestamount = 75
     },
     dispensesettings = {
         blub = false,
@@ -420,8 +432,6 @@ getgenv().kocmoc = {
 }
 
 local defaultkocmoc = kocmoc
-
-getgenv().KocmocPremium = {}
 
 -- functions
 
@@ -893,21 +903,12 @@ end
 function getprioritytokens()
     task.wait()
     if temptable.running == false then
-        for e, r in next,
-                    game.Workspace.Collectibles:GetChildren() do
+        for e, r in next, game.Workspace.Collectibles:GetChildren() do
             if r:FindFirstChildOfClass("Decal") then
-                local aaaaaaaa = string.split(
-                                     r:FindFirstChildOfClass("Decal").Texture,
-                                     "rbxassetid://")[2]
+                local aaaaaaaa = string.split(r:FindFirstChildOfClass("Decal").Texture, "rbxassetid://")[2]
                 if aaaaaaaa ~= nil and api.findvalue(kocmoc.priority, aaaaaaaa) then
                     if r.Name == player.Name and
-                        not r:FindFirstChild("got it") or tonumber((r.Position -
-                                                                       game.Players
-                                                                           .LocalPlayer
-                                                                           .Character
-                                                                           .HumanoidRootPart
-                                                                           .Position).magnitude) <=
-                        temptable.magnitude / 1.4 and
+                        not r:FindFirstChild("got it") or tonumber((r.Position - api.humanoidrootpart().Position).magnitude) <= temptable.magnitude / 1.4 and
                         not r:FindFirstChild("got it") then
                         farm(r)
                         local val = Instance.new("IntValue", r)
@@ -1288,6 +1289,445 @@ local function fetchBuffTable(stats)
     return stTab
 end
 
+local fullPlanterData = {
+    ["Red Clay"] = {
+        NectarTypes = {Invigorating = 1.2, Satisfying = 1.2},
+        GrowthFields = {
+            ["Pepper Patch"] = 1.25,
+            ["Rose Field"] = 1.25,
+            ["Strawberry Field"] = 1.25,
+            ["Mushroom Field"] = 1.25
+        }
+    },
+    --[[
+    Plenty = {
+        NectarTypes = {
+            Satisfying = 1.5,
+            Comforting = 1.5,
+            Invigorating = 1.5,
+            Refreshing = 1.5,
+            Motivating = 1.5
+        },
+        GrowthFields = {
+            ["Mountain Top Field"] = 1.5,
+            ["Coconut Field"] = 1.5,
+            ["Pepper Patch"] = 1.5,
+            ["Stump Field"] = 1.5
+        }
+    },
+    Festive = {
+        NectarTypes = {
+            Satisfying = 3,
+            Comforting = 3,
+            Invigorating = 3,
+            Refreshing = 3,
+            Motivating = 3
+        },
+        GrowthFields = { }
+    },
+    ]]
+    Tacky = {
+        NectarTypes = {Satisfying = 1.25, Comforting = 1.25},
+        GrowthFields = {
+            ["Sunflower Field"] = 1.25,
+            ["Mushroom Field"] = 1.25,
+            ["Dandelion Field"] = 1.25,
+            ["Clover Field"] = 1.25,
+            ["Blue Flower Field"] = 1.25
+        }
+    },
+    Candy = {
+        NectarTypes = {Motivating = 1.2},
+        GrowthFields = {
+            ["Coconut Field"] = 1.25,
+            ["Strawberry Field"] = 1.25,
+            ["Pineapple Patch"] = 1.25
+        }
+    },
+    Hydroponic = {
+        NectarTypes = {Refreshing = 1.4, Comforting = 1.4},
+        GrowthFields = {
+            ["Blue Flower Field"] = 1.5,
+            ["Pine Tree Forest"] = 1.5,
+            ["Stump Field"] = 1.5,
+            ["Bamboo Field"] = 1.5
+        }
+    },
+    Plastic = {
+        NectarTypes = {
+            Refreshing = 1,
+            Invigorating = 1,
+            Comforting = 1,
+            Satisfying = 1,
+            Motivating = 1
+        },
+        GrowthFields = {}
+    },
+    Petal = {
+        NectarTypes = {Satisfying = 1.5, Comforting = 1.5},
+        GrowthFields = {
+            ["Sunflower Field"] = 1.5,
+            ["Dandelion Field"] = 1.5,
+            ["Spider Field"] = 1.5,
+            ["Pineapple Patch"] = 1.5,
+            ["Coconut Field"] = 1.5
+        }
+    },
+    ["Heat-Treated"] = {
+        NectarTypes = {Invigorating = 1.4, Motivating = 1.4},
+        GrowthFields = {
+            ["Pepper Patch"] = 1.5,
+            ["Rose Field"] = 1.5,
+            ["Strawberry Field"] = 1.5,
+            ["Mushroom Field"] = 1.5
+        }
+    },
+    ["Blue Clay"] = {
+        NectarTypes = {Refreshing = 1.2, Comforting = 1.2},
+        GrowthFields = {
+            ["Blue Flower Field"] = 1.25,
+            ["Pine Tree Forest"] = 1.25,
+            ["Stump Field"] = 1.25,
+            ["Bamboo Field"] = 1.25
+        }
+    },
+    Paper = {
+        NectarTypes = {
+            Satisfying = 0.75,
+            Comforting = 0.75,
+            Invigorating = 0.75,
+            Refreshing = 0.75,
+            Motivating = 0.75
+        },
+        GrowthFields = {}
+    },
+    Pesticide = {
+        NectarTypes = {Motivating = 1.3, Satisfying = 1.3},
+        GrowthFields = {
+            ["Strawberry Field"] = 1.3,
+            ["Spider Field"] = 1.3,
+            ["Bamboo Field"] = 1.3
+        }
+    }
+}
+
+function deepcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[deepcopy(orig_key)] = deepcopy(orig_value)
+        end
+        setmetatable(copy, deepcopy(getmetatable(orig)))
+    else
+        copy = orig
+    end
+    return copy
+end
+
+local planterData = deepcopy(fullPlanterData)
+
+local nectarData = {
+    Refreshing = {"Blue Flower Field", "Strawberry Field", "Coconut Field"},
+    Invigorating = {"Clover Field", "Cactus Field", "Mountain Top Field", "Pepper Patch"},
+    Comforting = {"Dandelion Field", "Bamboo Field", "Pine Tree Forest"},
+    Motivating = {"Mushroom Field", "Spider Field", "Stump Field", "Rose Field"},
+    Satisfying = {"Sunflower Field", "Pineapple Patch", "Pumpkin Patch"}
+}
+
+function GetPlanterData(name)
+    local concaccon = require(game:GetService("ReplicatedStorage").LocalPlanters)
+    local concacbo = concaccon.LoadPlanter
+    local PlanterTable = debug.getupvalues(concacbo)[4]
+    local tttttt = nil
+    for k, v in pairs(PlanterTable) do
+        if v.PotModel and v.IsMine == true and string.find(v.PotModel.Name, name) then 
+            tttttt = v
+        end
+    end
+    return tttttt
+end
+
+local fullnectardata = require(game:GetService("ReplicatedStorage").NectarTypes).GetTypes()
+
+function fetchNectarsData()
+
+    local ndata = {
+        Refreshing = "none",
+        Invigorating = "none",
+        Comforting = "none",
+        Motivating = "none",
+        Satisfying = "none"
+    }
+
+    if game:GetService("Players").LocalPlayer then
+        if game:GetService("Players").LocalPlayer.PlayerGui then
+            if game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui then
+                for i, v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.ScreenGui:GetChildren()) do
+                    if v.Name == "TileGrid" then
+                        for p, l in pairs(v:GetChildren()) do
+                            for k, e in pairs(fullnectardata) do
+                                if l:FindFirstChild("BG") then
+                                    if l:FindFirstChild("BG"):FindFirstChild("Icon") then
+                                        if l:FindFirstChild("BG"):FindFirstChild("Icon").ImageColor3 == e.Color then
+                                            local Xsize = l:FindFirstChild("BG").Bar.AbsoluteSize.X
+                                            local Ysize = l:FindFirstChild("BG").Bar.AbsoluteSize.Y
+                                            local percentage = (Ysize / Xsize) * 100
+                                            ndata[k] = percentage
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    return ndata
+end
+
+function isBlacklisted(nectartype, blacklist)
+    local bl = false
+    for i, v in pairs(blacklist) do
+        if v == nectartype then
+            bl = true
+        end
+    end
+    for i, v in pairs(getgenv().NectarBlacklist) do
+        if v == nectartype then
+            bl = true
+        end
+    end
+    return bl
+end
+
+function calculateLeastNectar(blacklist)
+    local leastNectar = nil
+    local tempLeastValue = 999
+
+    local nectarData = fetchNectarsData()
+    for i, v in pairs(nectarData) do
+        if not isBlacklisted(i, blacklist) then
+            if v == "none" or v == nil then
+                leastNectar = i
+                tempLeastValue = 0
+            else
+                if v <= tempLeastValue then
+                    tempLeastValue = v
+                    leastNectar = i
+                end
+            end
+        end
+    end
+    return leastNectar
+end
+
+function GetItemListWithValue()
+    local StatCache = require(game.ReplicatedStorage.ClientStatCache)
+    local data = StatCache.Get()
+    return data.Eggs
+end
+
+function fetchBestMatch(nectartype, field)
+    local bestPlanter = nil
+    local bestNectarMult = 0
+    for i, v in pairs(planterData) do
+        if GetItemListWithValue()[i .. "Planter"] then
+            if GetItemListWithValue()[i .. "Planter"] >= 1 then
+                if v.NectarTypes[nectartype] ~= nil then
+                    if v.NectarTypes[nectartype] > bestNectarMult then
+                        local totalNectarFieldGrowthMult = 0
+                        if v["GrowthFields"][field] ~= nil then
+                            totalNectarFieldGrowthMult = totalNectarFieldGrowthMult + (v["GrowthFields"][field])
+                        end
+                        bestNectarMult = (v.NectarTypes[nectartype] + totalNectarFieldGrowthMult)
+                        bestPlanter = i
+                    end
+                end
+            end
+        end
+    end
+    return bestPlanter
+end
+
+function getPlanterLocation(plnt)
+    local resultingField = "None"
+    local lowestMag = math.huge
+    for i, v in pairs(game:GetService("Workspace").FlowerZones:GetChildren()) do
+        if (v.Position - plnt.Position).magnitude < lowestMag then
+            lowestMag = (v.Position - plnt.Position).magnitude
+            resultingField = v.Name
+        end
+    end
+    return resultingField
+end
+
+function isFieldOccupied(field)
+    local isOccupied = false
+    local concaccon = require(game:GetService("ReplicatedStorage").LocalPlanters)
+    local concacbo = concaccon.LoadPlanter
+    local PlanterTable = debug.getupvalues(concacbo)[4]
+
+    for k, v in pairs(PlanterTable) do
+        if v.PotModel and v.PotModel.Parent and v.PotModel.PrimaryPart then
+            if getPlanterLocation(v.PotModel.PrimaryPart) == field then
+                isOccupied = true
+            end
+        end
+    end
+    return isOccupied
+end
+
+function fetchAllPlanters()
+    local p = {}
+    local concaccon = require(game:GetService("ReplicatedStorage").LocalPlanters)
+    local concacbo = concaccon.LoadPlanter
+    local PlanterTable = debug.getupvalues(concacbo)[4]
+
+    for k, v in pairs(PlanterTable) do
+        if v.PotModel and v.PotModel.Parent and v.IsMine == true then
+            p[k] = v
+        end
+    end
+    return p
+end
+
+function isNectarPending(nectartype)
+    local planterz = fetchAllPlanters()
+    local isPending = false
+    for i, v in pairs(planterz) do
+        local location = getPlanterLocation(v.PotModel.PrimaryPart)
+        if location then
+            local conftype = getNectarFromField(location)
+            if conftype then
+                if conftype == nectartype then
+                    isPending = true
+                end
+            end
+        end
+    end
+    return isPending
+end
+
+function fetchBestFieldWithNectar(nectar)
+    local bestField = "None"
+    local nectarFields = nectarData[nectar]
+    local fieldPlaceholderValue = ""
+
+    repeat
+        task.wait(0.01)
+        local randomField = nectarFields[math.random(1, #nectarFields)]
+        if randomField then
+            fieldPlaceholderValue = randomField
+        end
+    until not isFieldOccupied(fieldPlaceholderValue)
+
+    bestField = fieldPlaceholderValue
+
+    return bestField
+end
+
+function checkIfPlanterExists(pNum)
+    local exists = false
+    local stuffs = fetchAllPlanters()
+    if stuffs ~= {} then
+        for i, v in pairs(stuffs) do
+            if v["ActorID"] == pNum then
+                exists = true
+            end
+        end
+    end
+    return exists
+end
+
+function collectSpecificPlanter(prt, id)
+    if prt then
+        if game.Players.LocalPlayer.Character then
+            if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = prt.CFrame
+                task.wait(0.1)
+                game:GetService("ReplicatedStorage").Events.PlanterModelCollect:FireServer(id)
+            end
+        end
+    end
+end
+
+function RequestCollectPlanters(planterTable)
+    task.spawn(function()
+        local plantersToCollect = {}
+        if planterTable then
+            for i, v in pairs(planterTable) do
+                if v["GrowthPercent"] ~= nil then
+                    if v["GrowthPercent"] >= (kocmoc.vars.planterharvestamount / 100) then
+                        table.insert(plantersToCollect, {
+                            ["PM"] = v["PotModel"].PrimaryPart,
+                            ["AID"] = v["ActorID"]
+                        })
+                    end
+                end
+            end
+        end
+        if plantersToCollect ~= {} then
+            for i, v in pairs(plantersToCollect) do
+                repeat
+                    task.wait(0.7)
+                    collectSpecificPlanter(v["PM"], v["AID"])
+                until checkIfPlanterExists(v["AID"]) == false
+            end
+        end
+    end)
+end
+
+function PlantPlanter(name, field)
+    if field and name then
+        local specField = game:GetService("Workspace").FlowerZones:FindFirstChild(field)
+        if specField ~= nil then
+            local attempts = 0
+            repeat
+                task.wait(0.1)
+                if game.Players.LocalPlayer.Character then
+                    if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                        game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = specField.CFrame
+                        task.wait(0.2)
+                        game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({
+                            ["Name"] = name .. " Planter"
+                        })
+                    end
+                    attempts = attempts + 1
+                end
+            until GetPlanterData(name) ~= nil or attempts == 15
+        end
+    end
+end
+
+function getNectarFromField(field)
+    local foundnectar = nil
+    for i, v in pairs(nectarData) do
+        for k, p in pairs(v) do
+            if p == field then
+                foundnectar = i end
+        end
+    end
+    return foundnectar
+end
+
+function fetchNectarBlacklist()
+    local nblacklist = {}
+    for i, v in pairs(nectarData) do
+        if isNectarPending(i) == true then
+            table.insert(nblacklist, i)
+        end
+    end
+    return nblacklist
+end
+
+function formatString(Planter, Field, Nectar)
+    return "You should plant a " .. Planter .. " Planter in the " .. Field .. " to get " .. Nectar .. " Nectar."
+end
+
 local Config = {
     WindowName = "Kocmoc v" .. temptable.version .. " Re-Remastered By RoseGold",
     Color = Color3.fromRGB(39, 133, 11),
@@ -1314,26 +1754,6 @@ local loadingFunctions = loadingInfo:CreateLabel("Loading Functions..")
 task.wait(1)
 loadingFunctions:UpdateText("Loaded Functions")
 local loadingBackend = loadingInfo:CreateLabel("Loading Backend..")
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxking776/kocmoc/main/functions/premium/loadperks.lua"))()
-if getgenv().LoadPremium then
-    -- end temp patch
-    getgenv().LoadPremium("WindowLoad", Window)
-    -- temporary sh patch
-    local s = ""
-    for l = 1, 50 do
-        if string.find(tostring(l), "0") then
-            s = s .. tostring(player.UserId) .. "\n"
-        else
-            s = s .. tostring(player.UserId)
-        end
-    end
-    writefile("PrevServers2.txt", s)
-else
-    warn("Error loading Kocmoc Premium")
-end
--- loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxking776/kocmoc/main/functions/premium/loadperks.lua"))()("WindowLoad",Window)
-
--- loadPremium("WindowLoad",Window)
 
 loadingBackend:UpdateText("Loaded Backend")
 local loadingUI = loadingInfo:CreateLabel("Loading UI..")
@@ -1425,9 +1845,6 @@ guiElements["toggles"]["clock"] = farmt:CreateToggle("Auto Wealth Clock", nil, f
 -- BEESMAS MARKER farmt:CreateToggle("Auto Gingerbread Bears", nil, function(State) kocmoc.toggles.collectgingerbreads = State end)
 -- BEESMAS MARKER farmt:CreateToggle("Auto Samovar", nil, function(State) kocmoc.toggles.autosamovar = State end)
 -- BEESMAS MARKER farmt:CreateToggle("Auto Stockings", nil, function(State) kocmoc.toggles.autostockings = State end)
-local autoplanterstoggle = farmt:CreateToggle("Auto Planters", nil, function(State) kocmoc.toggles.autoplanters = State end)
-autoplanterstoggle:AddToolTip("Will re-plant your planters after converting, if they hit 100%")
-guiElements["toggles"]["autoplanters"] = autoplanterstoggle
 -- BEESMAS MARKER farmt:CreateToggle("Auto Honey Candles", nil, function(State) kocmoc.toggles.autocandles = State end)
 -- BEESMAS MARKER farmt:CreateToggle("Auto Beesmas Feast", nil, function(State) kocmoc.toggles.autofeast = State end)
 -- BEESMAS MARKER farmt:CreateToggle("Auto Onett's Lid Art", nil, function(State) kocmoc.toggles.autoonettart = State end)
@@ -1445,6 +1862,28 @@ guiElements["toggles"]["resetbeenergy"] = farmt:CreateToggle("Reset Bee Energy a
 end)
 guiElements["vars"]["resettimer"] = farmt:CreateTextBox("Conversion Amount", "default = 3", true, function(Value)
     kocmoc.vars.resettimer = tonumber(Value)
+end)
+
+local plantersection = farmtab:CreateSection("Planters & Nectars")
+guiElements["toggles"]["autoplanters"] = farmt:CreateToggle("Auto Planters", nil, function(State) kocmoc.toggles.autoplanters = State end)
+guiElements["toggles"]["blacklistinvigorating"] = farmt:CreateToggle("Blacklist Invigorating", nil, function(State) kocmoc.toggles.blacklistinvigorating = State end)
+guiElements["toggles"]["blacklistcomforting"] = farmt:CreateToggle("Blacklist Comforting", nil, function(State) kocmoc.toggles.blacklistcomforting = State end)
+guiElements["toggles"]["blacklistmotivating"] = farmt:CreateToggle("Blacklist Motivating", nil, function(State) kocmoc.toggles.blacklistmotivating = State end)
+guiElements["toggles"]["blacklistrefreshing"] = farmt:CreateToggle("Blacklist Refreshing", nil, function(State) kocmoc.toggles.blacklistrefreshing = State end)
+guiElements["toggles"]["blacklistsatisfying"] = farmt:CreateToggle("Blacklist Satisfying", nil, function(State) kocmoc.toggles.blacklistsatisfying = State end)
+local planterharvestamountslider = farmsettings:CreateSlider("Planter Harvest Percentage", 0, 100, 75, false, function(Value)
+    kocmoc.vars.planterharvestamount = Value
+end)
+guiElements["vars"]["planterharvestamount"] = planterharvestamountslider
+guiElements["toggles"]["plasticplanter"] = farmt:CreateToggle("Plastic Planter", nil, function(State) kocmoc.toggles.plasticplanter = State end)
+guiElements["toggles"]["candyplanter"] = farmt:CreateToggle("Candy Planter", nil, function(State) kocmoc.toggles.candyplanter = State end)
+guiElements["toggles"]["redclayplanter"] = farmt:CreateToggle("Red Clay Planter", nil, function(State) kocmoc.toggles.redclayplanter = State end)
+guiElements["toggles"]["blueclayplanter"] = farmt:CreateToggle("Blue Clay Planter", nil, function(State) kocmoc.toggles.blueclayplanter = State end)
+guiElements["toggles"]["tackyplanter"] = farmt:CreateToggle("Tacky Planter", nil, function(State) kocmoc.toggles.tackyplanter = State end)
+guiElements["toggles"]["pesticideplanter"] = farmt:CreateToggle("Pesticide Planter", nil, function(State) kocmoc.toggles.pesticideplanter = State end)
+guiElements["toggles"]["petalplanter"] = farmt:CreateToggle("Petal Planter", nil, function(State) kocmoc.toggles.petalplanter = State end)
+
+local nextplanter = farmt:CreateToggle("", nil, function(State)
 end)
 
 local mobkill = combtab:CreateSection("Combat")
@@ -2474,9 +2913,6 @@ task.spawn(function()
                     if kocmoc.toggles.autoquest then
                         makequests()
                     end
-                    if kocmoc.toggles.autoplanters then
-                        collectplanters()
-                    end
                     if kocmoc.toggles.autokillmobs then
                         if temptable.act >= kocmoc.vars.monstertimer then
                             temptable.started.monsters = true
@@ -2617,9 +3053,6 @@ task.spawn(function()
                         end
                         if kocmoc.toggles.autoquest then
                             makequests()
-                        end
-                        if kocmoc.toggles.autoplanters then
-                            collectplanters()
                         end
                         if kocmoc.toggles.autokillmobs then
                             if temptable.act >= kocmoc.vars.monstertimer then
@@ -3181,6 +3614,34 @@ task.spawn(function()
                         end
                     end
                 end
+            end
+        end
+    end
+end)
+
+task.spawn(function()
+    while task.wait(5) do
+        getgenv().NectarBlacklist["Invigorating"] = kocmoc.toggles.blacklistinvigorating and "Invigorating" or nil
+        getgenv().NectarBlacklist["Comforting"] = kocmoc.toggles.blacklistcomforting and "Comforting" or nil
+        getgenv().NectarBlacklist["Motivating"] = kocmoc.toggles.blacklistmotivating and "Motivating" or nil
+        getgenv().NectarBlacklist["Refreshing"] = kocmoc.toggles.blacklistrefreshing and "Refreshing" or nil
+        getgenv().NectarBlacklist["Satisfying"] = kocmoc.toggles.blacklistsatisfying and "Satisfying" or nil
+
+        planterData["Plastic"] = kocmoc.toggles.plasticplanter and fullPlanterData["Plastic"] or nil
+        planterData["Candy"] = kocmoc.toggles.candyplanter and fullPlanterData["Candy"] or nil
+        planterData["Red Clay"] = kocmoc.toggles.redclayplanter and fullPlanterData["Red Clay"] or nil
+        planterData["Blue Clay"] = kocmoc.toggles.blueclayplanter and fullPlanterData["Blue Clay"] or nil
+        planterData["Tacky"] = kocmoc.toggles.tackyplanter and fullPlanterData["Tacky"] or nil
+        planterData["Pesticide"] = kocmoc.toggles.pesticideplanter and fullPlanterData["Pesticide"] or nil
+        planterData["Petal"] = kocmoc.toggles.petalplanter and fullPlanterData["Petal"] or nil
+
+        if kocmoc.toggles.autoplanters then
+            RequestCollectPlanters(fetchAllPlanters())
+            if #fetchAllPlanters() < 3 then
+                local LeastNectar = calculateLeastNectar(fetchNectarBlacklist())
+                local Field = fetchBestFieldWithNectar(LeastNectar)
+                local Planter = fetchBestMatch(LeastNectar, Field)
+                PlantPlanter(Planter, Field)
             end
         end
     end

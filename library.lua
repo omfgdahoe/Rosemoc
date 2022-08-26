@@ -446,24 +446,6 @@ function Library:CreateWindow(Config, Parent)
                     return Toggle
                 end
 
-				if Name == "Auto Nectar [⭐]" and isfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json") then
-					local e = game:service("HttpService"):JSONDecode(readfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json"))
-
-					if e.toggles.autopl then
-						SetState(true)
-					end
-				end
-
-				if string.find(Name, "Blacklist") and string.find(Name, "Nectar") and isfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json") then
-					local e = game:service("HttpService"):JSONDecode(readfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json"))
-
-					for nectar,state in pairs(e.vars.tempblacklist) do
-						if state and string.find(Name, nectar) then
-							SetState(true)
-						end
-					end
-				end
-
 				return ToggleInit
 			end
 			function SectionInit:CreateSlider(Name, Min, Max, Default, Precise, Callback)
@@ -587,14 +569,6 @@ function Library:CreateWindow(Config, Parent)
                 function SliderInit:GetObject()
                     return Slider
                 end
-
-				if Name == "Planter Harvest Percentage" and isfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json") then
-					local e = game:service("HttpService"):JSONDecode(readfile("kocmoc/premium/BSS_" .. game.Players.LocalPlayer.Name .. ".json"))
-
-					if e.vars.harvestpercent then
-						SetValue(e.vars.harvestpercent)
-					end
-				end
 
 				return SliderInit
 			end
