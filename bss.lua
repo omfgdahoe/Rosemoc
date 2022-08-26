@@ -35,6 +35,7 @@ local player = game.Players.LocalPlayer
 local playerstatsevent = game:GetService("ReplicatedStorage").Events.RetrievePlayerStats
 local statstable = playerstatsevent:InvokeServer()
 local monsterspawners = game.Workspace.MonsterSpawners
+local NectarBlacklist = {}
 local rarename
 
 function rtsg()
@@ -1496,7 +1497,7 @@ function isBlacklisted(nectartype, blacklist)
             bl = true
         end
     end
-    for i, v in pairs(getgenv().NectarBlacklist) do
+    for i, v in pairs(NectarBlacklist) do
         if v == nectartype then
             bl = true
         end
@@ -3618,11 +3619,11 @@ end)
 
 task.spawn(function()
     while task.wait(5) do
-        getgenv().NectarBlacklist["Invigorating"] = kocmoc.toggles.blacklistinvigorating and "Invigorating" or nil
-        getgenv().NectarBlacklist["Comforting"] = kocmoc.toggles.blacklistcomforting and "Comforting" or nil
-        getgenv().NectarBlacklist["Motivating"] = kocmoc.toggles.blacklistmotivating and "Motivating" or nil
-        getgenv().NectarBlacklist["Refreshing"] = kocmoc.toggles.blacklistrefreshing and "Refreshing" or nil
-        getgenv().NectarBlacklist["Satisfying"] = kocmoc.toggles.blacklistsatisfying and "Satisfying" or nil
+        NectarBlacklist["Invigorating"] = kocmoc.toggles.blacklistinvigorating and "Invigorating" or nil
+        NectarBlacklist["Comforting"] = kocmoc.toggles.blacklistcomforting and "Comforting" or nil
+        NectarBlacklist["Motivating"] = kocmoc.toggles.blacklistmotivating and "Motivating" or nil
+        NectarBlacklist["Refreshing"] = kocmoc.toggles.blacklistrefreshing and "Refreshing" or nil
+        NectarBlacklist["Satisfying"] = kocmoc.toggles.blacklistsatisfying and "Satisfying" or nil
 
         planterData["Plastic"] = kocmoc.toggles.plasticplanter and fullPlanterData["Plastic"] or nil
         planterData["Candy"] = kocmoc.toggles.candyplanter and fullPlanterData["Candy"] or nil
