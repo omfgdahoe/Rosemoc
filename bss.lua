@@ -2591,7 +2591,9 @@ local buysection = premiumtab:CreateSection("Buy")
 buysection:CreateLabel("Support the developer of Kocmoc v3!")
 buysection:CreateButton("Copy Shirt Link", function()
     api.notify("Kocmoc " .. temptable.version, "Copied link to clipboard!", 2)
-    setclipboard and setclipboard("https://www.roblox.com/catalog/8958348861/Kocmoc-Honey-Bee-Design")
+    if setclipboard then
+        setclipboard("https://www.roblox.com/catalog/8958348861/Kocmoc-Honey-Bee-Design")
+    end
 end)
 buysection:CreateLabel("Without them this project wouldn't be possible")
 
