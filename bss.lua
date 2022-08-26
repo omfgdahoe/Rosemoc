@@ -2970,7 +2970,7 @@ task.spawn(function()
                     end
                 end
                 
-                if kocmoc.toggles.convertballoons and kocmoc.vars.convertballoonpercent and gethiveballoon() and getBuffTime("8083443467") < tonumber(kocmoc.vars.convertballoonpercent) / 100 then
+                if kocmoc.toggles.convertballoons and not temptable.started.vicious and kocmoc.vars.convertballoonpercent and gethiveballoon() and getBuffTime("8083443467") < tonumber(kocmoc.vars.convertballoonpercent) / 100 then
                     temptable.tokensfarm = false
                     api.tween(2, player.SpawnPos.Value * CFrame.fromEulerAnglesXYZ(0, 110, 0) + Vector3.new(0, 0, 9))
                     task.wait(2)
@@ -3110,7 +3110,7 @@ task.spawn(function()
                             getpuff()
                         end
                     end
-                elseif tonumber(pollenpercentage) >= tonumber(kocmoc.vars.convertat) then
+                elseif tonumber(pollenpercentage) >= tonumber(kocmoc.vars.convertat) and not temptable.started.vicious then
                     if not kocmoc.toggles.disableconversion then
                         temptable.tokensfarm = false
                         api.tween(2, player.SpawnPos.Value * CFrame.fromEulerAnglesXYZ(0, 110, 0) + Vector3.new(0, 0, 9))
