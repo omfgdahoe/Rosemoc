@@ -3855,7 +3855,7 @@ end)
 task.spawn(function()
     local timestamp = tick()
     while task.wait(0.1) do
-        if tick() - timestamp > kocmoc.var.webhooktimer * 60 then
+        if tick() - timestamp > kocmoc.vars.webhooktimer * 60 then
             if httpreq and kocmoc.vars.webhookurl ~= "" and kocmoc.toggles.webhookupdates then
                 hourly(kocmoc.toggles.webhookping, kocmoc.vars.webhookurl, kocmoc.vars.discordid)
             end
