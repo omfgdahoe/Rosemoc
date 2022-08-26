@@ -387,13 +387,13 @@ getgenv().kocmoc = {
         blacklistmotivating = false,
         blacklistrefreshing = false,
         blacklistsatisfying = false,
-        plasticplanter = true,
-        candyplanter = true,
-        redclayplanter = true,
-        blueclayplanter = true,
-        tackyplanter = true,
-        pesticideplanter = true,
-        petalplanter = true
+        plasticplanter = false,
+        candyplanter = false,
+        redclayplanter = false,
+        blueclayplanter = false,
+        tackyplanter = false,
+        pesticideplanter = false,
+        petalplanter = false
     },
     vars = {
         field = "Ant Field",
@@ -1876,13 +1876,13 @@ local planterharvestamountslider = plantersection:CreateSlider("Planter Harvest 
     kocmoc.vars.planterharvestamount = Value
 end)
 guiElements["vars"]["planterharvestamount"] = planterharvestamountslider
-guiElements["toggles"]["plasticplanter"] = plantersection:CreateToggle("Plastic Planter", nil, function(State) kocmoc.toggles.plasticplanter = State end)
-guiElements["toggles"]["candyplanter"] = plantersection:CreateToggle("Candy Planter", nil, function(State) kocmoc.toggles.candyplanter = State end)
-guiElements["toggles"]["redclayplanter"] = plantersection:CreateToggle("Red Clay Planter", nil, function(State) kocmoc.toggles.redclayplanter = State end)
-guiElements["toggles"]["blueclayplanter"] = plantersection:CreateToggle("Blue Clay Planter", nil, function(State) kocmoc.toggles.blueclayplanter = State end)
-guiElements["toggles"]["tackyplanter"] = plantersection:CreateToggle("Tacky Planter", nil, function(State) kocmoc.toggles.tackyplanter = State end)
-guiElements["toggles"]["pesticideplanter"] = plantersection:CreateToggle("Pesticide Planter", nil, function(State) kocmoc.toggles.pesticideplanter = State end)
-guiElements["toggles"]["petalplanter"] = plantersection:CreateToggle("Petal Planter", nil, function(State) kocmoc.toggles.petalplanter = State end)
+guiElements["toggles"]["plasticplanter"] = plantersection:CreateToggle("Blacklist Plastic Planter", nil, function(State) kocmoc.toggles.plasticplanter = State end)
+guiElements["toggles"]["candyplanter"] = plantersection:CreateToggle("Blacklist Candy Planter", nil, function(State) kocmoc.toggles.candyplanter = State end)
+guiElements["toggles"]["redclayplanter"] = plantersection:CreateToggle("Blacklist Red Clay Planter", nil, function(State) kocmoc.toggles.redclayplanter = State end)
+guiElements["toggles"]["blueclayplanter"] = plantersection:CreateToggle("Blacklist Blue Clay Planter", nil, function(State) kocmoc.toggles.blueclayplanter = State end)
+guiElements["toggles"]["tackyplanter"] = plantersection:CreateToggle("Blacklist Tacky Planter", nil, function(State) kocmoc.toggles.tackyplanter = State end)
+guiElements["toggles"]["pesticideplanter"] = plantersection:CreateToggle("Blacklist Pesticide Planter", nil, function(State) kocmoc.toggles.pesticideplanter = State end)
+guiElements["toggles"]["petalplanter"] = plantersection:CreateToggle("Blacklist Petal Planter", nil, function(State) kocmoc.toggles.petalplanter = State end)
 
 local mobkill = combtab:CreateSection("Combat")
 mobkill:CreateToggle("Train Crab", nil, function(State)
@@ -3625,13 +3625,13 @@ task.spawn(function()
         NectarBlacklist["Refreshing"] = kocmoc.toggles.blacklistrefreshing and "Refreshing" or nil
         NectarBlacklist["Satisfying"] = kocmoc.toggles.blacklistsatisfying and "Satisfying" or nil
 
-        planterData["Plastic"] = kocmoc.toggles.plasticplanter and fullPlanterData["Plastic"] or nil
-        planterData["Candy"] = kocmoc.toggles.candyplanter and fullPlanterData["Candy"] or nil
-        planterData["Red Clay"] = kocmoc.toggles.redclayplanter and fullPlanterData["Red Clay"] or nil
-        planterData["Blue Clay"] = kocmoc.toggles.blueclayplanter and fullPlanterData["Blue Clay"] or nil
-        planterData["Tacky"] = kocmoc.toggles.tackyplanter and fullPlanterData["Tacky"] or nil
-        planterData["Pesticide"] = kocmoc.toggles.pesticideplanter and fullPlanterData["Pesticide"] or nil
-        planterData["Petal"] = kocmoc.toggles.petalplanter and fullPlanterData["Petal"] or nil
+        planterData["Plastic"] = not kocmoc.toggles.plasticplanter and fullPlanterData["Plastic"] or nil
+        planterData["Candy"] = not kocmoc.toggles.candyplanter and fullPlanterData["Candy"] or nil
+        planterData["Red Clay"] = not kocmoc.toggles.redclayplanter and fullPlanterData["Red Clay"] or nil
+        planterData["Blue Clay"] = not kocmoc.toggles.blueclayplanter and fullPlanterData["Blue Clay"] or nil
+        planterData["Tacky"] = not kocmoc.toggles.tackyplanter and fullPlanterData["Tacky"] or nil
+        planterData["Pesticide"] = not kocmoc.toggles.pesticideplanter and fullPlanterData["Pesticide"] or nil
+        planterData["Petal"] = not kocmoc.toggles.petalplanter and fullPlanterData["Petal"] or nil
 
         if kocmoc.toggles.autoplanters then
             RequestCollectPlanters(fetchAllPlanters())
