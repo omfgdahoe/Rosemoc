@@ -424,7 +424,8 @@ getgenv().kocmoc = {
         convertballoonpercent = 50,
         planterharvestamount = 75,
         webhookurl = "",
-        discordid = 0
+        discordid = 0,
+        webhooktimer = 60
     },
     dispensesettings = {
         blub = false,
@@ -2319,6 +2320,9 @@ guiElements["vars"]["webhookurl"] = webhooksection:CreateTextBox("Webhook URL", 
         api.notify("Kocmoc " .. temptable.version, "Invalid URL!", 2)
     end
 end)
+guiElements["vars"]["webhooktimer"] = webhooksection:CreateSlider("Minutes Between Updates", 1, 60, 60, false, function(Value)
+    kocmoc.vars.webhooktimer = Value
+end)
 guiElements["toggles"]["webhookping"] = webhooksection:CreateToggle("Ping on Hourly Update", nil, function(State)
     kocmoc.toggles.webhookping = State
 end)
@@ -2427,8 +2431,11 @@ end)
 raresettings:CreateDropdown("Tokens Blacklist", kocmoc.bltokens,
                             function(Option) end)
 raresettings:CreateDropdown("Rares List", kocmoc.rares, function(Option) end)
-local dispsettings = setttab:CreateSection(
-                         "Auto Dispenser & Auto Boosters Settings")
+raresettings:CreateButton("Copy Token List Link", function()
+    api.notify("Kocmoc " .. temptable.version, "Copied link to clipboard!", 2)
+    setclipboard("https://pastebin.com/raw/wtHBD3ij")
+end)
+local dispsettings = setttab:CreateSection("Auto Dispenser & Auto Boosters Settings")
 guiElements["dispensesettings"]["rj"] = dispsettings:CreateToggle("Royal Jelly Dispenser", nil, function(State)
     kocmoc.dispensesettings.rj = not kocmoc.dispensesettings.rj
 end)
@@ -2591,11 +2598,10 @@ local buysection = premiumtab:CreateSection("Buy")
 buysection:CreateLabel("Support the developer of Kocmoc v3!")
 buysection:CreateButton("Copy Shirt Link", function()
     api.notify("Kocmoc " .. temptable.version, "Copied link to clipboard!", 2)
-    if setclipboard then
-        setclipboard("https://www.roblox.com/catalog/8958348861/Kocmoc-Honey-Bee-Design")
-    end
+    setclipboard("https://www.roblox.com/catalog/8958348861/Kocmoc-Honey-Bee-Design")
 end)
-buysection:CreateLabel("Without them this project wouldn't be possible")
+buysection:CreateLabel("Without them this project")
+buysection:CreateLabel("wouldn't be possible")
 
 local miscsection = premiumtab:CreateSection("Misc")
 miscsection:CreateLabel("Kocmoc Premium includes:")
@@ -2610,7 +2616,8 @@ autofarmingsection:CreateLabel("Smart Bubble Bloat [" .. getgenv().Star .. "]")
 local autojellysection = premiumtab:CreateSection("Auto Jelly")
 autojellysection:CreateLabel("Kocmoc Premium includes:")
 autojellysection:CreateLabel("Auto Jelly [" .. getgenv().Star .. "]")
-autojellysection:CreateLabel("Incredibly intricate yet simple to use to get you the perfect hive!")
+autojellysection:CreateLabel("Incredibly intricate yet simple to use")
+autojellysection:CreateLabel("to use to get you the perfect hive!")
 
 local autonectarsection = premiumtab:CreateSection("Auto Nectar")
 autonectarsection:CreateLabel("Kocmoc Premium includes:")
@@ -2619,7 +2626,8 @@ autonectarsection:CreateLabel("Auto Nectar [" .. getgenv().Star .. "]")
 local webhooksection = premiumtab:CreateSection("Webhook")
 webhooksection:CreateLabel("Kocmoc Premium includes:")
 webhooksection:CreateLabel("Enable Webhook [" .. getgenv().Star .. "]")
-webhooksection:CreateLabel("The perfect way to track your exact progress and server status even from your mobile device!")
+webhooksection:CreateLabel("The perfect way to track your exact")
+webhooksection:CreateLabel("progress even from your mobile device!")
 
 loadingUI:UpdateText("Loaded UI")
 local loadingLoops = loadingInfo:CreateLabel("Loading Loops..")
@@ -3847,7 +3855,7 @@ end)
 task.spawn(function()
     local timestamp = tick()
     while task.wait(0.1) do
-        if tick() - timestamp > 3600 then
+        if tick() - timestamp > kocmoc.var.webhooktimer * 60 then
             if httpreq and kocmoc.vars.webhookurl ~= "" and kocmoc.toggles.webhookupdates then
                 hourly(kocmoc.toggles.webhookping, kocmoc.vars.webhookurl, kocmoc.vars.discordid)
             end
