@@ -77,7 +77,7 @@ for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
 end
 
 getgenv().temptable = {
-    version = "4.1.0",
+    version = "4.2.0",
     blackfield = "Sunflower Field",
     redfields = {},
     bluefields = {},
@@ -2293,23 +2293,23 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
 end
 
 local webhooksection = misctab:CreateSection("External")
-webhooksection:CreateToggle("Shutdown on Kick", nil, function(State)
+guiElements["toggles"]["shutdownkick"] = webhooksection:CreateToggle("Shutdown on Kick", nil, function(State)
     kocmoc.toggles.shutdownkick = State
 end)
-webhooksection:CreateToggle("Send Webhook Updates", nil, function(State)
+guiElements["toggles"]["webhookupdates"] = webhooksection:CreateToggle("Send Webhook Updates", nil, function(State)
     kocmoc.toggles.webhookupdates = State
 end)
-webhooksection:CreateTextBox("Webhook URL", "Discord webhook URL", false, function(Value)
+guiElements["vars"]["webhookurl"] = webhooksection:CreateTextBox("Webhook URL", "Discord webhook URL", false, function(Value)
     if Value and string.find(Value, "https://") then
         kocmoc.vars.webhookurl = Value
     else
         api.notify("Kocmoc " .. temptable.version, "Invalid URL!", 2)
     end
 end)
-webhooksection:CreateToggle("Ping on Hourly Update", nil, function(State)
+guiElements["toggles"]["webhookping"] = webhooksection:CreateToggle("Ping on Hourly Update", nil, function(State)
     kocmoc.toggles.webhookping = State
 end)
-webhooksection:CreateTextBox("Discord ID", "", false, function(Value)
+guiElements["vars"]["discordid"] = webhooksection:CreateTextBox("Discord ID", "", false, function(Value)
     if tonumber(Value) then
         kocmoc.vars.discordid = Value
     else
