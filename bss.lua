@@ -393,7 +393,10 @@ getgenv().kocmoc = {
         blueclayplanter = false,
         tackyplanter = false,
         pesticideplanter = false,
-        petalplanter = false
+        petalplanter = false,
+        shutdownkick = false,
+        webhookupdates = false,
+        webhookping = false
     },
     vars = {
         field = "Ant Field",
@@ -417,7 +420,9 @@ getgenv().kocmoc = {
         questcolorprefer = "Any NPC",
         playertofollow = "",
         convertballoonpercent = 50,
-        planterharvestamount = 75
+        planterharvestamount = 75,
+        webhookurl = "",
+        discordid = 0
     },
     dispensesettings = {
         blub = false,
@@ -546,7 +551,7 @@ local function hourly(ping, hook, discordid)
     local data = {
         ["username"] = player.Name,
         ["avatar_url"] = "https://www.roblox.com/HeadShot-thumbnail/image?userId="..tostring(player.UserId).."&width=420&height=420&format=png",
-        ["content"] = ping and "<@".._G.discordid.."> ".."Hourly Update" or "Hourly Update",
+        ["content"] = ping and "<@"..discordid.."> ".."Hourly Update" or "Hourly Update",
         ["embeds"] = {{
             ["title"] = "**Hourly Update**",
             ["type"] = "rich",
@@ -2288,6 +2293,31 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
     end)
 end
 
+local webhooksection = misctab:CreateSection("External")
+webhooksection:CreateToggle("Shutdown on Kick", nil, function(State)
+    kocmoc.toggles.shutdownkick = State
+end)
+webhooksection:CreateToggle("Send Webhook Updates", nil, function(State)
+    kocmoc.toggles.webhookupdates = State
+end)
+webhooksection:CreateTextBox("Webhook URL", "Discord webhook URL", false, function(Value)
+    if string.find("https://") then
+        kocmoc.vars.webhookurl = Value
+    else
+        api.notify("Kocmoc " .. temptable.version, "Invalid URL!", 2)
+    end
+end)
+webhooksection:CreateToggle("Ping on Hourly Update", nil, function(State)
+    kocmoc.toggles.webhookping = State
+end)
+webhooksection:CreateTextBox("Discord ID", "", false, function(Value)
+    if tonumber(Value) then
+        kocmoc.vars.discordid = Value
+    else
+        api.notify("Kocmoc " .. temptable.version, "Invalid ID!", 2)
+    end
+end)
+
 local autofeed = itemstab:CreateSection("Auto Feed")
 
 local function feedAllBees(treat, amt)
@@ -3724,58 +3754,57 @@ local function getToyCooldown(toy)
     return u, canBeUsed
 end
 
-if _G.supersecret then
-    game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
-        if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
-            if _G.url and httpreq then
-                task.wait(1)
-                disconnected(_G.url, _G.discordid, child.MessageArea.ErrorFrame.ErrorMessage.Text)
-            end
-            if _G.shutdownwhenkick then
-                game:Shutdown()
-            end
-        end
-    end)
 
-    task.spawn(function()
-        local timestamp = tick()
-        while task.wait(10) do
-            local timeout = false
-            task.spawn(function()
-                timeout = true
-                task.wait(10)
-                if timeout then
-                    if _G.url and httpreq then
-                        disconnected(_G.url, _G.discordid, "Server Timeout (Game Freeze)")
-                    end
-                    if _G.shutdownwhenkick then
-                        game:Shutdown()
-                    end
-                end
-            end)
-            local timestamp = tick()
-            local statstable = playerstatsevent:InvokeServer()
-            while task.wait() do
-                if timeout then
-                    timeout = false
-                    break
-                end
-            end
+game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
+    if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
+        if kocmoc.vars.webhookurl ~= "" and httpreq then
+            task.wait(1)
+            disconnected(kocmoc.vars.webhookurl, kocmoc.vars.discordid, child.MessageArea.ErrorFrame.ErrorMessage.Text)
         end
-    end)
+        if kocmoc.toggles.shutdownkick then
+            game:Shutdown()
+        end
+    end
+end)
 
-    task.spawn(function()
-        local timestamp = tick()
-        while task.wait(0.1) do
-            if tick() - timestamp > 3600 then
-                if httpreq and _G.url and _G.hourly then
-                    hourly(_G.pinghourly, _G.url, _G.discordid)
+task.spawn(function()
+    local timestamp = tick()
+    while task.wait(10) do
+        local timeout = false
+        task.spawn(function()
+            timeout = true
+            task.wait(10)
+            if timeout then
+                if kocmoc.vars.webhookurl ~= "" and httpreq then
+                    disconnected(kocmoc.vars.webhookurl, kocmoc.vars.discordid, "Server Timeout (Game Freeze)")
                 end
-                timestamp = tick()
+                if kocmoc.toggles.shutdownkick then
+                    game:Shutdown()
+                end
+            end
+        end)
+        local timestamp = tick()
+        local statstable = playerstatsevent:InvokeServer()
+        while task.wait() do
+            if timeout then
+                timeout = false
+                break
             end
         end
-    end)
-end
+    end
+end)
+
+task.spawn(function()
+    local timestamp = tick()
+    while task.wait(0.1) do
+        if tick() - timestamp > 3600 then
+            if httpreq and kocmoc.vars.webhookurl ~= "" and kocmoc.toggles.webhookupdates then
+                hourly(kocmoc.toggles.webhookping, kocmoc.vars.webhookurl, kocmoc.vars.discordid)
+            end
+            timestamp = tick()
+        end
+    end
+end)
 
 task.spawn(function()
     pcall(function()
