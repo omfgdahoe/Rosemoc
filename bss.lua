@@ -1662,7 +1662,7 @@ function RequestCollectPlanters(planterTable)
         if planterTable then
             for i, v in pairs(planterTable) do
                 if v["GrowthPercent"] ~= nil then
-                    if v["GrowthPercent"] >= (kocmoc.vars.planterharvestamount / 100) then
+                    if v["GrowthPercent"] >= (kocmoc.vars.planterharvestamount or 75 / 100) then
                         table.insert(plantersToCollect, {
                             ["PM"] = v["PotModel"].PrimaryPart,
                             ["AID"] = v["ActorID"]
@@ -3927,7 +3927,7 @@ end)
 
 if _G.autoload then
     if isfile("kocmoc/BSS_" .. _G.autoload .. ".json") then
-        kocmoc = game:service "HttpService":JSONDecode(readfile("kocmoc/BSS_" .. _G.autoload .. ".json"))
+        kocmoc = game:service("HttpService"):JSONDecode(readfile("kocmoc/BSS_" .. _G.autoload .. ".json"))
         for i,v in pairs(guiElements) do
             for j,k in pairs(v) do
                 local obj = k:GetObject()
