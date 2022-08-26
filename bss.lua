@@ -12,6 +12,7 @@ local bssapi = loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxkin
 local httpreq = (syn and syn.request) or http_request or (http and http.request) or request
 
 if not isfolder("kocmoc") then makefolder("kocmoc") end
+if not isfolder("kocmoc/premium") then makefolder("kocmoc/premium") end
 
 if isfile("rosemoc.txt") == false then
     httpreq({
@@ -396,7 +397,8 @@ getgenv().kocmoc = {
         petalplanter = false,
         shutdownkick = false,
         webhookupdates = false,
-        webhookping = false
+        webhookping = false,
+        autoquesthoneybee = false
     },
     vars = {
         field = "Ant Field",
@@ -1108,7 +1110,7 @@ end
 
 function makequests()
     for i, v in next, game.Workspace.NPCs:GetChildren() do
-        if v.Name ~= "Ant Challenge Info" and v.Name ~= "Bubble Bee Man 2" and v.Name ~= "Wind Shrine" and v.Name ~= "Gummy Bear" then
+        if v.Name ~= "Ant Challenge Info" and v.Name ~= "Bubble Bee Man 2" and v.Name ~= "Wind Shrine" and v.Name ~= "Gummy Bear" and v.Name ~= "Honey Bee" then
             if v:FindFirstChild("Platform") then
                 if v.Platform:FindFirstChild("AlertPos") then
                     if v.Platform.AlertPos:FindFirstChild("AlertGui") then
@@ -1127,8 +1129,8 @@ function makequests()
                                     api.tween(2, CFrame.new(
                                         v.Platform.Position.X,
                                         v.Platform.Position.Y + 3,
-                                        v.Platform.Position.Z)
-                                    )
+                                        v.Platform.Position.Z
+                                    ))
                                     task.wait(3)
                                 end
                                 for b, z in next, getconnections(button) do
@@ -1666,11 +1668,20 @@ function RequestCollectPlanters(planterTable)
         if planterTable then
             for i, v in pairs(planterTable) do
                 if v["GrowthPercent"] ~= nil then
-                    if v["GrowthPercent"] >= (kocmoc.vars.planterharvestamount or 75 / 100) then
-                        table.insert(plantersToCollect, {
-                            ["PM"] = v["PotModel"].PrimaryPart,
-                            ["AID"] = v["ActorID"]
-                        })
+                    if kocmoc.vars.planterharvestamount then
+                        if v["GrowthPercent"] >= (kocmoc.vars.planterharvestamount / 100) then
+                            table.insert(plantersToCollect, {
+                                ["PM"] = v["PotModel"].PrimaryPart,
+                                ["AID"] = v["ActorID"]
+                            })
+                        end
+                    else
+                        if v["GrowthPercent"] >= (75 / 100) then
+                            table.insert(plantersToCollect, {
+                                ["PM"] = v["PotModel"].PrimaryPart,
+                                ["AID"] = v["ActorID"]
+                            })
+                        end
                     end
                 end
             end
@@ -1753,6 +1764,7 @@ local combtab = Window:CreateTab("Combat")
 local itemstab = Window:CreateTab("Items")
 local misctab = Window:CreateTab("Misc")
 local setttab = Window:CreateTab("Settings")
+local premiumtab = Window:CreateTab("Premium")
 
 local loadingInfo = hometab:CreateSection("Startup")
 local loadingFunctions = loadingInfo:CreateLabel("Loading Functions..")
@@ -1859,6 +1871,7 @@ guiElements["toggles"]["farmpuffshrooms"] = farmt:CreateToggle("Farm Puffshrooms
 -- BEESMAS MARKER farmt:CreateToggle("Farm Snowflakes [⚠️]", nil, function(State) kocmoc.toggles.farmsnowflakes = State end)
 guiElements["toggles"]["farmrares"] = farmt:CreateToggle("Teleport To Rares [⚠️]", nil, function(State) kocmoc.toggles.farmrares = State end)
 guiElements["toggles"]["autoquest"] = farmt:CreateToggle("Auto Accept/Confirm Quests [⚙]", nil, function(State) kocmoc.toggles.autoquest = State end)
+guiElements["toggles"]["autoquesthoneybee"] = farmt:CreateToggle("Include Honey Bee Quests [⚙]", nil, function(State) kocmoc.toggles.autoquesthoneybee = State end)
 guiElements["toggles"]["autodoquest"] = farmt:CreateToggle("Auto Do Quests [⚙]", nil, function(State) kocmoc.toggles.autodoquest = State end)
 guiElements["toggles"]["honeystorm"] = farmt:CreateToggle("Auto Honeystorm", nil, function(State) kocmoc.toggles.honeystorm = State end)
 farmt:CreateLabel(" ")
@@ -2573,6 +2586,38 @@ pts:CreateButton("Remove Token From Priority List", function()
     pts:CreateDropdown("Priority List", kocmoc.priority, function(Option) end)
 end)
 pts:CreateDropdown("Priority List", kocmoc.priority, function(Option) end)
+
+local buysection = premiumtab:CreateSection("Buy")
+buysection:CreateLabel("Support the developer of Kocmoc v3!")
+buysection:CreateButton("Copy Shirt Link", function()
+    api.notify("Kocmoc " .. temptable.version, "Copied link to clipboard!", 2)
+    setclipboard and setclipboard("https://www.roblox.com/catalog/8958348861/Kocmoc-Honey-Bee-Design")
+end)
+buysection:CreateLabel("Without them this project wouldn't be possible")
+
+local miscsection = premiumtab:CreateSection("Misc")
+miscsection:CreateLabel("Kocmoc Premium includes:")
+miscsection:CreateLabel("Glider Speed Modifier [" .. getgenv().Star .. "]")
+miscsection:CreateLabel("Glider Float Exploit [" .. getgenv().Star .. "]")
+
+local autofarmingsection = premiumtab:CreateSection("Auto Farming")
+autofarmingsection:CreateLabel("Kocmoc Premium includes:")
+autofarmingsection:CreateLabel("Windy Bee Server Hopper [" .. getgenv().Star .. "]")
+autofarmingsection:CreateLabel("Smart Bubble Bloat [" .. getgenv().Star .. "]")
+
+local autojellysection = premiumtab:CreateSection("Auto Jelly")
+autojellysection:CreateLabel("Kocmoc Premium includes:")
+autojellysection:CreateLabel("Auto Jelly [" .. getgenv().Star .. "]")
+autojellysection:CreateLabel("Incredibly intricate yet simple to use to get you the perfect hive!")
+
+local autonectarsection = premiumtab:CreateSection("Auto Nectar")
+autonectarsection:CreateLabel("Kocmoc Premium includes:")
+autonectarsection:CreateLabel("Auto Nectar [" .. getgenv().Star .. "]")
+
+local webhooksection = premiumtab:CreateSection("Webhook")
+webhooksection:CreateLabel("Kocmoc Premium includes:")
+webhooksection:CreateLabel("Enable Webhook [" .. getgenv().Star .. "]")
+webhooksection:CreateLabel("The perfect way to track your exact progress and server status even from your mobile device!")
 
 loadingUI:UpdateText("Loaded UI")
 local loadingLoops = loadingInfo:CreateLabel("Loading Loops..")
@@ -3461,7 +3506,9 @@ task.spawn(function()
         completeQuest:FireServer("Black Bear 2")
         completeQuest:FireServer("Bucko Bee")
         completeQuest:FireServer("Riley Bee")
-        completeQuest:FireServer("Honey Bee")
+        if kocmoc.toggles.autoquesthoneybee then
+            completeQuest:FireServer("Honey Bee")
+        end
         task.wait(1)
         local getQuest = game.ReplicatedStorage.Events.GiveQuestFromPool
         getQuest:FireServer("Polar Bear")
@@ -3469,7 +3516,9 @@ task.spawn(function()
         getQuest:FireServer("Black Bear 2")
         getQuest:FireServer("Bucko Bee")
         getQuest:FireServer("Riley Bee")
-        getQuest:FireServer("Honey Bee")
+        if kocmoc.toggles.autoquesthoneybee then
+            completeQuest:FireServer("Honey Bee")
+        end
     end
 end)
 
