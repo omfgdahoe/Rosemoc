@@ -492,8 +492,7 @@ local function disconnected(hook, discordid, reason)
     local data = {
         ["username"] = player.Name,
         ["avatar_url"] = "https://www.roblox.com/HeadShot-thumbnail/image?userId="..tostring(player.UserId).."&width=420&height=420&format=png",
-        ["content"] = flag and "<@"..discordid.."> ".."Hourly Update" or "Hourly Update",
-        ["content"] = "<@"..discordid.."> "..(reason == "Server Timeout (Game Freeze)" and "Freeze" or "Kick"),
+        ["content"] = "<@"..tostring(discordid).."> "..(reason == "Server Timeout (Game Freeze)" and "Freeze" or "Kick"),
         ["embeds"] = {{
             ["title"] = "**Disconnect Detected**",
             --["description"] = "description",
@@ -551,7 +550,7 @@ local function hourly(ping, hook, discordid)
     local data = {
         ["username"] = player.Name,
         ["avatar_url"] = "https://www.roblox.com/HeadShot-thumbnail/image?userId="..tostring(player.UserId).."&width=420&height=420&format=png",
-        ["content"] = ping and "<@"..discordid.."> ".."Hourly Update" or "Hourly Update",
+        ["content"] = ping and "<@"..tostring(discordid).."> ".."Hourly Update" or "Hourly Update",
         ["embeds"] = {{
             ["title"] = "**Hourly Update**",
             ["type"] = "rich",
@@ -2301,7 +2300,7 @@ webhooksection:CreateToggle("Send Webhook Updates", nil, function(State)
     kocmoc.toggles.webhookupdates = State
 end)
 webhooksection:CreateTextBox("Webhook URL", "Discord webhook URL", false, function(Value)
-    if string.find("https://") then
+    if Value and string.find(Value, "https://") then
         kocmoc.vars.webhookurl = Value
     else
         api.notify("Kocmoc " .. temptable.version, "Invalid URL!", 2)
