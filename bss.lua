@@ -1872,10 +1872,9 @@ guiElements["toggles"]["blacklistcomforting"] = plantersection:CreateToggle("Bla
 guiElements["toggles"]["blacklistmotivating"] = plantersection:CreateToggle("Blacklist Motivating", nil, function(State) kocmoc.toggles.blacklistmotivating = State end)
 guiElements["toggles"]["blacklistrefreshing"] = plantersection:CreateToggle("Blacklist Refreshing", nil, function(State) kocmoc.toggles.blacklistrefreshing = State end)
 guiElements["toggles"]["blacklistsatisfying"] = plantersection:CreateToggle("Blacklist Satisfying", nil, function(State) kocmoc.toggles.blacklistsatisfying = State end)
-local planterharvestamountslider = plantersection:CreateSlider("Planter Harvest Percentage", 0, 100, 75, false, function(Value)
+guiElements["vars"]["planterharvestamount"] = plantersection:CreateSlider("Planter Harvest Percentage", 0, 100, 75, false, function(Value)
     kocmoc.vars.planterharvestamount = Value
 end)
-guiElements["vars"]["planterharvestamount"] = planterharvestamountslider
 guiElements["toggles"]["plasticplanter"] = plantersection:CreateToggle("Blacklist Plastic Planter", nil, function(State) kocmoc.toggles.plasticplanter = State end)
 guiElements["toggles"]["candyplanter"] = plantersection:CreateToggle("Blacklist Candy Planter", nil, function(State) kocmoc.toggles.candyplanter = State end)
 guiElements["toggles"]["redclayplanter"] = plantersection:CreateToggle("Blacklist Red Clay Planter", nil, function(State) kocmoc.toggles.redclayplanter = State end)
