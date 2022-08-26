@@ -1333,6 +1333,16 @@ local fullPlanterData = {
         },
         GrowthFields = { }
     },
+    Paper = {
+        NectarTypes = {
+            Satisfying = 0.75,
+            Comforting = 0.75,
+            Invigorating = 0.75,
+            Refreshing = 0.75,
+            Motivating = 0.75
+        },
+        GrowthFields = {}
+    },
     ]]
     Tacky = {
         NectarTypes = {Satisfying = 1.25, Comforting = 1.25},
@@ -1398,16 +1408,6 @@ local fullPlanterData = {
             ["Stump Field"] = 1.25,
             ["Bamboo Field"] = 1.25
         }
-    },
-    Paper = {
-        NectarTypes = {
-            Satisfying = 0.75,
-            Comforting = 0.75,
-            Invigorating = 0.75,
-            Refreshing = 0.75,
-            Motivating = 0.75
-        },
-        GrowthFields = {}
     },
     Pesticide = {
         NectarTypes = {Motivating = 1.3, Satisfying = 1.3},
