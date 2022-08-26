@@ -1871,7 +1871,7 @@ guiElements["toggles"]["blacklistcomforting"] = farmt:CreateToggle("Blacklist Co
 guiElements["toggles"]["blacklistmotivating"] = farmt:CreateToggle("Blacklist Motivating", nil, function(State) kocmoc.toggles.blacklistmotivating = State end)
 guiElements["toggles"]["blacklistrefreshing"] = farmt:CreateToggle("Blacklist Refreshing", nil, function(State) kocmoc.toggles.blacklistrefreshing = State end)
 guiElements["toggles"]["blacklistsatisfying"] = farmt:CreateToggle("Blacklist Satisfying", nil, function(State) kocmoc.toggles.blacklistsatisfying = State end)
-local planterharvestamountslider = farmsettings:CreateSlider("Planter Harvest Percentage", 0, 100, 75, false, function(Value)
+local planterharvestamountslider = farmt:CreateSlider("Planter Harvest Percentage", 0, 100, 75, false, function(Value)
     kocmoc.vars.planterharvestamount = Value
 end)
 guiElements["vars"]["planterharvestamount"] = planterharvestamountslider
