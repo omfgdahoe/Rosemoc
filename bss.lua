@@ -1,4 +1,4 @@
-repeat task.wait() until game:IsLoaded()
+repeat task.wait(0.1) until game:IsLoaded()
 
 getgenv().Star = "⭐"
 getgenv().Danger = "⚠️"
@@ -58,6 +58,8 @@ local done = true
 local hi = false
 local Items = require(game:GetService("ReplicatedStorage").EggTypes).GetTypes()
 local v1 = require(game.ReplicatedStorage.ClientStatCache):Get()
+
+repeat task.wait(0.1) until player.PlayerGui.ScreenGui:FindFirstChild("Menus")
 
 local hives = game.Workspace.Honeycombs:GetChildren()
 for i = #hives, 1, -1 do
@@ -4054,7 +4056,7 @@ if _G.autoload then
         api.notify("Rosemoc " .. temptable.version, "No such config file!", 2)
     end
 
-    local menuTabs = game.Players.LocalPlayer.PlayerGui.ScreenGui.Menus.ChildTabs
+    local menuTabs = player.PlayerGui.ScreenGui.Menus.ChildTabs
     local set_thread_identity = syn and syn.set_thread_identity or setthreadcontext or setidentity
 
     if not set_thread_identity then
