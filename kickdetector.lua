@@ -1,4 +1,4 @@
-local doneloading = false
+getgenv().doneloading = false
 
 task.spawn(function()
     while not doneloading do
@@ -15,4 +15,4 @@ repeat task.wait(0.1) until player.PlayerGui.ScreenGui:FindFirstChild("Menus")
 
 print("Game was properly loaded, so now the main Rosemoc file will handle any disconnections")
 
-doneloading = true
+getgenv().doneloading = true
