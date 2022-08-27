@@ -400,7 +400,8 @@ getgenv().kocmoc = {
         webhookupdates = false,
         webhookping = false,
         autoquesthoneybee = false,
-        buyantpass = false
+        buyantpass = false,
+        tweenteleport = false
     },
     vars = {
         field = "Ant Field",
@@ -1851,6 +1852,7 @@ guiElements["toggles"]["collectcrosshairs"] = farmo:CreateToggle("Farm Precise C
 guiElements["toggles"]["farmfuzzy"] = farmo:CreateToggle("Farm Fuzzy Bombs", nil, function(State) kocmoc.toggles.farmfuzzy = State end)
 guiElements["toggles"]["farmunderballoons"] = farmo:CreateToggle("Farm Under Balloons", nil, function(State) kocmoc.toggles.farmunderballoons = State end)
 guiElements["toggles"]["farmclouds"] = farmo:CreateToggle("Farm Under Clouds", nil, function(State) kocmoc.toggles.farmclouds = State end)
+guiElements["toggles"]["tweenteleport"] = farmo:CreateToggle("Play Animation Instead of Teleporting", nil, function(State) kocmoc.toggles.tweenteleport = State end)
 farmo:CreateLabel("")
 guiElements["toggles"]["honeymaskconv"] = farmo:CreateToggle("Auto Honey Mask", nil, function(bool) kocmoc.toggles.honeymaskconv = bool end)
 guiElements["vars"]["defmask"] = farmo:CreateDropdown("Default Mask", MasksTable, function(val) kocmoc.vars.defmask = val end)
@@ -2707,30 +2709,41 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
         if v.Name == "WarningDisk" and kocmoc.toggles.farmcoco then
             task.wait(0.5)
             if v.BrickColor == BrickColor.new("Lime green") then
-                task.wait(1.1)
-                if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
-                if temptable.lookat then
-                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
-                    task.wait()
-                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
+                if kocmoc.toggles.tweenteleport then
+                    if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
+                    api.tween(0.2, v.CFrame.p)
+                    task.wait(0.9)
                 else
-                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
-                    task.wait()
-                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+                    task.wait(1.1)
+                    if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
+                    if temptable.lookat then
+                        api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
+                        task.wait()
+                        api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
+                    else
+                        api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+                        task.wait()
+                        api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+                    end
                 end
             end
         elseif v.Name == "Crosshair" and kocmoc.toggles.collectcrosshairs then
             task.wait(0.5)
             if v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") then
-                if (v.Position - api.humanoidrootpart().Position).magnitude > 200 then return end
-                if temptable.lookat then
-                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
-                    task.wait()
-                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
+                if kocmoc.toggles.tweenteleport then
+                    if (v.Position - api.humanoidrootpart().Position).magnitude > 200 then return end
+                    api.tween(0.1, v.CFrame.p)
                 else
-                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
-                    task.wait()
-                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+                    if (v.Position - api.humanoidrootpart().Position).magnitude > 200 then return end
+                    if temptable.lookat then
+                        api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
+                        task.wait()
+                        api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
+                    else
+                        api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+                        task.wait()
+                        api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+                    end
                 end
             end
         elseif string.find(v.Name, "Bubble") and not temptable.currentbubble and getBuffTime("5101328809") > 0.2 and kocmoc.toggles.farmbubbles then
