@@ -69,9 +69,6 @@ for i = #hives, 1, -1 do
     end
 end
 
--- repeat task.wait() until game.Players.LocalPlayer.Honeycomb
--- local plrhive = game.Players.LocalPlayer:FindFirstChild("Honeycomb")
-
 -- Script tables
 for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
     if v:IsA("TextLabel") and string.find(v.Text, "Kocmoc v") then
@@ -3016,17 +3013,17 @@ task.spawn(function()
                             temptable.act2 = 0
                             repeat 
                                 task.wait()
-                            until workspace:FindFirstChild(player.Name) and workspace:FindFirstChild(player.Name):FindFirstChild("Humanoid") and workspace:FindFirstChild(player.Name):FindFirstChild("Humanoid").Health > 0
-                            workspace:FindFirstChild(game.Players.LocalPlayer.Name):BreakJoints()
+                            until player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0
+                            player.Character:BreakJoints()
                             task.wait(6.5)
                             repeat 
                                 task.wait()
-                            until workspace:FindFirstChild(player.Name)
-                            workspace:FindFirstChild(game.Players.LocalPlayer.Name):BreakJoints()
+                            until player.Character
+                            player.Character:BreakJoints()
                             task.wait(6.5)
                             repeat
                                 task.wait()
-                            until workspace:FindFirstChild(player.Name)
+                            until player.Character
                             temptable.started.monsters = false
                         end
                     end
@@ -3157,17 +3154,17 @@ task.spawn(function()
                                 temptable.act2 = 0
                                 repeat 
                                     task.wait()
-                                until workspace:FindFirstChild(player.Name) and workspace:FindFirstChild(player.Name):FindFirstChild("Humanoid") and workspace:FindFirstChild(player.Name):FindFirstChild("Humanoid").Health > 0
-                                workspace:FindFirstChild(game.Players.LocalPlayer.Name):BreakJoints()
+                                until player.Character and player.Character:FindFirstChild("Humanoid") and player.Character,Humanoid.Health > 0
+                                player.Character:BreakJoints()
                                 task.wait(6.5)
                                 repeat 
                                     task.wait()
-                                until workspace:FindFirstChild(player.Name)
-                                workspace:FindFirstChild(game.Players.LocalPlayer.Name):BreakJoints()
+                                until player.Character
+                                player.Character:BreakJoints()
                                 task.wait(6.5)
                                 repeat
                                     task.wait()
-                                until workspace:FindFirstChild(player.Name)
+                                until player.Character
                                 temptable.started.monsters = false
                             end
                         end
