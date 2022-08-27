@@ -78,7 +78,7 @@ for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
 end
 
 getgenv().temptable = {
-    version = "4.2.1",
+    version = "4.2.2",
     blackfield = "Sunflower Field",
     redfields = {},
     bluefields = {},
@@ -398,7 +398,8 @@ getgenv().kocmoc = {
         shutdownkick = false,
         webhookupdates = false,
         webhookping = false,
-        autoquesthoneybee = false
+        autoquesthoneybee = false,
+        buyantpass = false
     },
     vars = {
         field = "Ant Field",
@@ -553,9 +554,9 @@ local function hourly(ping, hook, discordid)
     local data = {
         ["username"] = player.Name,
         ["avatar_url"] = "https://www.roblox.com/HeadShot-thumbnail/image?userId="..tostring(player.UserId).."&width=420&height=420&format=png",
-        ["content"] = ping and "<@"..tostring(discordid).."> ".."Hourly Update" or "Hourly Update",
+        ["content"] = ping and "<@"..tostring(discordid).."> ".."Honey Update" or "Honey Update",
         ["embeds"] = {{
-            ["title"] = "**Hourly Update**",
+            ["title"] = "**Honey Update**",
             ["type"] = "rich",
             ["color"] = tonumber(0xfff802),
             ["fields"] = {
@@ -1746,7 +1747,7 @@ function formatString(Planter, Field, Nectar)
 end
 
 local Config = {
-    WindowName = "Kocmoc v" .. temptable.version .. " Re-Remastered By RoseGold",
+    WindowName = "Rosemoc v" .. temptable.version .. " Re-Remastered By RoseGold",
     Color = Color3.fromRGB(39, 133, 11),
     Keybind = Enum.KeyCode.Semicolon
 }
@@ -1872,7 +1873,6 @@ guiElements["toggles"]["farmpuffshrooms"] = farmt:CreateToggle("Farm Puffshrooms
 -- BEESMAS MARKER farmt:CreateToggle("Farm Snowflakes [⚠️]", nil, function(State) kocmoc.toggles.farmsnowflakes = State end)
 guiElements["toggles"]["farmrares"] = farmt:CreateToggle("Teleport To Rares [⚠️]", nil, function(State) kocmoc.toggles.farmrares = State end)
 guiElements["toggles"]["autoquest"] = farmt:CreateToggle("Auto Accept/Confirm Quests [⚙]", nil, function(State) kocmoc.toggles.autoquest = State end)
-guiElements["toggles"]["autoquesthoneybee"] = farmt:CreateToggle("Include Honey Bee Quests [⚙]", nil, function(State) kocmoc.toggles.autoquesthoneybee = State end)
 guiElements["toggles"]["autodoquest"] = farmt:CreateToggle("Auto Do Quests [⚙]", nil, function(State) kocmoc.toggles.autodoquest = State end)
 guiElements["toggles"]["honeystorm"] = farmt:CreateToggle("Auto Honeystorm", nil, function(State) kocmoc.toggles.honeystorm = State end)
 farmt:CreateLabel(" ")
@@ -2317,20 +2317,20 @@ guiElements["vars"]["webhookurl"] = webhooksection:CreateTextBox("Webhook URL", 
     if Value and string.find(Value, "https://") then
         kocmoc.vars.webhookurl = Value
     else
-        api.notify("Kocmoc " .. temptable.version, "Invalid URL!", 2)
+        api.notify("Rosemoc " .. temptable.version, "Invalid URL!", 2)
     end
 end)
 guiElements["vars"]["webhooktimer"] = webhooksection:CreateSlider("Minutes Between Updates", 1, 60, 60, false, function(Value)
     kocmoc.vars.webhooktimer = Value
 end)
-guiElements["toggles"]["webhookping"] = webhooksection:CreateToggle("Ping on Hourly Update", nil, function(State)
+guiElements["toggles"]["webhookping"] = webhooksection:CreateToggle("Ping on Honey Update", nil, function(State)
     kocmoc.toggles.webhookping = State
 end)
 guiElements["vars"]["discordid"] = webhooksection:CreateTextBox("Discord ID", "", false, function(Value)
     if tonumber(Value) then
         kocmoc.vars.discordid = Value
     else
-        api.notify("Kocmoc " .. temptable.version, "Invalid ID!", 2)
+        api.notify("Rosemoc " .. temptable.version, "Invalid ID!", 2)
     end
 end)
 
@@ -2432,7 +2432,7 @@ raresettings:CreateDropdown("Tokens Blacklist", kocmoc.bltokens,
                             function(Option) end)
 raresettings:CreateDropdown("Rares List", kocmoc.rares, function(Option) end)
 raresettings:CreateButton("Copy Token List Link", function()
-    api.notify("Kocmoc " .. temptable.version, "Copied link to clipboard!", 2)
+    api.notify("Rosemoc " .. temptable.version, "Copied link to clipboard!", 2)
     setclipboard("https://pastebin.com/raw/wtHBD3ij")
 end)
 local dispsettings = setttab:CreateSection("Auto Dispenser & Auto Boosters Settings")
@@ -2499,7 +2499,7 @@ local kocmocs = setttab:CreateSection("Configs")
 kocmocs:CreateTextBox("Config Name", "ex: stumpconfig", false, function(Value) temptable.configname = Value end)
 kocmocs:CreateButton("Load Config", function()
     if not isfile("kocmoc/BSS_" .. temptable.configname .. ".json") then
-        api.notify("Kocmoc " .. temptable.version, "No such config file!", 2)
+        api.notify("Rosemoc " .. temptable.version, "No such config file!", 2)
     else
         kocmoc = game:service("HttpService"):JSONDecode(readfile("kocmoc/BSS_" .. temptable.configname .. ".json"))
         for i,v in pairs(guiElements) do
@@ -2578,13 +2578,14 @@ guiElements["vars"]["questcolorprefer"] = aqs:CreateDropdown("Only Farm Ants Fro
     kocmoc.vars.questcolorprefer = Option
 end)
 guiElements["toggles"]["tptonpc"] = aqs:CreateToggle("Teleport To NPC", nil, function(State) kocmoc.toggles.tptonpc = State end)
+guiElements["toggles"]["autoquesthoneybee"] = aqs:CreateToggle("Include Honey Bee Quests", nil, function(State) kocmoc.toggles.autoquesthoneybee = State end)
+guiElements["toggles"]["buyantpass"] = aqs:CreateToggle("Buy Ant Pass When Needed", nil, function(State) kocmoc.toggles.buyantpass = State end)
+
 local pts = setttab:CreateSection("Autofarm Priority Tokens")
-pts:CreateTextBox("Asset ID", "rbxassetid", false,
-                  function(Value) rarename = Value end)
+pts:CreateTextBox("Asset ID", "rbxassetid", false, function(Value) rarename = Value end)
 pts:CreateButton("Add Token To Priority List", function()
     table.insert(kocmoc.priority, rarename)
-    game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild(
-        "Priority List Dropdown", true):Destroy()
+    game:GetService("CoreGui"):FindFirstChild(_G.windowname).Main:FindFirstChild("Priority List Dropdown", true):Destroy()
     pts:CreateDropdown("Priority List", kocmoc.priority, function(Option) end)
 end)
 pts:CreateButton("Remove Token From Priority List", function()
@@ -2597,7 +2598,7 @@ pts:CreateDropdown("Priority List", kocmoc.priority, function(Option) end)
 local buysection = premiumtab:CreateSection("Buy")
 buysection:CreateLabel("Support the developer of Kocmoc v3!")
 buysection:CreateButton("Copy Shirt Link", function()
-    api.notify("Kocmoc " .. temptable.version, "Copied link to clipboard!", 2)
+    api.notify("Rosemoc " .. temptable.version, "Copied link to clipboard!", 2)
     setclipboard("https://www.roblox.com/catalog/8958348861/Kocmoc-Honey-Bee-Design")
 end)
 buysection:CreateLabel("Without them this project")
@@ -2617,7 +2618,7 @@ local autojellysection = premiumtab:CreateSection("Auto Jelly")
 autojellysection:CreateLabel("Kocmoc Premium includes:")
 autojellysection:CreateLabel("Auto Jelly [" .. getgenv().Star .. "]")
 autojellysection:CreateLabel("Incredibly intricate yet simple to use")
-autojellysection:CreateLabel("to use to get you the perfect hive!")
+autojellysection:CreateLabel("to get you the perfect hive!")
 
 local autonectarsection = premiumtab:CreateSection("Auto Nectar")
 autonectarsection:CreateLabel("Kocmoc Premium includes:")
@@ -2798,6 +2799,10 @@ task.spawn(function()
                                             break
                                         end
                                     elseif string.find(text, "Ants.") and not string.find(text, "Complete!") then
+                                        if rtsg().Eggs.AntPass == 0 and kocmoc.toggles.buyantpass then
+                                            game.ReplicatedStorage.Events.ToyEvent:FireServer("Ant Pass Dispenser")
+                                            task.wait(0.5)
+                                        end
                                         if not game.Workspace.Toys["Ant Challenge"].Busy.Value and rtsg().Eggs.AntPass > 0 then
                                             if kocmoc.vars.questcolorprefer == "Any NPC" then
                                                 farmant()
@@ -3309,7 +3314,7 @@ task.spawn(function()
                 fd.Position.Z
             )
         end
-        if kocmoc.toggles.farmrares and not temptable.started.crab then
+        if kocmoc.toggles.farmrares and not temptable.started.crab and not temptable.started.ant then
             for k, v in next, game.workspace.Collectibles:GetChildren() do
                 if v.CFrame.YVector.Y == 1 then
                     if v.Transparency == 0 then
@@ -3388,8 +3393,7 @@ task.spawn(function()
     while task.wait(0.1) do
         if not temptable.converting then
             if kocmoc.toggles.autosamovar then
-                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer(
-                    "Samovar")
+                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer("Samovar")
                 platformm = game.Workspace.Toys.Samovar.Platform
                 for i, v in pairs(game.Workspace.Collectibles:GetChildren()) do
                     if (v.Position - platformm.Position).magnitude < 25 and
@@ -3399,8 +3403,7 @@ task.spawn(function()
                 end
             end
             if kocmoc.toggles.autostockings then
-                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer(
-                    "Stockings")
+                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer("Stockings")
                 platformm = game.Workspace.Toys.Stockings.Platform
                 for i, v in pairs(game.Workspace.Collectibles:GetChildren()) do
                     if (v.Position - platformm.Position).magnitude < 25 and
@@ -3410,8 +3413,7 @@ task.spawn(function()
                 end
             end
             if kocmoc.toggles.autoonettart then
-                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer(
-                    "Onett's Lid Art")
+                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer("Onett's Lid Art")
                 platformm = game.Workspace.Toys["Onett's Lid Art"]
                                 .Platform
                 for i, v in pairs(game.Workspace.Collectibles:GetChildren()) do
@@ -3422,11 +3424,8 @@ task.spawn(function()
                 end
             end
             if kocmoc.toggles.autocandles then
-                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer(
-                    "Honeyday Candles")
-                platformm =
-                    game.Workspace.Toys["Honeyday Candles"]
-                        .Platform
+                game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer("Honeyday Candles")
+                platformm = game.Workspace.Toys["Honeyday Candles"].Platform
                 for i, v in pairs(game.Workspace.Collectibles:GetChildren()) do
                     if (v.Position - platformm.Position).magnitude < 25 and
                         v.CFrame.YVector.Y == 1 then
@@ -4049,14 +4048,14 @@ if _G.autoload then
             end
         end
     else
-        api.notify("Kocmoc " .. temptable.version, "No such config file!", 2)
+        api.notify("Rosemoc " .. temptable.version, "No such config file!", 2)
     end
 
     local menuTabs = game.Players.LocalPlayer.PlayerGui.ScreenGui.Menus.ChildTabs
     local set_thread_identity = syn and syn.set_thread_identity or setthreadcontext or setidentity
 
     if not set_thread_identity then
-        api.notify("Kocmoc " .. temptable.version, "your exploit only partially supports autoload!", 2)
+        api.notify("Rosemoc " .. temptable.version, "your exploit only partially supports autoload!", 2)
     else
         for _,v in pairs(menuTabs:GetChildren()) do
             if v:FindFirstChild("Icon") and v.Icon.Image == "rbxassetid://1436835355" then
