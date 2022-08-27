@@ -1,5 +1,3 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/RoseGoldIsntGay/Rosemoc/main/kickdetector.lua"))()
-
 repeat task.wait(0.1) until game:IsLoaded()
 
 getgenv().Star = "⭐"
@@ -8,6 +6,7 @@ getgenv().ExploitSpecific = "📜"
 
 -- API CALLS
 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/RoseGoldIsntGay/Rosemoc/main/kickdetector.lua"))()
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RoseGoldIsntGay/Rosemoc/main/library.lua"))()
 getgenv().api = loadstring(game:HttpGet("https://raw.githubusercontent.com/RoseGoldIsntGay/Rosemoc/main/api.lua"))()
 local bssapi = loadstring(game:HttpGet("https://raw.githubusercontent.com/RoseGoldIsntGay/Rosemoc/main/bssapi.lua"))()
