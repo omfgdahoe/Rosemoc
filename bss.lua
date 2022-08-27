@@ -1,5 +1,3 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/RoseGoldIsntGay/Rosemoc/main/kickdetector.lua"))()
-
 repeat task.wait(0.1) until game:IsLoaded()
 
 getgenv().Star = "⭐"
