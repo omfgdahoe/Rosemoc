@@ -1094,9 +1094,9 @@ end
 
 function docrosshairs()
     for i,v in pairs(temptable.crosshairs) do
-        api.tween(0.2, v.CFrame)
+        api.tween(0.3, v.CFrame)
         temptable.crosshairs[i] = nil
-        break
+        task.wait()
     end
 end
 
@@ -1840,7 +1840,6 @@ guiElements["toggles"]["collectcrosshairs"] = farmo:CreateToggle("Farm Precise C
 guiElements["toggles"]["farmfuzzy"] = farmo:CreateToggle("Farm Fuzzy Bombs", nil, function(State) kocmoc.toggles.farmfuzzy = State end)
 guiElements["toggles"]["farmunderballoons"] = farmo:CreateToggle("Farm Under Balloons", nil, function(State) kocmoc.toggles.farmunderballoons = State end)
 guiElements["toggles"]["farmclouds"] = farmo:CreateToggle("Farm Under Clouds", nil, function(State) kocmoc.toggles.farmclouds = State end)
-guiElements["toggles"]["tweenteleport"] = farmo:CreateToggle("Play Animation Instead of Teleporting", nil, function(State) kocmoc.toggles.tweenteleport = State end)
 farmo:CreateLabel("")
 guiElements["toggles"]["honeymaskconv"] = farmo:CreateToggle("Auto Honey Mask", nil, function(bool) kocmoc.toggles.honeymaskconv = bool end)
 guiElements["vars"]["defmask"] = farmo:CreateDropdown("Default Mask", MasksTable, function(val) kocmoc.vars.defmask = val end)
@@ -2711,7 +2710,7 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
                 end
             end
         elseif v.Name == "Crosshair" and kocmoc.toggles.collectcrosshairs then
-            task.wait(0.5)
+            task.wait(0.1)
             if v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") then
                 table.insert(temptable.crosshairs, v)
             end
