@@ -3154,7 +3154,7 @@ task.spawn(function()
                                 temptable.act2 = 0
                                 repeat 
                                     task.wait()
-                                until player.Character and player.Character:FindFirstChild("Humanoid") and player.Character,Humanoid.Health > 0
+                                until player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0
                                 player.Character:BreakJoints()
                                 task.wait(6.5)
                                 repeat 
