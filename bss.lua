@@ -1092,22 +1092,11 @@ function avoidmob()
     end
 end
 
-function getcrosshairs(v)
-    if v.BrickColor ~= BrickColor.new("Lime green") and v.BrickColor ~= BrickColor.new("Flint") then
-        if temptable.crosshair then
-            repeat task.wait() until not temptable.crosshair
-        end
-        temptable.crosshair = true
-        api.walkTo(v.Position)
-        repeat
-            task.wait()
-            api.walkTo(v.Position)
-        until not v.Parent or v.BrickColor == BrickColor.new("Forest green")
-        task.wait(.1)
-        temptable.crosshair = false
-        table.remove(temptable.crosshairs, table.find(temptable.crosshairs, v))
-    else
-        table.remove(temptable.crosshairs, table.find(temptable.crosshairs, v))
+function docrosshairs()
+    for i,v in pairs(temptable.crosshairs) do
+        api.tween(0.2, v.CFrame)
+        temptable.crosshairs[i] = nil
+        break
     end
 end
 
@@ -2697,6 +2686,7 @@ end)
 task.spawn(function()
     while task.wait() do
         if kocmoc.toggles.autofarm then
+            if kocmoc.toggles.collectcrosshairs then docrosshairs() end
             if kocmoc.toggles.farmflame then getflame() end
             if kocmoc.toggles.farmfuzzy then getfuzzy() end
         end
@@ -2708,42 +2698,22 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
         if v.Name == "WarningDisk" and kocmoc.toggles.farmcoco then
             task.wait(0.5)
             if v.BrickColor == BrickColor.new("Lime green") then
-                if kocmoc.toggles.tweenteleport then
-                    if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
-                    api.tween(0.2, v.CFrame)
-                    task.wait(0.9)
+                task.wait(1.1)
+                if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
+                if temptable.lookat then
+                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
+                    task.wait()
+                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
                 else
-                    task.wait(1.1)
-                    if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
-                    if temptable.lookat then
-                        api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
-                        task.wait()
-                        api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
-                    else
-                        api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
-                        task.wait()
-                        api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
-                    end
+                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+                    task.wait()
+                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
                 end
             end
         elseif v.Name == "Crosshair" and kocmoc.toggles.collectcrosshairs then
             task.wait(0.5)
             if v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") then
-                if kocmoc.toggles.tweenteleport then
-                    if (v.Position - api.humanoidrootpart().Position).magnitude > 200 then return end
-                    api.tween(0.1, v.CFrame)
-                else
-                    if (v.Position - api.humanoidrootpart().Position).magnitude > 200 then return end
-                    if temptable.lookat then
-                        api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
-                        task.wait()
-                        api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
-                    else
-                        api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
-                        task.wait()
-                        api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
-                    end
-                end
+                table.insert(temptable.crosshairs, v)
             end
         elseif string.find(v.Name, "Bubble") and not temptable.currentbubble and getBuffTime("5101328809") > 0.2 and kocmoc.toggles.farmbubbles then
             if not kocmoc.toggles.farmpuffshrooms or (kocmoc.toggles.farmpuffshrooms and not game.Workspace.Happenings.Puffshrooms:FindFirstChildOfClass("Model")) then
