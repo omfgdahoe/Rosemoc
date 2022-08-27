@@ -3737,6 +3737,7 @@ task.spawn(function()
                 local LeastNectar = calculateLeastNectar(fetchNectarBlacklist())
                 local Field = fetchBestFieldWithNectar(LeastNectar)
                 local Planter = fetchBestMatch(LeastNectar, Field)
+                print(formatString(Planter, Field, LeastNectar))
                 PlantPlanter(Planter, Field)
             end
         end
