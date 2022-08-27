@@ -3731,7 +3731,7 @@ task.spawn(function()
         planterData["Pesticide"] = not kocmoc.toggles.pesticideplanter and fullPlanterData["Pesticide"] or nil
         planterData["Petal"] = not kocmoc.toggles.petalplanter and fullPlanterData["Petal"] or nil
 
-        if kocmoc.toggles.autoplanters then
+        if kocmoc.toggles.autoplanters and not temptable.started.ant and kocmoc.toggles.autofarm and not temptable.converting then
             RequestCollectPlanters(fetchAllPlanters())
             if #fetchAllPlanters() < 3 then
                 local LeastNectar = calculateLeastNectar(fetchNectarBlacklist())
