@@ -1095,8 +1095,11 @@ end
 function docrosshairs()
     for i,v in pairs(temptable.crosshairs) do
         api.tween(0.3, v.CFrame)
+        for i=0,3 do
+            task.wait()
+            api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+        end
         temptable.crosshairs[i] = nil
-        task.wait()
     end
 end
 
