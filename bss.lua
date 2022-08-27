@@ -2697,11 +2697,11 @@ task.spawn(function()
 end)
 
 game.Workspace.Particles.ChildAdded:Connect(function(v)
-    if v:IsA("Part") and not temptable.started.ant and not temptable.started.vicious and kocmoc.toggles.autofarm and not temptable.converting then
+    if (v:IsA("Part") or v:IsA("MeshPart")) and not temptable.started.ant and not temptable.started.vicious and kocmoc.toggles.autofarm and not temptable.converting then
         if v.Name == "WarningDisk" and kocmoc.toggles.farmcoco then
             task.wait(0.5)
             if v.BrickColor == BrickColor.new("Lime green") then
-                task.wait(1.2)
+                task.wait(1.1)
                 if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
                 if temptable.lookat then
                     api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
