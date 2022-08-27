@@ -2713,17 +2713,19 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
                     api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
                 end
             end
-        elseif v and v.Name == "Crosshair" and v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") and kocmoc.toggles.collectcrosshairs then
-            task.wait(1)
-            if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
-            if temptable.lookat then
-                api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
-                task.wait()
-                api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
-            else
-                api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
-                task.wait()
-                api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+        elseif v.Name == "Crosshair" and kocmoc.toggles.collectcrosshairs then
+            task.wait(0.5)
+            if v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") then
+                if (v.Position - api.humanoidrootpart().Position).magnitude > 200 then return end
+                if temptable.lookat then
+                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
+                    task.wait()
+                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
+                else
+                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+                    task.wait()
+                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+                end
             end
         elseif string.find(v.Name, "Bubble") and not temptable.currentbubble and getBuffTime("5101328809") > 0.2 and kocmoc.toggles.farmbubbles then
             if not kocmoc.toggles.farmpuffshrooms or (kocmoc.toggles.farmpuffshrooms and not game.Workspace.Happenings.Puffshrooms:FindFirstChildOfClass("Model")) then
