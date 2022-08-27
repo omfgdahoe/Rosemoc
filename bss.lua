@@ -1093,8 +1093,7 @@ function avoidmob()
 end
 
 function getcrosshairs(v)
-    if v.BrickColor ~= BrickColor.new("Lime green") and v.BrickColor ~=
-        BrickColor.new("Flint") then
+    if v.BrickColor ~= BrickColor.new("Lime green") and v.BrickColor ~= BrickColor.new("Flint") then
         if temptable.crosshair then
             repeat task.wait() until not temptable.crosshair
         end
@@ -2711,7 +2710,7 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
             if v.BrickColor == BrickColor.new("Lime green") then
                 if kocmoc.toggles.tweenteleport then
                     if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
-                    api.tween(0.2, v.CFrame.p)
+                    api.tween(0.2, v.CFrame)
                     task.wait(0.9)
                 else
                     task.wait(1.1)
@@ -2732,7 +2731,7 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
             if v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") then
                 if kocmoc.toggles.tweenteleport then
                     if (v.Position - api.humanoidrootpart().Position).magnitude > 200 then return end
-                    api.tween(0.1, v.CFrame.p)
+                    api.tween(0.1, v.CFrame)
                 else
                     if (v.Position - api.humanoidrootpart().Position).magnitude > 200 then return end
                     if temptable.lookat then
