@@ -1,11 +1,18 @@
+print("loaded kickdetector")
 getgenv().doneloading = false
 
 task.spawn(function()
     while not doneloading do
         task.wait()
-        local ep = game:GetService("CoreGui").RobloxPromptGui.promptOverlay:FindFirstChild("ErrorPrompt")
-        if ep and ep:FindFirstChild('MessageArea') and ep.MessageArea:FindFirstChild("ErrorFrame") then
-            game:Shutdown()
+        local robloxPromptGui = game:GetService("CoreGui"):FindFirstChild("RobloxPromptGui")
+        if robloxPromptGui then
+            local promptOverlay = robloxPromptGui:FindFirstChild("promptOverlay")
+            if promptOverlay then
+                local errorPrompt = promptOverlay:FindFirstChild("ErrorPrompt")
+                if errorPrompt and ep:FindFirstChild('MessageArea') and ep.MessageArea:FindFirstChild("ErrorFrame") then
+                    game:Shutdown()
+                end
+            end
         end
     end
 end)
