@@ -2700,7 +2700,7 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
         if v.Name == "WarningDisk" and kocmoc.toggles.farmcoco then
             task.wait(0.5)
             if v.BrickColor == BrickColor.new("Lime green") then
-                task.wait(1.1)
+                task.wait(1.25)
                 if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
                 if temptable.lookat then
                     api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
