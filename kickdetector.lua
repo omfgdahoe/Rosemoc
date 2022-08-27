@@ -18,6 +18,7 @@ task.spawn(function()
 end)
 
 repeat task.wait(0.1) until game:IsLoaded()
+repeat task.wait(0.1) until game.Players.LocalPlayer.PlayerGui:FindFirstChild("ScreenGui")
 repeat task.wait(0.1) until game.Players.LocalPlayer.PlayerGui.ScreenGui:FindFirstChild("Menus")
 
 print("Game was properly loaded, so now the main Rosemoc file will handle any disconnections")
