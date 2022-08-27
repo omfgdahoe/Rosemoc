@@ -1655,9 +1655,9 @@ end
 
 function collectSpecificPlanter(prt, id)
     if prt then
-        if game.Players.LocalPlayer.Character then
-            if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = prt.CFrame
+        if player.Character then
+            if player.Character:FindFirstChild("HumanoidRootPart") then
+                player.Character:FindFirstChild("HumanoidRootPart").CFrame = prt.CFrame
                 task.wait(0.1)
                 game:GetService("ReplicatedStorage").Events.PlanterModelCollect:FireServer(id)
             end
@@ -1701,6 +1701,7 @@ function RequestCollectPlanters(planterTable)
 end
 
 function PlantPlanter(name, field)
+    print("PlantPlanter was triggered with "..name.." Planter on "..field)
     if field and name then
         local specField = game:GetService("Workspace").FlowerZones:FindFirstChild(field)
         if specField ~= nil then
@@ -1708,10 +1709,12 @@ function PlantPlanter(name, field)
             local attempts = 0
             repeat
                 task.wait(0.1)
-                if game.Players.LocalPlayer.Character then
-                    if game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                        game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = specField.CFrame
-                        task.wait(0.2)
+                if player.Character then
+                    if player.Character:FindFirstChild("HumanoidRootPart") then
+                        for i=0,50 do
+                            player.Character.HumanoidRootPart.CFrame = specField.CFrame
+                            task.wait()
+                        end
                         game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({
                             ["Name"] = name .. " Planter"
                         })
