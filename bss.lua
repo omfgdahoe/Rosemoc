@@ -78,7 +78,7 @@ for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
 end
 
 getgenv().temptable = {
-    version = "4.2.2",
+    version = "4.2.3",
     blackfield = "Sunflower Field",
     redfields = {},
     bluefields = {},
@@ -2595,6 +2595,14 @@ pts:CreateButton("Remove Token From Priority List", function()
 end)
 pts:CreateDropdown("Priority List", kocmoc.priority, function(Option) end)
 
+local warningsection = premiumtab:CreateSection("WARNING!!")
+warningsection:CreateLabel("Kocmoc v3 creator was hacked!")
+warningsection:CreateLabel("Do not buy Kocmoc Premium for now!")
+
+local warningsection2 = premiumtab:CreateSection("WARNING!!")
+warningsection2:CreateLabel("Kocmoc v3 creator was hacked!")
+warningsection2:CreateLabel("Do not buy Kocmoc Premium for now!")
+
 local buysection = premiumtab:CreateSection("Buy")
 buysection:CreateLabel("Support the developer of Kocmoc v3!")
 buysection:CreateButton("Copy Shirt Link", function()
@@ -3509,24 +3517,26 @@ end)
 
 task.spawn(function()
     while task.wait(1) do
-        local completeQuest = game.ReplicatedStorage.Events.CompleteQuestFromPool
-        completeQuest:FireServer("Polar Bear")
-        completeQuest:FireServer("Brown Bear 2")
-        completeQuest:FireServer("Black Bear 2")
-        completeQuest:FireServer("Bucko Bee")
-        completeQuest:FireServer("Riley Bee")
-        if kocmoc.toggles.autoquesthoneybee then
-            completeQuest:FireServer("Honey Bee")
-        end
-        task.wait(1)
-        local getQuest = game.ReplicatedStorage.Events.GiveQuestFromPool
-        getQuest:FireServer("Polar Bear")
-        getQuest:FireServer("Brown Bear 2")
-        getQuest:FireServer("Black Bear 2")
-        getQuest:FireServer("Bucko Bee")
-        getQuest:FireServer("Riley Bee")
-        if kocmoc.toggles.autoquesthoneybee then
-            completeQuest:FireServer("Honey Bee")
+        if kocmoc.toggles.autoquest then
+            local completeQuest = game.ReplicatedStorage.Events.CompleteQuestFromPool
+            completeQuest:FireServer("Polar Bear")
+            completeQuest:FireServer("Brown Bear 2")
+            completeQuest:FireServer("Black Bear 2")
+            completeQuest:FireServer("Bucko Bee")
+            completeQuest:FireServer("Riley Bee")
+            if kocmoc.toggles.autoquesthoneybee then
+                completeQuest:FireServer("Honey Bee")
+            end
+            task.wait(1)
+            local getQuest = game.ReplicatedStorage.Events.GiveQuestFromPool
+            getQuest:FireServer("Polar Bear")
+            getQuest:FireServer("Brown Bear 2")
+            getQuest:FireServer("Black Bear 2")
+            getQuest:FireServer("Bucko Bee")
+            getQuest:FireServer("Riley Bee")
+            if kocmoc.toggles.autoquesthoneybee then
+                completeQuest:FireServer("Honey Bee")
+            end
         end
     end
 end)
