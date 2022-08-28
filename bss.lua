@@ -1093,13 +1093,11 @@ end
 
 function dobubbles()
     for _,v in pairs(temptable.bubbles) do
-        api.tween(0.4, v.CFrame)
-        for i=0,3 do
-            task.wait()
-            api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
-        end
-        if temptable.bubbles[i] then
-            temptable.bubbles[i] = nil
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and getBuffTime("5101328809") > 0.2 then
+            api.tween((api.humanoidrootpart().CFrame.p - v.CFrame.p).Magnitude / player.Character.Humanoid.WalkSpeed, CFrame.new(v.CFrame.p))
+            if temptable.bubbles[i] then
+                temptable.bubbles[i] = nil
+            end
         end
     end
 end
