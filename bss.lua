@@ -1110,14 +1110,18 @@ function avoidmob()
     end
 end
 
-function dobubbles()
+function dobubbles(bubba)
     for _,v in pairs(temptable.bubbles) do
-        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and getBuffTime("5101328809") > 0.2 then
-            api.tween((api.humanoidrootpart().CFrame.p - v.CFrame.p).Magnitude / player.Character.Humanoid.WalkSpeed, CFrame.new(v.CFrame.p))
+        if v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and getBuffTime("5101328809") > 0.2 then
+            api.tween(((api.humanoidrootpart().CFrame.p - v.CFrame.p).Magnitude / player.Character.Humanoid.WalkSpeed) * 0.75, CFrame.new(v.CFrame.p))
             if temptable.bubbles[i] then
                 temptable.bubbles[i] = nil
             end
         end
+    end
+
+    if bubba % 100 == 0 then
+        temptable.bubbles = {}
     end
 end
 
@@ -2711,9 +2715,13 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-    while task.wait() do
+    local bubba = 0
+    while task.wait(0.2) do
         if kocmoc.toggles.autofarm then
-            if kocmoc.toggles.farmbubbles then dobubbles() end
+            if kocmoc.toggles.farmbubbles then 
+                dobubbles(bubba)
+                bubba = bubba + 1
+            end
             if kocmoc.toggles.collectcrosshairs then docrosshairs() end
             if kocmoc.toggles.farmflame then getflame() end
             if kocmoc.toggles.farmfuzzy then getfuzzy() end
