@@ -77,7 +77,7 @@ for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
 end
 
 getgenv().temptable = {
-    version = "4.2.3",
+    version = "4.2.4",
     blackfield = "Sunflower Field",
     redfields = {},
     bluefields = {},
@@ -149,6 +149,7 @@ getgenv().temptable = {
     end,
     coconuts = {},
     crosshairs = {},
+    bubbles = {},
     crosshair = false,
     coconut = false,
     act = 0,
@@ -178,7 +179,6 @@ getgenv().temptable = {
     lookat = nil,
     currtool = rtsg()["EquippedCollector"],
     starttime = tick(),
-    currentbubble = nil,
     planting = false
 }
 local planterst = {plantername = {}, planterid = {}}
@@ -837,7 +837,6 @@ function farmant()
         task.wait()
         task.spawn(function()
             if not anttokendb then
-                anttokendb = true
                 local smallest = math.huge
                 for _,token in pairs(workspace.Collectibles:GetChildren()) do
                     local decal = token:FindFirstChildOfClass("Decal")
@@ -853,6 +852,7 @@ function farmant()
                             end
                             
                             if player.Character:FindFirstChild("Humanoid") and smallest > 20 and smallest < 100 then
+                                anttokendb = true
                                 local save = api.humanoidrootpart().CFrame
                                 api.humanoidrootpart().CFrame = CFrame.new(token.CFrame.p)
                                 task.wait(0.5)
@@ -872,12 +872,12 @@ function farmant()
                     api.humanoidrootpart().CFrame = acr
                     anttable.left = false
                     anttable.right = true
-                    task.wait(0.5)
+                    task.wait(1)
                 elseif (v.Root.Position - api.humanoidrootpart().Position).magnitude <= 40 and anttable.right then
                     api.humanoidrootpart().CFrame = acl
                     anttable.left = true
                     anttable.right = false
-                    task.wait(0.5)
+                    task.wait(1)
                 end
             end
         end
@@ -1091,9 +1091,20 @@ function avoidmob()
     end
 end
 
+function dobubbles()
+    for _,v in pairs(temptable.bubbles) do
+        api.tween(0.4, v.CFrame)
+        for i=0,3 do
+            task.wait()
+            api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+        end
+        temptable.bubbles[i] = nil
+    end
+end
+
 function docrosshairs()
-    for i,v in pairs(temptable.crosshairs) do
-        api.tween(0.3, v.CFrame)
+    for _,v in pairs(temptable.crosshairs) do
+        api.tween(0.4, v.CFrame)
         for i=0,3 do
             task.wait()
             api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
@@ -1535,6 +1546,19 @@ end
 function fetchBestMatch(nectartype, field)
     local bestPlanter = nil
     local bestNectarMult = 0
+    local bestFieldGrowthRate = 0
+    for i, v in pairs(planterData) do
+        if GetItemListWithValue()[i .. "Planter"] then
+            if GetItemListWithValue()[i .. "Planter"] >= 1 then
+                if v.GrowthFields[field] ~= nil then
+                    if v.GrowthFields[field] > bestFieldGrowthRate then
+                        bestFieldGrowthRate = v.GrowthFields[field]
+                        bestPlanter = i
+                    end
+                end
+            end
+        end
+    end
     for i, v in pairs(planterData) do
         if GetItemListWithValue()[i .. "Planter"] then
             if GetItemListWithValue()[i .. "Planter"] >= 1 then
@@ -1692,7 +1716,6 @@ function RequestCollectPlanters(planterTable)
 end
 
 function PlantPlanter(name, field)
-    print("PlantPlanter was triggered with "..name.." Planter on "..field)
     if field and name then
         local specField = game:GetService("Workspace").FlowerZones:FindFirstChild(field)
         if specField ~= nil then
@@ -1723,7 +1746,8 @@ function getNectarFromField(field)
     for i, v in pairs(nectarData) do
         for k, p in pairs(v) do
             if p == field then
-                foundnectar = i end
+                foundnectar = i
+            end
         end
     end
     return foundnectar
@@ -2687,6 +2711,7 @@ end)
 task.spawn(function()
     while task.wait() do
         if kocmoc.toggles.autofarm then
+            if kocmoc.toggles.farmbubbles then dobubbles() end
             if kocmoc.toggles.collectcrosshairs then docrosshairs() end
             if kocmoc.toggles.farmflame then getflame() end
             if kocmoc.toggles.farmfuzzy then getfuzzy() end
@@ -2716,17 +2741,9 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
             if v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") then
                 table.insert(temptable.crosshairs, v)
             end
-        elseif string.find(v.Name, "Bubble") and not temptable.currentbubble and getBuffTime("5101328809") > 0.2 and kocmoc.toggles.farmbubbles then
+        elseif string.find(v.Name, "Bubble") and getBuffTime("5101328809") > 0.2 and kocmoc.toggles.farmbubbles then
             if not kocmoc.toggles.farmpuffshrooms or (kocmoc.toggles.farmpuffshrooms and not game.Workspace.Happenings.Puffshrooms:FindFirstChildOfClass("Model")) then
-                if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
-                temptable.currentbubble = v
-                if temptable.lookat then
-                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
-                else
-                    api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
-                end
-                task.wait(0.5)
-                temptable.currentbubble = nil
+                table.insert(temptable.bubbles, v)
             end
         end
     end
@@ -2742,9 +2759,8 @@ task.spawn(function()
             pollenpercentage = pollencount / maxpollen * 100
             fieldselected = game.Workspace.FlowerZones[kocmoc.vars.field]
 
-            if kocmoc.toggles.autouseconvertors == true then
-                if tonumber(pollenpercentage) >=
-                    (kocmoc.vars.convertat - (kocmoc.vars.autoconvertWaitTime)) then
+            if kocmoc.toggles.autouseconvertors then
+                if tonumber(pollenpercentage) >= (kocmoc.vars.convertat - (kocmoc.vars.autoconvertWaitTime)) then
                     if not temptable.consideringautoconverting then
                         temptable.consideringautoconverting = true
                         task.spawn(function()
@@ -3726,8 +3742,10 @@ task.spawn(function()
                 local LeastNectar = calculateLeastNectar(fetchNectarBlacklist())
                 local Field = fetchBestFieldWithNectar(LeastNectar)
                 local Planter = fetchBestMatch(LeastNectar, Field)
-                print(formatString(Planter, Field, LeastNectar))
-                PlantPlanter(Planter, Field)
+                if LeastNectar and Field and Planter then
+                    print(formatString(Planter, Field, LeastNectar))
+                    PlantPlanter(Planter, Field)
+                end
             end
         end
     end
