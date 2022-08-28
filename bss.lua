@@ -808,6 +808,25 @@ function getplanters()
     end
 end
 
+function getBuffTime(decalID)
+    if not decalID then return 0 end
+    if player and player.PlayerGui and player.PlayerGui.ScreenGui then
+        for i,v in pairs(player.PlayerGui.ScreenGui:GetChildren()) do
+            if v.Name == "TileGrid" then
+                for j,k in pairs(v:GetChildren()) do
+                    if k:FindFirstChild("BG") and k.BG:FindFirstChild("Icon") then
+                        if string.find(tostring(k.BG.Icon.Image), decalID) then
+                            return k.BG.Bar.Size.Y.Scale
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    return 0
+end
+
 function farmant()
     antpart.CanCollide = true
     temptable.started.ant = true
@@ -1244,25 +1263,6 @@ local function useConvertors()
         game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer(
             {["Name"] = "Coconut"})
     end
-end
-
-local function getBuffTime(decalID)
-    if not decalID then return 0 end
-    if player and player.PlayerGui and player.PlayerGui.ScreenGui then
-        for i,v in pairs(player.PlayerGui.ScreenGui:GetChildren()) do
-            if v.Name == "TileGrid" then
-                for j,k in pairs(v:GetChildren()) do
-                    if k:FindFirstChild("BG") and k.BG:FindFirstChild("Icon") then
-                        if string.find(tostring(k.BG.Icon.Image), decalID) then
-                            return k.BG.Bar.Size.Y.Scale
-                        end
-                    end
-                end
-            end
-        end
-    end
-
-    return 0
 end
 
 local function fetchBuffTable(stats)
