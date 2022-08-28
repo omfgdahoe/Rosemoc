@@ -837,6 +837,7 @@ function farmant()
         task.wait()
         task.spawn(function()
             if not anttokendb then
+                anttokendb = true
                 local smallest = math.huge
                 for _,token in pairs(workspace.Collectibles:GetChildren()) do
                     local decal = token:FindFirstChildOfClass("Decal")
@@ -852,7 +853,6 @@ function farmant()
                             end
                             
                             if player.Character:FindFirstChild("Humanoid") and smallest > 20 and smallest < 100 then
-                                anttokendb = true
                                 local save = api.humanoidrootpart().CFrame
                                 api.humanoidrootpart().CFrame = CFrame.new(token.CFrame.p)
                                 task.wait(0.5)
@@ -862,7 +862,7 @@ function farmant()
                         end
                     end
                 end
-                task.wait(2)
+                task.wait(1)
                 anttokendb = false
             end
         end)
