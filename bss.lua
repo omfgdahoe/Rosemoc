@@ -1098,7 +1098,9 @@ function dobubbles()
             task.wait()
             api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
         end
-        temptable.bubbles[i] = nil
+        if temptable.bubbles[i] then
+            temptable.bubbles[i] = nil
+        end
     end
 end
 
@@ -1109,7 +1111,9 @@ function docrosshairs()
             task.wait()
             api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
         end
-        temptable.crosshairs[i] = nil
+        if temptable.crosshairs[i] then
+            temptable.crosshairs[i] = nil
+        end
     end
 end
 
@@ -2743,6 +2747,7 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
             end
         elseif string.find(v.Name, "Bubble") and getBuffTime("5101328809") > 0.2 and kocmoc.toggles.farmbubbles then
             if not kocmoc.toggles.farmpuffshrooms or (kocmoc.toggles.farmpuffshrooms and not game.Workspace.Happenings.Puffshrooms:FindFirstChildOfClass("Model")) then
+                if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
                 table.insert(temptable.bubbles, v)
             end
         end
