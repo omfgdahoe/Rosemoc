@@ -1112,7 +1112,7 @@ end
 
 function dobubbles(bubba)
     for _,v in pairs(temptable.bubbles) do
-        if v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and getBuffTime("5101328809") > 0.2 then
+        if v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and getBuffTime("5101328809") > 0.2 and not temptable.started.ant and not temptable.started.vicious and not temptable.converting and not temptable.planting then
             api.tween(((api.humanoidrootpart().CFrame.p - v.CFrame.p).Magnitude / player.Character.Humanoid.WalkSpeed) * 0.75, CFrame.new(v.CFrame.p))
             if temptable.bubbles[i] then
                 temptable.bubbles[i] = nil
@@ -1127,7 +1127,7 @@ end
 
 function docrosshairs(count)
     for _,v in pairs(temptable.crosshairs) do
-        if v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        if v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and not temptable.started.ant and not temptable.started.vicious and not temptable.converting and not temptable.planting then
             api.tween(((api.humanoidrootpart().CFrame.p - v.CFrame.p).Magnitude / player.Character.Humanoid.WalkSpeed) * 0.75, CFrame.new(v.CFrame.p))
             task.wait(0.1)
             if temptable.crosshairs[i] then
@@ -2744,10 +2744,12 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
                 task.wait(1.25)
                 if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
                 if temptable.lookat then
+                    api.humanoidrootpart().Velocity = Vector3.new(0, 0, 0)
                     api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
                     task.wait()
                     api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p, temptable.lookat)
                 else
+                    api.humanoidrootpart().Velocity = Vector3.new(0, 0, 0)
                     api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
                     task.wait()
                     api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
