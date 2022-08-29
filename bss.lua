@@ -1011,12 +1011,7 @@ end
 
 function closestleaf()
     for i, v in next, game.Workspace.Flowers:GetChildren() do
-        if temptable.running == false and tonumber((v.Position -
-                                                       player
-                                                           .Character
-                                                           .HumanoidRootPart
-                                                           .Position).magnitude) <
-            temptable.magnitude / 1.4 then
+        if temptable.running == false and tonumber((v.Position - player.Character.HumanoidRootPart.Position).magnitude) < temptable.magnitude / 1.4 then
             farm(v)
             break
         end
@@ -1024,6 +1019,7 @@ function closestleaf()
 end
 
 function getballoons()
+    if temptable.doingbubbles then return end
     for i, v in next, game.Workspace.Balloons.FieldBalloons:GetChildren() do
         if v:FindFirstChild("BalloonRoot") and v:FindFirstChild("PlayerName") then
             if v:FindFirstChild("PlayerName").Value == player.Name then
@@ -1069,6 +1065,7 @@ function getflower()
 end
 
 function getcloud()
+    if temptable.doingbubbles then return end
     for i, v in next, game.Workspace.Clouds:GetChildren() do
         e = v:FindFirstChild("Plane")
         if e and tonumber((e.Position - api.humanoidrootpart().Position).magnitude) < temptable.magnitude / 1.4 then
@@ -1123,7 +1120,7 @@ function dobubbles()
             api.humanoid():MoveTo(v.Position)
             repeat
                 task.wait()
-            until (trying.Position - api.humanoidrootpart().Position).magnitude <= 4 or not v or not v.Parent or not temptable.running
+            until (v.Position - api.humanoidrootpart().Position).magnitude <= 4 or not v or not v.Parent or not temptable.running
 
             kocmoc.vars.walkspeed = savespeed
 
