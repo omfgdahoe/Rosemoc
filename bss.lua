@@ -179,7 +179,9 @@ getgenv().temptable = {
     lookat = nil,
     currtool = rtsg()["EquippedCollector"],
     starttime = tick(),
-    planting = false
+    planting = false,
+    bubblecounter = 0,
+    crosshaircounter = 0
 }
 local planterst = {plantername = {}, planterid = {}}
 
@@ -1110,7 +1112,7 @@ function avoidmob()
     end
 end
 
-function dobubbles(bubba)
+function dobubbles()
     for _,v in pairs(temptable.bubbles) do
         if v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and getBuffTime("5101328809") > 0.2 and not temptable.started.ant and not temptable.started.vicious and not temptable.converting and not temptable.planting then
             api.tween(((api.humanoidrootpart().CFrame.p - v.CFrame.p).Magnitude / player.Character.Humanoid.WalkSpeed) * 0.75, CFrame.new(v.CFrame.p))
@@ -1120,12 +1122,12 @@ function dobubbles(bubba)
         end
     end
 
-    if bubba % 100 == 0 then
+    if temptable.bubblecounter % 100 == 0 then
         temptable.bubbles = {}
     end
 end
 
-function docrosshairs(count)
+function docrosshairs()
     for _,v in pairs(temptable.crosshairs) do
         if v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and not temptable.started.ant and not temptable.started.vicious and not temptable.converting and not temptable.planting then
             api.tween(((api.humanoidrootpart().CFrame.p - v.CFrame.p).Magnitude / player.Character.Humanoid.WalkSpeed) * 0.75, CFrame.new(v.CFrame.p))
@@ -1136,7 +1138,7 @@ function docrosshairs(count)
         end
     end
 
-    if count % 100 == 0 then
+    if temptable.crosshaircounter % 100 == 0 then
         temptable.crosshairs = {}
     end
 end
@@ -2718,17 +2720,15 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-    local bubba = 0
-    local crossa = 0
     while task.wait(0.2) do
         if kocmoc.toggles.autofarm then
             if kocmoc.toggles.farmbubbles then 
-                dobubbles(bubba)
-                bubba = bubba + 1
+                dobubbles()
+                temptable.bubblecounter = temptable.bubblecounter + 1
             end
             if kocmoc.toggles.collectcrosshairs then 
                 docrosshairs()
-                crossa = crossa + 1
+                temptable.crosshaircounter = temptable.crosshaircounter + 1
             end
             if kocmoc.toggles.farmflame then getflame() end
             if kocmoc.toggles.farmfuzzy then getfuzzy() end
