@@ -1125,16 +1125,19 @@ function dobubbles(bubba)
     end
 end
 
-function docrosshairs()
+function docrosshairs(count)
     for _,v in pairs(temptable.crosshairs) do
-        api.tween(0.4, v.CFrame)
-        for i=0,3 do
-            task.wait()
-            api.humanoidrootpart().CFrame = CFrame.new(v.CFrame.p)
+        if v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            api.tween(((api.humanoidrootpart().CFrame.p - v.CFrame.p).Magnitude / player.Character.Humanoid.WalkSpeed) * 0.75, CFrame.new(v.CFrame.p))
+            task.wait(0.1)
+            if temptable.crosshairs[i] then
+                temptable.crosshairs[i] = nil
+            end
         end
-        if temptable.crosshairs[i] then
-            temptable.crosshairs[i] = nil
-        end
+    end
+
+    if count % 100 == 0 then
+        temptable.crosshairs = {}
     end
 end
 
@@ -2716,13 +2719,17 @@ end)
 
 task.spawn(function()
     local bubba = 0
+    local crossa = 0
     while task.wait(0.2) do
         if kocmoc.toggles.autofarm then
             if kocmoc.toggles.farmbubbles then 
                 dobubbles(bubba)
                 bubba = bubba + 1
             end
-            if kocmoc.toggles.collectcrosshairs then docrosshairs() end
+            if kocmoc.toggles.collectcrosshairs then 
+                docrosshairs()
+                crossa = crossa + 1
+            end
             if kocmoc.toggles.farmflame then getflame() end
             if kocmoc.toggles.farmfuzzy then getfuzzy() end
         end
@@ -2845,7 +2852,7 @@ task.spawn(function()
                         if i == #player.PlayerGui.ScreenGui.Menus.Children.Quests:GetDescendants() then
                             if kocmoc.toggles.followplayer then
                                 local playerToFollow = game.Players:FindFirstChild(kocmoc.vars.playertofollow)
-                                if playerToFollow and playerToFollow.Character:FindFirstChild("HumanoidRootPart") then
+                                if playerToFollow and playerToFollow.Character and playerToFollow.Character:FindFirstChild("HumanoidRootPart") then
                                     fieldselected = findField(playerToFollow.Character.HumanoidRootPart.CFrame.p)
                                     if not fieldselected or fieldselected == "Ant Field" then
                                         fieldselected = game.Workspace.FlowerZones[kocmoc.vars.field]
@@ -2859,7 +2866,7 @@ task.spawn(function()
                 else
                     if kocmoc.toggles.followplayer then
                         local playerToFollow = game.Players:FindFirstChild(kocmoc.vars.playertofollow)
-                        if playerToFollow and playerToFollow.Character:FindFirstChild("HumanoidRootPart") then
+                        if playerToFollow and playerToFollow.Character and playerToFollow.Character:FindFirstChild("HumanoidRootPart") then
                             fieldselected = findField(playerToFollow.Character.HumanoidRootPart.CFrame.p)
                             if not fieldselected then
                                 fieldselected = game.Workspace.FlowerZones[kocmoc.vars.field]
