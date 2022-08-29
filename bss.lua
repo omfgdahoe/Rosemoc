@@ -181,7 +181,8 @@ getgenv().temptable = {
     starttime = tick(),
     planting = false,
     bubblecounter = 0,
-    crosshaircounter = 0
+    crosshaircounter = 0,
+    doingbubbles = false
 }
 local planterst = {plantername = {}, planterid = {}}
 
@@ -623,7 +624,9 @@ function farm(trying)
         player.Character.Humanoid.WalkSpeed = kocmoc.vars.farmspeed
     end
     api.humanoid():MoveTo(trying.Position)
-    repeat task.wait() until (trying.Position - api.humanoidrootpart().Position).magnitude <= 4 or not IsToken(trying) or not temptable.running
+    repeat 
+        task.wait()
+    until (trying.Position - api.humanoidrootpart().Position).magnitude <= 4 or not IsToken(trying) or not temptable.running
 end
 
 function disableall()
@@ -665,12 +668,12 @@ function enableall()
 end
 
 function gettoken(v3)
+    if temptable.doingbubbles then return end
     if not v3 then v3 = fieldposition end
     task.wait()
     for e, r in next, game.Workspace.Collectibles:GetChildren() do
         itb = false
-        if r:FindFirstChildOfClass("Decal") and
-            kocmoc.toggles.enabletokenblacklisting then
+        if r:FindFirstChildOfClass("Decal") and kocmoc.toggles.enabletokenblacklisting then
             if api.findvalue(kocmoc.bltokens, string.split(r:FindFirstChildOfClass("Decal").Texture, "rbxassetid://")[2]) then
                 itb = true
             end
@@ -1093,9 +1096,7 @@ end
 
 function getflame()
     for i, v in next, game.Workspace.PlayerFlames:GetChildren() do
-        if tonumber((v.Position -
-                        api.humanoidrootpart()
-                            .Position).magnitude) < temptable.magnitude / 1.4 then
+        if tonumber((v.Position - api.humanoidrootpart().Position).magnitude) < temptable.magnitude / 1.4 then
             farm(v)
             break
         end
@@ -1115,12 +1116,24 @@ end
 function dobubbles()
     for _,v in pairs(temptable.bubbles) do
         if v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and getBuffTime("5101328809") > 0.2 and not temptable.started.ant and not temptable.started.vicious and not temptable.converting and not temptable.planting then
-            api.tween(((api.humanoidrootpart().CFrame.p - v.CFrame.p).Magnitude / player.Character.Humanoid.WalkSpeed) * 0.75, CFrame.new(v.CFrame.p))
+            temptable.doingbubbles = true
+            local savespeed = kocmoc.vars.walkspeed
+            kocmoc.vars.walkspeed = kocmoc.vars.walkspeed * 1.2
+
+            api.humanoid():MoveTo(v.Position)
+            repeat
+                task.wait()
+            until (trying.Position - api.humanoidrootpart().Position).magnitude <= 4 or not v or not v.Parent or not temptable.running
+
+            kocmoc.vars.walkspeed = savespeed
+
             if temptable.bubbles[i] then
                 temptable.bubbles[i] = nil
             end
         end
     end
+
+    temptable.doingbubbles = false
 
     if temptable.bubblecounter % 100 == 0 then
         temptable.bubbles = {}
