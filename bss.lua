@@ -180,7 +180,6 @@ getgenv().temptable = {
     currtool = rtsg()["EquippedCollector"],
     starttime = tick(),
     planting = false,
-    bubblecounter = 0,
     crosshaircounter = 0,
     doingbubbles = false
 }
@@ -1111,11 +1110,14 @@ function avoidmob()
 end
 
 function dobubbles()
-    for _,v in pairs(temptable.bubbles) do
-        if v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and getBuffTime("5101328809") > 0.2 and not temptable.started.ant and not temptable.started.vicious and not temptable.converting and not temptable.planting then
+    if kocmoc.toggles.farmpuffshrooms and game.Workspace.Happenings.Puffshrooms:FindFirstChildOfClass("Model") then return end
+    if temptable.started.ant or temptable.started.vicious or temptable.converting or temptable.planting then return end
+
+    for _,v in pairs(game.Workspace.Particles:GetChildren()) do
+        if string.find(v.Name, "Bubble") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and getBuffTime("5101328809") > 0.2 and (v.Position - api.humanoidrootpart().Position).magnitude < temptable.magnitude * 0.9 then
             temptable.doingbubbles = true
             local savespeed = kocmoc.vars.walkspeed
-            kocmoc.vars.walkspeed = kocmoc.vars.walkspeed * 1.2
+            kocmoc.vars.walkspeed = kocmoc.vars.walkspeed * 1.5
 
             api.humanoid():MoveTo(v.Position)
             repeat
@@ -1123,18 +1125,10 @@ function dobubbles()
             until (v.Position - api.humanoidrootpart().Position).magnitude <= 4 or not v or not v.Parent or not temptable.running
 
             kocmoc.vars.walkspeed = savespeed
-
-            if temptable.bubbles[i] then
-                temptable.bubbles[i] = nil
-            end
         end
     end
 
     temptable.doingbubbles = false
-
-    if temptable.bubblecounter % 100 == 0 then
-        temptable.bubbles = {}
-    end
 end
 
 function docrosshairs()
@@ -2734,7 +2728,6 @@ task.spawn(function()
         if kocmoc.toggles.autofarm then
             if kocmoc.toggles.farmbubbles then 
                 dobubbles()
-                temptable.bubblecounter = temptable.bubblecounter + 1
             end
             if kocmoc.toggles.collectcrosshairs then 
                 docrosshairs()
