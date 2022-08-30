@@ -1132,9 +1132,7 @@ function getfuzzy()
     pcall(function()
         for i, v in next, game.workspace.Particles:GetChildren() do
             if v.Name == "DustBunnyInstance" and temptable.running == false and
-                tonumber((v.Plane.Position -
-                             api.humanoidrootpart()
-                                 .Position).magnitude) < temptable.magnitude /
+                tonumber((v.Plane.Position - api.humanoidrootpart().Position).magnitude) < temptable.magnitude /
                 1.4 then
                 if v:FindFirstChild("Plane") then
                     farm(v:FindFirstChild("Plane"))
@@ -1146,10 +1144,13 @@ function getfuzzy()
 end
 
 function getflame()
-    for i, v in next, game.Workspace.PlayerFlames:GetChildren() do
-        if tonumber((v.Position - api.humanoidrootpart().Position).magnitude) < temptable.magnitude / 1.4 then
-            farm(v)
-            break
+    for _,v in pairs(game.Workspace.PlayerFlames:GetChildren()) do
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.PF.Color.Keypoints[1].Value.G == 0 and (v.Position - api.humanoidrootpart().Position).magnitude < temptable.magnitude * 0.9 then
+            api.humanoid():MoveTo(v.Position)
+            repeat
+                task.wait()
+            until (v.Position - api.humanoidrootpart().Position).magnitude <= 4 or not v or not v.Parent or not temptable.running
+            return
         end
     end
 end
@@ -3189,6 +3190,9 @@ task.spawn(function()
                             end)
                         end
                         getprioritytokens()
+                        if kocmoc.toggles.farmflame then 
+                            getflame()
+                        end
                         if kocmoc.toggles.avoidmobs then
                             avoidmob()
                         end
@@ -3740,8 +3744,17 @@ task.spawn(function()
         
         if temptable.currtool == "Tide Popper" then
             temptable.lookat = getfurthestballoon() or fieldposition
-        elseif temptable.currtool == "Petal Wand" or temptable.currtool == "Dark Scythe" then
+        elseif temptable.currtool == "Petal Wand" then
             temptable.lookat = fieldposition
+        if temptable.currtool == "Dark Scythe" then
+            temptable.lookat = fieldposition
+            for i,v in pairs(game.Workspace.PlayerFlames:GetChildren()) do
+                local dist = (v.Position - torso.Position).magnitude
+                if v:FindFirstChild("PF") and v.PF.Color.Keypoints[1].Value.G ~= 0 and (v.Position - torso.Position).magnitude < 20 then
+                    temptable.lookat = v.Position
+                    break
+                end
+            end
         end
         
         if not temptable.started.ant and not temptable.started.vicious and kocmoc.toggles.autofarm and not temptable.converting then
