@@ -2792,7 +2792,6 @@ task.spawn(function()
                 docrosshairs()
                 temptable.crosshaircounter = temptable.crosshaircounter + 1
             end
-            if kocmoc.toggles.farmflame then getflame() end
             if kocmoc.toggles.farmfuzzy then getfuzzy() end
         end
     end
