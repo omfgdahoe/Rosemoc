@@ -1989,7 +1989,7 @@ end)
 guiElements["toggles"]["customplanterfield11"] = plantersection:CreateDropdown("Planter 1 Field 1", DropdownFieldsTable, function(Option)
 
 end)
-guiElements["vars"]["customplanterdelay11"] = plantersection:CreateTextBox("Harvest Planter 1 Field 1 Minutes", true, function(Value)
+guiElements["vars"]["customplanterdelay11"] = plantersection:CreateTextBox("Harvest Planter 1 Field 1 Time", "Enter time in minutes", true, function(Value)
     if tonumber(Value) then
         kocmoc.vars.customplanterdelay11 = tonumber(Value)
     end
