@@ -1195,11 +1195,11 @@ function docrosshairs()
     kocmoc.vars.walkspeed = kocmoc.vars.walkspeed * 1.75
 
     for _,v in pairs(game.Workspace.Particles:GetChildren()) do
-        if string.find(v.Name, "Crosshair") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") and (v.Position - api.humanoidrootpart().Position).magnitude < temptable.magnitude * 0.9 then
+        if string.find(v.Name, "Crosshair") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") and v.BrickColor ~= BrickColor.new("Royal purple") and (v.Position - api.humanoidrootpart().Position).magnitude < temptable.magnitude * 0.9 then
             api.humanoid():MoveTo(v.Position)
             repeat
                 task.wait()
-            until (v.Position - api.humanoidrootpart().Position).magnitude <= 4 or not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or not temptable.running
+            until (v.Position - api.humanoidrootpart().Position).magnitude <= 4 or not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple") or not temptable.running
         end
     end
 
