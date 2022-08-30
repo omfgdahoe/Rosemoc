@@ -181,9 +181,25 @@ getgenv().temptable = {
     starttime = tick(),
     planting = false,
     crosshaircounter = 0,
-    doingbubbles = false
+    doingbubbles = false,
+    doingcrosshairs = false
 }
 local planterst = {plantername = {}, planterid = {}}
+
+function deepcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[deepcopy(orig_key)] = deepcopy(orig_value)
+        end
+        setmetatable(copy, deepcopy(getmetatable(orig)))
+    else
+        copy = orig
+    end
+    return copy
+end
 
 for i, v in next, temptable.blacklist do
     if v == api.nickname then
@@ -242,9 +258,10 @@ local accesoriestable = {}
 for _, v in next, game:GetService("ReplicatedStorage").Accessories:GetChildren() do
     if v.Name ~= "UpdateMeter" then table.insert(accesoriestable, v.Name) end
 end
-for i, v in pairs(getupvalues(require(
-                                  game:GetService("ReplicatedStorage").PlanterTypes).GetTypes)) do
-    for e, z in pairs(v) do table.insert(temptable.allplanters, e) end
+for i, v in pairs(getupvalues(require(game:GetService("ReplicatedStorage").PlanterTypes).GetTypes)) do
+    for e, z in pairs(v) do 
+        table.insert(temptable.allplanters, e)
+    end
 end
 local donatableItemsTable = {}
 local treatsTable = {}
@@ -268,6 +285,22 @@ local MasksTable = {}
 for i, v in pairs(AccessoryTypes) do
     if string.find(i, "Mask") then
         if i ~= "Honey Mask" then table.insert(MasksTable, i) end
+    end
+end
+local DropdownPlanterTable = {
+    "Plastic Planter",
+    "Candy Planter",
+    "Red Clay Planter",
+    "Blue Clay Planter",
+    "Tacky Planter",
+    "Pesticide Planter",
+    "Petal Planter",
+    "The Planter Of Plenty"
+}
+local DropdownFieldsTable = deepcopy(fieldstable)
+for i,v in pairs(DropdownFieldsTable) do
+    if v == "Ant Field" then
+        table.remove(DropdownFieldsTable, i)
     end
 end
 
@@ -402,7 +435,8 @@ getgenv().kocmoc = {
         webhookping = false,
         autoquesthoneybee = false,
         buyantpass = false,
-        tweenteleport = false
+        tweenteleport = false,
+        docustomplanters = false
     },
     vars = {
         field = "Ant Field",
@@ -429,7 +463,28 @@ getgenv().kocmoc = {
         planterharvestamount = 75,
         webhookurl = "",
         discordid = 0,
-        webhooktimer = 60
+        webhooktimer = 60,
+        customplanter1 = "",
+        customplanter2 = "",
+        customplanter3 = "",
+        customplanterfield11 = "",
+        customplanterfield12 = "",
+        customplanterfield13 = "",
+        customplanterfield21 = "",
+        customplanterfield22 = "",
+        customplanterfield23 = "",
+        customplanterfield31 = "",
+        customplanterfield32 = "",
+        customplanterfield33 = "",
+        customplanterdelay11 = 0,
+        customplanterdelay12 = 0,
+        customplanterdelay13 = 0,
+        customplanterdelay21 = 0,
+        customplanterdelay22 = 0,
+        customplanterdelay23 = 0,
+        customplanterdelay31 = 0,
+        customplanterdelay32 = 0,
+        customplanterdelay33 = 0
     },
     dispensesettings = {
         blub = false,
@@ -667,7 +722,7 @@ function enableall()
 end
 
 function gettoken(v3)
-    if temptable.doingbubbles then return end
+    if temptable.doingbubbles or temptable.doingcrosshairs then return end
     if not v3 then v3 = fieldposition end
     task.wait()
     for e, r in next, game.Workspace.Collectibles:GetChildren() do
@@ -1018,7 +1073,7 @@ function closestleaf()
 end
 
 function getballoons()
-    if temptable.doingbubbles then return end
+    if temptable.doingbubbles or temptable.doingcrosshairs then return end
     for i, v in next, game.Workspace.Balloons.FieldBalloons:GetChildren() do
         if v:FindFirstChild("BalloonRoot") and v:FindFirstChild("PlayerName") then
             if v:FindFirstChild("PlayerName").Value == player.Name then
@@ -1064,7 +1119,7 @@ function getflower()
 end
 
 function getcloud()
-    if temptable.doingbubbles then return end
+    if temptable.doingbubbles or temptable.doingcrosshairs then return end
     for i, v in next, game.Workspace.Clouds:GetChildren() do
         e = v:FindFirstChild("Plane")
         if e and tonumber((e.Position - api.humanoidrootpart().Position).magnitude) < temptable.magnitude / 1.4 then
@@ -1113,38 +1168,42 @@ function dobubbles()
     if kocmoc.toggles.farmpuffshrooms and game.Workspace.Happenings.Puffshrooms:FindFirstChildOfClass("Model") then return end
     if temptable.started.ant or temptable.started.vicious or temptable.converting or temptable.planting then return end
 
+    temptable.doingbubbles = true
+    local savespeed = kocmoc.vars.walkspeed
+    kocmoc.vars.walkspeed = kocmoc.vars.walkspeed * 1.75
+
     for _,v in pairs(game.Workspace.Particles:GetChildren()) do
         if string.find(v.Name, "Bubble") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and getBuffTime("5101328809") > 0.2 and (v.Position - api.humanoidrootpart().Position).magnitude < temptable.magnitude * 0.9 then
-            temptable.doingbubbles = true
-            local savespeed = kocmoc.vars.walkspeed
-            kocmoc.vars.walkspeed = kocmoc.vars.walkspeed * 1.5
-
             api.humanoid():MoveTo(v.Position)
             repeat
                 task.wait()
             until (v.Position - api.humanoidrootpart().Position).magnitude <= 4 or not v or not v.Parent or not temptable.running
-
-            kocmoc.vars.walkspeed = savespeed
         end
     end
 
     temptable.doingbubbles = false
+    kocmoc.vars.walkspeed = savespeed
 end
 
 function docrosshairs()
-    for _,v in pairs(temptable.crosshairs) do
-        if v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and not temptable.started.ant and not temptable.started.vicious and not temptable.converting and not temptable.planting then
-            api.tween(((api.humanoidrootpart().CFrame.p - v.CFrame.p).Magnitude / player.Character.Humanoid.WalkSpeed) * 0.75, CFrame.new(v.CFrame.p))
-            task.wait(0.1)
-            if temptable.crosshairs[i] then
-                temptable.crosshairs[i] = nil
-            end
+    if kocmoc.toggles.farmpuffshrooms and game.Workspace.Happenings.Puffshrooms:FindFirstChildOfClass("Model") then return end
+    if temptable.started.ant or temptable.started.vicious or temptable.converting or temptable.planting then return end
+
+    temptable.doingcrosshairs = true
+    local savespeed = kocmoc.vars.walkspeed
+    kocmoc.vars.walkspeed = kocmoc.vars.walkspeed * 1.75
+
+    for _,v in pairs(game.Workspace.Particles:GetChildren()) do
+        if string.find(v.Name, "Crosshair") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") and (v.Position - api.humanoidrootpart().Position).magnitude < temptable.magnitude * 0.9 then
+            api.humanoid():MoveTo(v.Position)
+            repeat
+                task.wait()
+            until (v.Position - api.humanoidrootpart().Position).magnitude <= 4 or not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or not temptable.running
         end
     end
 
-    if temptable.crosshaircounter % 100 == 0 then
-        temptable.crosshairs = {}
-    end
+    temptable.doingcrosshairs = false
+    kocmoc.vars.walkspeed = savespeed
 end
 
 function makequests()
@@ -1437,21 +1496,6 @@ local fullPlanterData = {
         }
     }
 }
-
-function deepcopy(orig)
-    local orig_type = type(orig)
-    local copy
-    if orig_type == 'table' then
-        copy = {}
-        for orig_key, orig_value in next, orig, nil do
-            copy[deepcopy(orig_key)] = deepcopy(orig_value)
-        end
-        setmetatable(copy, deepcopy(getmetatable(orig)))
-    else
-        copy = orig
-    end
-    return copy
-end
 
 local planterData = deepcopy(fullPlanterData)
 
@@ -1919,7 +1963,7 @@ guiElements["vars"]["resettimer"] = farmt:CreateTextBox("Conversion Amount", "de
     kocmoc.vars.resettimer = tonumber(Value)
 end)
 
-local plantersection = farmtab:CreateSection("Planters & Nectars")
+local plantersection = farmtab:CreateSection("Automatic Planters & Nectars")
 guiElements["toggles"]["autoplanters"] = plantersection:CreateToggle("Auto Planters", nil, function(State) kocmoc.toggles.autoplanters = State end)
 guiElements["toggles"]["blacklistinvigorating"] = plantersection:CreateToggle("Blacklist Invigorating", nil, function(State) kocmoc.toggles.blacklistinvigorating = State end)
 guiElements["toggles"]["blacklistcomforting"] = plantersection:CreateToggle("Blacklist Comforting", nil, function(State) kocmoc.toggles.blacklistcomforting = State end)
@@ -1936,6 +1980,18 @@ guiElements["toggles"]["blueclayplanter"] = plantersection:CreateToggle("Blackli
 guiElements["toggles"]["tackyplanter"] = plantersection:CreateToggle("Blacklist Tacky Planter", nil, function(State) kocmoc.toggles.tackyplanter = State end)
 guiElements["toggles"]["pesticideplanter"] = plantersection:CreateToggle("Blacklist Pesticide Planter", nil, function(State) kocmoc.toggles.pesticideplanter = State end)
 guiElements["toggles"]["petalplanter"] = plantersection:CreateToggle("Blacklist Petal Planter", nil, function(State) kocmoc.toggles.petalplanter = State end)
+
+local customplantersection = farmtab:CreateSection("Custom Planters")
+guiElements["toggles"]["customplanter"] = plantersection:CreateToggle("Custom Planters", nil, function(State) kocmoc.toggles.customplanter = State end)
+guiElements["vars"]["customplanter1"] = plantersection:CreateDropdown("Planter 1", DropdownPlanterTable, function(Option)
+    kocmoc.vars.customplanter1 = Option
+end)
+guiElements["toggles"]["blacklistinvigorating"] = plantersection:CreateDropdown("Planter 1 Field 1", DropdownFieldsTable, function(Option)
+
+end)
+guiElements["vars"]["planterharvestamount"] = plantersection:CreateTextBox("Harvest", 0, 100, 75, false, function(Value)
+    kocmoc.vars.planterharvestamount = Value
+end)
 
 local mobkill = combtab:CreateSection("Combat")
 mobkill:CreateToggle("Train Crab", nil, function(State)
@@ -2724,7 +2780,7 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-    while task.wait(0.2) do
+    while task.wait() do
         if kocmoc.toggles.autofarm then
             if kocmoc.toggles.farmbubbles then 
                 dobubbles()
@@ -3121,7 +3177,7 @@ task.spawn(function()
                             task.wait(0.5)
                             gettoken()
                         end
-                        if (fieldposition - api.humanoidrootpart().Position).magnitude > temptable.magnitude then
+                        if (fieldposition - api.humanoidrootpart().Position).magnitude > temptable.magnitude and not temptable.planting and not temptable.doingcrosshairs and not temptable.doingbubbles then
                             api.tween(0.1, fieldpos)
                             task.spawn(function()
                                 task.wait(0.5)
@@ -3682,7 +3738,7 @@ task.spawn(function()
         
         if temptable.currtool == "Tide Popper" then
             temptable.lookat = getfurthestballoon() or fieldposition
-        elseif temptable.currtool == "Petal Wand" then
+        elseif temptable.currtool == "Petal Wand" or temptable.currtool == "Dark Scythe" then
             temptable.lookat = fieldposition
         end
         
