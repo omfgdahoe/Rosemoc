@@ -3746,13 +3746,11 @@ task.spawn(function()
             temptable.lookat = getfurthestballoon() or fieldposition
         elseif temptable.currtool == "Petal Wand" then
             temptable.lookat = fieldposition
-        if temptable.currtool == "Dark Scythe" then
+        elseif temptable.currtool == "Dark Scythe" then
             temptable.lookat = fieldposition
             for i,v in pairs(game.Workspace.PlayerFlames:GetChildren()) do
-                local dist = (v.Position - torso.Position).magnitude
                 if v:FindFirstChild("PF") and v.PF.Color.Keypoints[1].Value.G ~= 0 and (v.Position - torso.Position).magnitude < 20 then
                     temptable.lookat = v.Position
-                    break
                 end
             end
         end
