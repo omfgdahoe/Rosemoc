@@ -1982,15 +1982,17 @@ guiElements["toggles"]["pesticideplanter"] = plantersection:CreateToggle("Blackl
 guiElements["toggles"]["petalplanter"] = plantersection:CreateToggle("Blacklist Petal Planter", nil, function(State) kocmoc.toggles.petalplanter = State end)
 
 local customplantersection = farmtab:CreateSection("Custom Planters")
-guiElements["toggles"]["customplanter"] = plantersection:CreateToggle("Custom Planters", nil, function(State) kocmoc.toggles.customplanter = State end)
+guiElements["toggles"]["docustomplanters"] = plantersection:CreateToggle("Custom Planters", nil, function(State) kocmoc.toggles.docustomplanters = State end)
 guiElements["vars"]["customplanter1"] = plantersection:CreateDropdown("Planter 1", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter1 = Option
 end)
-guiElements["toggles"]["blacklistinvigorating"] = plantersection:CreateDropdown("Planter 1 Field 1", DropdownFieldsTable, function(Option)
+guiElements["toggles"]["customplanterfield11"] = plantersection:CreateDropdown("Planter 1 Field 1", DropdownFieldsTable, function(Option)
 
 end)
-guiElements["vars"]["planterharvestamount"] = plantersection:CreateTextBox("Harvest", 0, 100, 75, false, function(Value)
-    kocmoc.vars.planterharvestamount = Value
+guiElements["vars"]["customplanterdelay11"] = plantersection:CreateTextBox("Harvest Planter 1 Field 1 Minutes", true, function(Value)
+    if tonumber(Value) then
+        kocmoc.vars.customplanterdelay11 = tonumber(Value)
+    end
 end)
 
 local mobkill = combtab:CreateSection("Combat")
