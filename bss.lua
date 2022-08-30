@@ -722,7 +722,7 @@ function enableall()
 end
 
 function gettoken(v3)
-    if temptable.doingbubbles or temptable.doingcrosshairs then return end
+    --if temptable.doingbubbles or temptable.doingcrosshairs then return end
     if not v3 then v3 = fieldposition end
     task.wait()
     for e, r in next, game.Workspace.Collectibles:GetChildren() do
@@ -795,7 +795,7 @@ function domob(place)
 
         local point = Vector3.new((place.CFrame.p.X + monsterpart.CFrame.p.X) / 2, monsterpart.CFrame.p.Y, (place.CFrame.p.Z + monsterpart.CFrame.p.Z) / 2)
 
-        while not place:FindFirstChild("TimerLabel", true).Visible and tick() - timestamp < 45 do
+        while not place:FindFirstChild("TimerLabel", true).Visible and tick() - timestamp < 25 do
             if tick() - secondstamp > 2 then
                 api.humanoidrootpart().CFrame = CFrame.new(point + Vector3.new(0, 30, 0))
                 api.humanoidrootpart().Velocity = Vector3.new(0, 0, 0)
@@ -1106,8 +1106,7 @@ end
 
 function getflower()
     flowerrrr = flowertable[math.random(#flowertable)]
-    if tonumber((flowerrrr - api.humanoidrootpart().Position).magnitude) <=
-        temptable.magnitude / 1.4 and
+    if tonumber((flowerrrr - api.humanoidrootpart().Position).magnitude) <= temptable.magnitude / 1.4 and
         tonumber((flowerrrr - fieldposition).magnitude) <= temptable.magnitude / 1.4 then
         if temptable.running == false then
             if kocmoc.toggles.loopfarmspeed then
@@ -2790,7 +2789,6 @@ task.spawn(function()
             end
             if kocmoc.toggles.collectcrosshairs then 
                 docrosshairs()
-                temptable.crosshaircounter = temptable.crosshaircounter + 1
             end
             if kocmoc.toggles.farmfuzzy then getfuzzy() end
         end
