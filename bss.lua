@@ -1196,7 +1196,7 @@ function docrosshairs()
     for _,v in pairs(game.Workspace.Particles:GetChildren()) do
         if string.find(v.Name, "Crosshair") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") and v.BrickColor ~= BrickColor.new("Royal purple") then
             if getBuffTime("8172818074") > 0.5 then
-                if v.BrickColor == "Alder" then
+                if v.BrickColor == BrickColor.new("Alder") then
                     repeat
                         task.wait()
                         api.humanoidrootpart().CFrame = CFrame.new(v.Position)
@@ -2801,7 +2801,9 @@ task.spawn(function()
             if kocmoc.toggles.collectcrosshairs then 
                 docrosshairs()
             end
-            if kocmoc.toggles.farmfuzzy then getfuzzy() end
+            if kocmoc.toggles.farmfuzzy then
+                getfuzzy()
+            end
         end
     end
 end)
