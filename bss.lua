@@ -436,7 +436,8 @@ getgenv().kocmoc = {
         autoquesthoneybee = false,
         buyantpass = false,
         tweenteleport = false,
-        docustomplanters = false
+        docustomplanters = false,
+        fastcrosshairs = false
     },
     vars = {
         field = "Ant Field",
@@ -869,14 +870,31 @@ end
 
 function getBuffTime(decalID)
     if not decalID then return 0 end
-    if player and player.PlayerGui and player.PlayerGui.ScreenGui then
-        for i,v in pairs(player.PlayerGui.ScreenGui:GetChildren()) do
-            if v.Name == "TileGrid" then
-                for j,k in pairs(v:GetChildren()) do
-                    if k:FindFirstChild("BG") and k.BG:FindFirstChild("Icon") then
-                        if string.find(tostring(k.BG.Icon.Image), decalID) then
-                            return k.BG.Bar.Size.Y.Scale
-                        end
+    
+    for i,v in pairs(player.PlayerGui.ScreenGui:GetChildren()) do
+        if v.Name == "TileGrid" then
+            for j,k in pairs(v:GetChildren()) do
+                if k:FindFirstChild("BG") and k.BG:FindFirstChild("Icon") then
+                    if string.find(tostring(k.BG.Icon.Image), decalID) then
+                        return k.BG.Bar.Size.Y.Scale
+                    end
+                end
+            end
+        end
+    end
+
+    return 0
+end
+
+function getBuffStack(decalID)
+    if not decalID then return 0 end
+    
+    for i,v in pairs(player.PlayerGui.ScreenGui:GetChildren()) do
+        if v.Name == "TileGrid" then
+            for j,k in pairs(v:GetChildren()) do
+                if k:FindFirstChild("BG") and k.BG:FindFirstChild("Icon") then
+                    if string.find(tostring(k.BG.Icon.Image), decalID) then
+                        return tonumber(k.BG.Text.Text) or 1
                     end
                 end
             end
@@ -1189,32 +1207,40 @@ function docrosshairs()
     if kocmoc.toggles.farmpuffshrooms and game.Workspace.Happenings.Puffshrooms:FindFirstChildOfClass("Model") then return end
     if temptable.started.ant or temptable.started.vicious or temptable.converting or temptable.planting then return end
 
-    temptable.doingcrosshairs = true
     local savespeed = kocmoc.vars.walkspeed
-    kocmoc.vars.walkspeed = kocmoc.vars.walkspeed * 1.75
 
     for _,v in pairs(game.Workspace.Particles:GetChildren()) do
         if string.find(v.Name, "Crosshair") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") and v.BrickColor ~= BrickColor.new("Royal purple") then
-            if getBuffTime("8172818074") > 0.8 then
-                if v.BrickColor == BrickColor.new("Alder") then
+            if kocmoc.toggles.fastcrosshairs then
+                print(getBuffStack("8172818074"))
+                if getBuffTime("8172818074") > 0.5 and getBuffStack("8172818074") > 9 then
+                    if v.BrickColor == BrickColor.new("Alder") then
+                        task.wait(1)
+                        repeat
+                            task.wait()
+                            api.humanoidrootpart().CFrame = CFrame.new(v.Position)
+                        until not v or not v.Parent
+                    end
+                else
                     repeat
                         task.wait()
                         api.humanoidrootpart().CFrame = CFrame.new(v.Position)
-                    until not v or not v.Parent
+                    until not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple") or not temptable.running
                 end
             else
                 if (v.Position - api.humanoidrootpart().Position).magnitude < temptable.magnitude * 0.9 then
+                    temptable.doingcrosshairs = true
+                    kocmoc.vars.walkspeed = savespeed * 1.75
                     api.humanoid():MoveTo(v.Position)
                     repeat
                         task.wait()
                     until (v.Position - api.humanoidrootpart().Position).magnitude <= 4 or not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple") or not temptable.running
+                    kocmoc.vars.walkspeed = savespeed
+                    temptable.doingcrosshairs = false
                 end
             end
         end
     end
-
-    temptable.doingcrosshairs = false
-    kocmoc.vars.walkspeed = savespeed
 end
 
 function makequests()
@@ -1933,6 +1959,7 @@ guiElements["toggles"]["farmbubbles"] = farmo:CreateToggle("Farm Bubbles", nil, 
 guiElements["toggles"]["farmflame"] = farmo:CreateToggle("Farm Flames", nil, function(State) kocmoc.toggles.farmflame = State end)
 guiElements["toggles"]["farmcoco"] = farmo:CreateToggle("Farm Coconuts & Shower", nil, function(State) kocmoc.toggles.farmcoco = State end)
 guiElements["toggles"]["collectcrosshairs"] = farmo:CreateToggle("Farm Precise Crosshairs", nil, function(State) kocmoc.toggles.collectcrosshairs = State end)
+guiElements["toggles"]["fastcrosshairs"] = farmo:CreateToggle("Fast Precise Crosshairs ⚠️", nil, function(State) kocmoc.toggles.fastcrosshairs = State end)
 guiElements["toggles"]["farmfuzzy"] = farmo:CreateToggle("Farm Fuzzy Bombs", nil, function(State) kocmoc.toggles.farmfuzzy = State end)
 guiElements["toggles"]["farmunderballoons"] = farmo:CreateToggle("Farm Under Balloons", nil, function(State) kocmoc.toggles.farmunderballoons = State end)
 guiElements["toggles"]["farmclouds"] = farmo:CreateToggle("Farm Under Clouds", nil, function(State) kocmoc.toggles.farmclouds = State end)
@@ -3449,7 +3476,6 @@ task.spawn(function()
                     end
                 end
                 if kocmoc.vars.autodigmode == "Collector Steal" then
-                    print("steal")
                     task.spawn(function()
                         local onnet = game.Workspace.NPCs.Onett.Onett["Porcelain Dipper"]:FindFirstChild("ClickEvent")
                         if onnet then
