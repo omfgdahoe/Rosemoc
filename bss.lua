@@ -1194,20 +1194,21 @@ function docrosshairs()
     kocmoc.vars.walkspeed = kocmoc.vars.walkspeed * 1.75
 
     for _,v in pairs(game.Workspace.Particles:GetChildren()) do
-        if string.find(v.Name, "Crosshair") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") and v.BrickColor ~= BrickColor.new("Royal purple") and (v.Position - api.humanoidrootpart().Position).magnitude < temptable.magnitude * 0.9 then
-            if getBuffTime("8172818074") < 0.5 then
+        if string.find(v.Name, "Crosshair") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") and v.BrickColor ~= BrickColor.new("Royal purple") then
+            if getBuffTime("8172818074") > 0.5 then
                 if v.BrickColor == "Alder" then
-                    local timestamp = tick()
                     repeat
                         task.wait()
                         api.humanoidrootpart().CFrame = CFrame.new(v.Position)
-                    until tick() - timestamp > 1
+                    until not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple")
                 end
             else
-                api.humanoid():MoveTo(v.Position)
-                repeat
-                    task.wait()
-                until (v.Position - api.humanoidrootpart().Position).magnitude <= 4 or not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple") or not temptable.running
+                if (v.Position - api.humanoidrootpart().Position).magnitude < temptable.magnitude * 0.9 then
+                    api.humanoid():MoveTo(v.Position)
+                    repeat
+                        task.wait()
+                    until (v.Position - api.humanoidrootpart().Position).magnitude <= 4 or not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple") or not temptable.running
+                end
             end
         end
     end
