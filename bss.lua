@@ -894,7 +894,8 @@ function getBuffStack(decalID)
             for j,k in pairs(v:GetChildren()) do
                 if k:FindFirstChild("BG") and k.BG:FindFirstChild("Icon") then
                     if string.find(tostring(k.BG.Icon.Image), decalID) then
-                        return tonumber(k.BG.Text.Text:gsub("x", "")) or 1
+                        local placeholder = tonumber(k.BG.Text.Text:gsub("x", ""))
+                        return placeholder or 1
                     end
                 end
             end
@@ -1228,6 +1229,7 @@ function docrosshairs()
                         repeat
                             timestamp = v:FindFirstChild("timestamp")
                             if timestamp then
+                                print(tick() - timestamp.Value)
                                 if tick() - timestamp.Value > 1 then
                                     api.humanoidrootpart().CFrame = CFrame.new(v.Position)
                                 end
