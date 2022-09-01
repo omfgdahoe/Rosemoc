@@ -1226,7 +1226,7 @@ function docrosshairs()
                     if v:FindFirstChild("timestamp") then
                         repeat
                             task.wait()
-                            local _tick = v:FindFirstChild("timestamp") and v.timestamp.Value or inf
+                            local _tick = v:FindFirstChild("timestamp") and v.timestamp.Value or tick()
                             if tick() - _tick > 1 then
                                 api.humanoidrootpart().CFrame = CFrame.new(v.Position)
                             end
