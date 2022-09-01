@@ -950,12 +950,12 @@ function farmant()
                     api.humanoidrootpart().CFrame = acr
                     anttable.left = false
                     anttable.right = true
-                    task.wait(1)
+                    task.wait(0.5)
                 elseif (v.Root.Position - api.humanoidrootpart().Position).magnitude <= 40 and anttable.right then
                     api.humanoidrootpart().CFrame = acl
                     anttable.left = true
                     anttable.right = false
-                    task.wait(1)
+                    task.wait(0.5)
                 end
             end
         end
@@ -1195,10 +1195,20 @@ function docrosshairs()
 
     for _,v in pairs(game.Workspace.Particles:GetChildren()) do
         if string.find(v.Name, "Crosshair") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") and v.BrickColor ~= BrickColor.new("Royal purple") and (v.Position - api.humanoidrootpart().Position).magnitude < temptable.magnitude * 0.9 then
-            api.humanoid():MoveTo(v.Position)
-            repeat
-                task.wait()
-            until (v.Position - api.humanoidrootpart().Position).magnitude <= 4 or not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple") or not temptable.running
+            if getBuffTime("8172818074") < 0.5 then
+                if v.BrickColor == "Alder" then
+                    local timestamp = tick()
+                    repeat
+                        task.wait()
+                        api.humanoidrootpart().CFrame = CFrame.new(v.Position)
+                    until tick() - timestamp > 1
+                end
+            else
+                api.humanoid():MoveTo(v.Position)
+                repeat
+                    task.wait()
+                until (v.Position - api.humanoidrootpart().Position).magnitude <= 4 or not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple") or not temptable.running
+            end
         end
     end
 
@@ -3435,13 +3445,16 @@ task.spawn(function()
                         clickEvent:FireServer()
                     end
                 end
-                task.spawn(function()
-                    local onnet = game.Workspace.NPCs.Onett.Onett["Porcelain Dipper"]:FindFirstChild("ClickEvent")
-                    if onnet then
-                        task.wait()
-                        onnet:FireServer()
-                    end
-                end)
+                if kocmoc.vars.autodigmode == "Collector Steal" then
+                    print("steal")
+                    task.spawn(function()
+                        local onnet = game.Workspace.NPCs.Onett.Onett["Porcelain Dipper"]:FindFirstChild("ClickEvent")
+                        if onnet then
+                            task.wait()
+                            onnet:FireServer()
+                        end
+                    end)
+                end
             end
         end
     end
