@@ -894,7 +894,7 @@ function getBuffStack(decalID)
             for j,k in pairs(v:GetChildren()) do
                 if k:FindFirstChild("BG") and k.BG:FindFirstChild("Icon") then
                     if string.find(tostring(k.BG.Icon.Image), decalID) then
-                        return tonumber(k.BG.Text.Text) or 1
+                        return tonumber(k.BG.Text.Text:gsub("x", "")) or 1
                     end
                 end
             end
@@ -1213,6 +1213,7 @@ function docrosshairs()
         if string.find(v.Name, "Crosshair") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") and v.BrickColor ~= BrickColor.new("Royal purple") then
             if kocmoc.toggles.fastcrosshairs then
                 print(getBuffStack("8172818074"))
+                if (v.Position - api.humanoidrootpart().Position).magnitude > 200 then continue end
                 if getBuffTime("8172818074") > 0.5 and getBuffStack("8172818074") > 9 then
                     if v.BrickColor == BrickColor.new("Alder") then
                         task.wait(1)
@@ -1222,10 +1223,24 @@ function docrosshairs()
                         until not v or not v.Parent
                     end
                 else
-                    repeat
-                        task.wait()
-                        api.humanoidrootpart().CFrame = CFrame.new(v.Position)
-                    until not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple") or not temptable.running
+                    if v:FindFirstChild("timestamp") then
+                        repeat
+                            task.wait()
+                            print(tick() - v.timestamp.Value)
+                            if tick() - v.timestamp.Value > 2 then
+                                api.humanoidrootpart().CFrame = CFrame.new(v.Position)
+                            end
+                        until not v or not v.Parent
+                    else
+                        local timestamp = Instance.new("NumberValue", v)
+                        timestamp.Name = "timestamp"
+                        timestamp.Value = tick()
+
+                        repeat
+                            task.wait()
+                            api.humanoidrootpart().CFrame = CFrame.new(v.Position)
+                        until not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple") or not temptable.running
+                    end
                 end
             else
                 if (v.Position - api.humanoidrootpart().Position).magnitude < temptable.magnitude * 0.9 then
