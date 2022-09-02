@@ -1243,6 +1243,7 @@ function docrosshairs()
 
                         repeat
                             task.wait()
+                            print(v.BrickColor)
                             api.humanoidrootpart().CFrame = CFrame.new(v.Position)
                         until not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple") or not temptable.running
                     end
