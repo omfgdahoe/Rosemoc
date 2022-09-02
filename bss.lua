@@ -1228,7 +1228,7 @@ function docrosshairs()
                             api.humanoidrootpart().CFrame = CFrame.new(v.Position)
                             task.wait(0.5)
                         until not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple")
-                    else
+                    elseif v.BrickColor == BrickColor.new("Royal purple") then
                         repeat
                             local timestamp = v:FindFirstChild("timestamp")
                             if timestamp then
