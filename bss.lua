@@ -182,7 +182,9 @@ getgenv().temptable = {
     planting = false,
     crosshaircounter = 0,
     doingbubbles = false,
-    doingcrosshairs = false
+    doingcrosshairs = false,
+    pollenpercentage = 0,
+    lastmobkill = 0
 }
 local planterst = {plantername = {}, planterid = {}}
 
@@ -437,7 +439,8 @@ getgenv().kocmoc = {
         buyantpass = false,
         tweenteleport = false,
         docustomplanters = false,
-        fastcrosshairs = false
+        fastcrosshairs = false,
+        smartmobkill = false
     },
     vars = {
         field = "Ant Field",
@@ -448,7 +451,7 @@ getgenv().kocmoc = {
         jumppower = 70,
         npcprefer = "All Quests",
         farmtype = "Walk",
-        monstertimer = 3,
+        monstertimer = 15,
         autodigmode = "Normal",
         donoItem = "Coconut",
         donoAmount = 25,
@@ -815,23 +818,31 @@ function domob(place)
 end
 
 function killmobs()
-    domob(monsterspawners:FindFirstChild("Rhino Bush")) -- Clover Field
-    domob(monsterspawners:FindFirstChild("Ladybug Bush")) -- Clover Field
-    domob(monsterspawners:FindFirstChild("Rhino Cave 1")) -- Blue Flower Field
-    domob(monsterspawners:FindFirstChild("Rhino Cave 2")) -- Bamboo Field
-    domob(monsterspawners:FindFirstChild("Rhino Cave 3")) -- Bamboo Field
-    domob(monsterspawners:FindFirstChild("PineappleMantis1")) -- Pineapple Field
-    domob(monsterspawners:FindFirstChild("PineappleBeetle")) -- Pineapple Field
-    domob(monsterspawners:FindFirstChild("Spider Cave")) -- Spider Field
-    domob(monsterspawners:FindFirstChild("MushroomBush")) -- Mushroom Field
-    domob(monsterspawners:FindFirstChild("Spider Cave")) -- Spider Field
-    domob(monsterspawners:FindFirstChild("Ladybug Bush 2")) -- Strawberry Field
-    domob(monsterspawners:FindFirstChild("Ladybug Bush 3")) -- Strawberry Field
-    domob(monsterspawners:FindFirstChild("ScorpionBush")) -- Rose Field
-    domob(monsterspawners:FindFirstChild("ScorpionBush2")) -- Rose Field
-    domob(monsterspawners:FindFirstChild("WerewolfCave")) -- Werewolf
-    domob(monsterspawners:FindFirstChild("ForestMantis1")) -- Pine Tree Field
-    domob(monsterspawners:FindFirstChild("ForestMantis2")) -- Pine Tree Field
+    if kocmoc.toggles.smartmobkill then
+        for i, v in next, player.PlayerGui.ScreenGui.Menus.Children.Quests:GetDescendants() do
+            if v.Name == "Description" and v.Parent and v.Parent.Parent then
+
+            end
+        end
+    else
+        domob(monsterspawners:FindFirstChild("Rhino Bush")) -- Clover Field
+        domob(monsterspawners:FindFirstChild("Ladybug Bush")) -- Clover Field
+        domob(monsterspawners:FindFirstChild("Rhino Cave 1")) -- Blue Flower Field
+        domob(monsterspawners:FindFirstChild("Rhino Cave 2")) -- Bamboo Field
+        domob(monsterspawners:FindFirstChild("Rhino Cave 3")) -- Bamboo Field
+        domob(monsterspawners:FindFirstChild("PineappleMantis1")) -- Pineapple Field
+        domob(monsterspawners:FindFirstChild("PineappleBeetle")) -- Pineapple Field
+        domob(monsterspawners:FindFirstChild("Spider Cave")) -- Spider Field
+        domob(monsterspawners:FindFirstChild("MushroomBush")) -- Mushroom Field
+        domob(monsterspawners:FindFirstChild("Spider Cave")) -- Spider Field
+        domob(monsterspawners:FindFirstChild("Ladybug Bush 2")) -- Strawberry Field
+        domob(monsterspawners:FindFirstChild("Ladybug Bush 3")) -- Strawberry Field
+        domob(monsterspawners:FindFirstChild("ScorpionBush")) -- Rose Field
+        domob(monsterspawners:FindFirstChild("ScorpionBush2")) -- Rose Field
+        domob(monsterspawners:FindFirstChild("WerewolfCave")) -- Werewolf
+        domob(monsterspawners:FindFirstChild("ForestMantis1")) -- Pine Tree Field
+        domob(monsterspawners:FindFirstChild("ForestMantis2")) -- Pine Tree Field
+    end
 end
 
 function IsToken(token)
@@ -1214,7 +1225,7 @@ function docrosshairs()
         if string.find(v.Name, "Crosshair") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.BrickColor ~= BrickColor.new("Flint") then
             if kocmoc.toggles.fastcrosshairs then
                 if (v.Position - api.humanoidrootpart().Position).magnitude > 200 then continue end
-                if getBuffTime("8172818074") > 0.5 and getBuffStack("8172818074") > 9 then
+                if getBuffTime("8172818074") > 0.5 and getBuffStack("8172818074") > 9 and getBuffTime("5101329167") == 0 and temptable.pollenpercentage <= 75 then
                     if v.BrickColor == BrickColor.new("Alder") then
                         task.wait(1)
                         repeat
@@ -1228,15 +1239,15 @@ function docrosshairs()
                             api.humanoidrootpart().CFrame = CFrame.new(v.Position)
                             task.wait(0.5)
                         until not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple")
-                    elseif v.BrickColor == BrickColor.new("Royal purple") then
+                    elseif v.BrickColor == BrickColor.new("Royal purple") and temptable.pollenpercentage > 75 then
                         repeat
                             local timestamp = v:FindFirstChild("timestamp")
                             if timestamp then
-                                if tick() - timestamp.Value > 2.4 then
+                                if tick() - timestamp.Value > 2.2 then
                                     api.humanoidrootpart().CFrame = CFrame.new(v.Position)
                                 end
                             end
-                            task.wait(0.05)
+                            task.wait(0.1)
                         until not v or not v.Parent
                     end
                 end
@@ -1910,7 +1921,7 @@ local loadingUI = loadingInfo:CreateLabel("Loading UI..")
 local information = hometab:CreateSection("Information")
 information:CreateLabel("Welcome, " .. api.nickname .. "!")
 information:CreateLabel("Script version: " .. temptable.version)
-information:CreateLabel("⚠️ - Not Safe Function")
+information:CreateLabel(Danger.." - Not Safe Function")
 information:CreateLabel("⚙ - Configurable Function")
 information:CreateLabel("📜 - May be exploit specific")
 information:CreateLabel("v4 by RoseGold#5441")
@@ -1972,7 +1983,7 @@ guiElements["toggles"]["farmbubbles"] = farmo:CreateToggle("Farm Bubbles", nil, 
 guiElements["toggles"]["farmflame"] = farmo:CreateToggle("Farm Flames", nil, function(State) kocmoc.toggles.farmflame = State end)
 guiElements["toggles"]["farmcoco"] = farmo:CreateToggle("Farm Coconuts & Shower", nil, function(State) kocmoc.toggles.farmcoco = State end)
 guiElements["toggles"]["collectcrosshairs"] = farmo:CreateToggle("Farm Precise Crosshairs", nil, function(State) kocmoc.toggles.collectcrosshairs = State end)
-guiElements["toggles"]["fastcrosshairs"] = farmo:CreateToggle("Fast Precise Crosshairs ⚠️", nil, function(State) kocmoc.toggles.fastcrosshairs = State end)
+guiElements["toggles"]["fastcrosshairs"] = farmo:CreateToggle("Hyper Precise Crosshairs ["..Danger.."]", nil, function(State) kocmoc.toggles.fastcrosshairs = State end)
 guiElements["toggles"]["farmfuzzy"] = farmo:CreateToggle("Farm Fuzzy Bombs", nil, function(State) kocmoc.toggles.farmfuzzy = State end)
 guiElements["toggles"]["farmunderballoons"] = farmo:CreateToggle("Farm Under Balloons", nil, function(State) kocmoc.toggles.farmunderballoons = State end)
 guiElements["toggles"]["farmclouds"] = farmo:CreateToggle("Farm Under Clouds", nil, function(State) kocmoc.toggles.farmclouds = State end)
@@ -2001,8 +2012,8 @@ guiElements["toggles"]["clock"] = farmt:CreateToggle("Auto Wealth Clock", nil, f
 guiElements["toggles"]["freeantpass"] = farmt:CreateToggle("Auto Free Antpasses", nil, function(State) kocmoc.toggles.freeantpass = State end)
 guiElements["toggles"]["farmsprouts"] = farmt:CreateToggle("Farm Sprouts", nil, function(State) kocmoc.toggles.farmsprouts = State end)
 guiElements["toggles"]["farmpuffshrooms"] = farmt:CreateToggle("Farm Puffshrooms", nil, function(State) kocmoc.toggles.farmpuffshrooms = State end)
--- BEESMAS MARKER farmt:CreateToggle("Farm Snowflakes [⚠️]", nil, function(State) kocmoc.toggles.farmsnowflakes = State end)
-guiElements["toggles"]["farmrares"] = farmt:CreateToggle("Teleport To Rares [⚠️]", nil, function(State) kocmoc.toggles.farmrares = State end)
+-- BEESMAS MARKER farmt:CreateToggle("Farm Snowflakes ["..Danger.."]", nil, function(State) kocmoc.toggles.farmsnowflakes = State end)
+guiElements["toggles"]["farmrares"] = farmt:CreateToggle("Teleport To Rares ["..Danger.."]", nil, function(State) kocmoc.toggles.farmrares = State end)
 guiElements["toggles"]["autoquest"] = farmt:CreateToggle("Auto Accept/Confirm Quests [⚙]", nil, function(State) kocmoc.toggles.autoquest = State end)
 guiElements["toggles"]["autodoquest"] = farmt:CreateToggle("Auto Do Quests [⚙]", nil, function(State) kocmoc.toggles.autodoquest = State end)
 guiElements["toggles"]["honeystorm"] = farmt:CreateToggle("Auto Honeystorm", nil, function(State) kocmoc.toggles.honeystorm = State end)
@@ -2082,15 +2093,15 @@ autoanttoggle:AddToolTip("You Need Spark Stuff 😋; Goes to Ant Challenge after
 guiElements["toggles"]["autoant"] = autoanttoggle
 
 local serverhopkill = combtab:CreateSection("Serverhopping Combat")
-serverhopkill:CreateButton("Vicious Bee Serverhopper [⚠️][📜]", function()
+serverhopkill:CreateButton("Vicious Bee Serverhopper ["..Danger.."]["..ExploitSpecific.."]", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Boxking776/kocmoc/main/functions/viciousbeeserverhop.lua"))()
 end):AddToolTip("Serverhops for rouge vicious bees")
 serverhopkill:CreateLabel("")
-serverhopkill:CreateLabel("[⚠️] These functions will unload the UI")
+serverhopkill:CreateLabel("["..Danger.."] These functions will unload the UI")
 serverhopkill:CreateLabel("")
 
 local amks = combtab:CreateSection("Auto Kill Mobs Settings")
-guiElements["vars"]["monstertimers"] = amks:CreateTextBox("Kill Mobs After x Convertions", "default = 3", true, function(Value)
+guiElements["vars"]["monstertimer"] = amks:CreateTextBox("Reset Mob Timer Minutes", "default = 15", true, function(Value)
     if tonumber(Value) then
         kocmoc.vars.monstertimer = tonumber(Value)
     end
@@ -2128,7 +2139,7 @@ end)
 
 local useitems = itemstab:CreateSection("Use Items")
 
-useitems:CreateButton("Use All Buffs [⚠️]", function()
+useitems:CreateButton("Use All Buffs ["..Danger.."]", function()
     for i, v in pairs(buffTable) do
         game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = i})
     end
@@ -2211,7 +2222,7 @@ misco:CreateDropdown("Generate Amulet", {
 }, function(Option)
     game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer(Option .. " Generator")
 end)
-misco:CreateButton("Export Stats Table [📜]", function()
+misco:CreateButton("Export Stats Table ["..ExploitSpecific.."]", function()
     local StatCache = require(game.ReplicatedStorage.ClientStatCache)
     writefile("Stats_" .. api.nickname .. ".json", StatCache:Encode())
 end)
@@ -2225,7 +2236,7 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
         local chat = function(...) alerts:Push(...) end
         chat(alertText, nil, alertDesign)
     end
-    visu:CreateButton("Spawn Coconut", function()
+    visu:CreateButton("Spawn Coconut ["..ExploitSpecific.."]", function()
         syn.secure_call(function()
             require(game.ReplicatedStorage.LocalFX.FallingCoconut)({
                 Pos = player.Character.Humanoid.RootPart.CFrame.p,
@@ -2236,7 +2247,7 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
             })
         end, player.PlayerScripts.ClientInit)
     end)
-    visu:CreateButton("Spawn Hostile Coconut", function()
+    visu:CreateButton("Spawn Hostile Coconut ["..ExploitSpecific.."]", function()
         syn.secure_call(function()
             require(game.ReplicatedStorage.LocalFX.FallingCoconut)({
                 Pos = player.Character.Humanoid.RootPart.CFrame.p,
@@ -2247,7 +2258,7 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
             })
         end, player.PlayerScripts.ClientInit)
     end)
-    visu:CreateButton("Spawn Mythic Meteor", function()
+    visu:CreateButton("Spawn Mythic Meteor ["..ExploitSpecific.."]", function()
         syn.secure_call(function()
             require(game.ReplicatedStorage.LocalFX.MythicMeteor)({
                 Pos = player.Character.Humanoid.RootPart.CFrame.p,
@@ -2258,7 +2269,7 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
             })
         end, player.PlayerScripts.ClientInit)
     end)
-    visu:CreateButton("Spawn Jelly Bean", function()
+    visu:CreateButton("Spawn Jelly Bean ["..ExploitSpecific.."]", function()
         local jellybeans = {
             "Navy", "Blue", "Spoiled", "Merigold", "Teal", "Periwinkle", "Pink",
             "Slate", "White", "Black", "Green", "Brown", "Yellow", "Maroon",
@@ -2272,7 +2283,7 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
             })
         end, player.PlayerScripts.ClientInit)
     end)
-    visu:CreateButton("Spawn Puffshroom Spores", function()
+    visu:CreateButton("Spawn Puffshroom Spores ["..ExploitSpecific.."]", function()
         task.spawn(function()
             syn.secure_call(function()
                 local field = game.Workspace.FlowerZones:GetChildren()[math.random(1, #game.Workspace.FlowerZones:GetChildren())]
@@ -2286,14 +2297,14 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
             workspace.Particles:FindFirstChild("SporeCloud"):Destroy()
         end)
     end)
-    visu:CreateButton("Spawn Party Popper", function()
+    visu:CreateButton("Spawn Party Popper ["..ExploitSpecific.."]", function()
         syn.secure_call(function()
             require(game:GetService("ReplicatedStorage").LocalFX.PartyPopper)({
                 Pos = player.Character.Humanoid.RootPart.CFrame.p
             })
         end, player.PlayerScripts.ClientInit)
     end)
-    visu:CreateButton("Spawn Flame", function()
+    visu:CreateButton("Spawn Flame ["..ExploitSpecific.."]", function()
         syn.secure_call(function()
             require(game.ReplicatedStorage.LocalFX.LocalFlames).AddFlame(
                 player.Character.Humanoid.RootPart.CFrame.p,
@@ -2304,7 +2315,7 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
             )
         end, player.PlayerScripts.ClientInit)
     end)
-    visu:CreateButton("Spawn Dark Flame", function()
+    visu:CreateButton("Spawn Dark Flame ["..ExploitSpecific.."]", function()
         syn.secure_call(function()
             require(game.ReplicatedStorage.LocalFX.LocalFlames).AddFlame(
                 player.Character.Humanoid.RootPart.CFrame.p,
@@ -2316,7 +2327,7 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
         end, player.PlayerScripts.ClientInit)
     end)
     local booolholder = false
-    visu:CreateToggle("Flame Walk", nil, function(boool)
+    visu:CreateToggle("Flame Walk ["..ExploitSpecific.."]", nil, function(boool)
         if boool == true then
             booolholder = true
             repeat
@@ -2335,7 +2346,7 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
             booolholder = false
         end
     end)
-    visu:CreateToggle("Dark Flame Walk", nil, function(boool)
+    visu:CreateToggle("Dark Flame Walk ["..ExploitSpecific.."]", nil, function(boool)
         if boool == true then
             booolholder = true
             repeat
@@ -2378,13 +2389,11 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
     }
     local alertDesign2 = "ChaChing"
     for i, v in pairs(raw) do table.insert(styles, i) end
-    visu:CreateDropdown("Notification Style", styles,
-                        function(dd) alertDesign2 = dd end)
-    visu:CreateTextBox("Text", "ex. Hello World", false, function(tx)
+    visu:CreateDropdown("Notification Style", styles,function(dd) alertDesign2 = dd end)
+    visu:CreateTextBox("Text ["..ExploitSpecific.."]", "ex. Hello World", false, function(tx)
         alertText = tx
         alertDesign = alertDesign2
-        syn.secure_call(pushAlert, player
-                            .PlayerScripts.AlertBoxes)
+        syn.secure_call(pushAlert, player.PlayerScripts.AlertBoxes)
     end)
 
     visu:CreateLabel("")
@@ -2409,7 +2418,7 @@ if string.find(string.upper(identifyexecutor()), "SYN") or string.find(string.up
             Pos = nukePosition
         })
     end
-    visu:CreateButton("Spawn Nuke", function()
+    visu:CreateButton("Spawn Nuke ["..ExploitSpecific.."]", function()
         alertText = "☢️ A nuke is incoming! ☢️"
         syn.secure_call(pushAlert, spoof)
         alertText = "☢️ Get somewhere high! ☢️"
@@ -2725,6 +2734,8 @@ end)
 guiElements["toggles"]["tptonpc"] = aqs:CreateToggle("Teleport To NPC", nil, function(State) kocmoc.toggles.tptonpc = State end)
 guiElements["toggles"]["autoquesthoneybee"] = aqs:CreateToggle("Include Honey Bee Quests", nil, function(State) kocmoc.toggles.autoquesthoneybee = State end)
 guiElements["toggles"]["buyantpass"] = aqs:CreateToggle("Buy Ant Pass When Needed", nil, function(State) kocmoc.toggles.buyantpass = State end)
+guiElements["toggles"]["smartmobkill"] = aqs:CreateToggle("Modify Mob Kill To Match Quests", nil, function(State) kocmoc.toggles.smartmobkill = State end)
+
 
 local pts = setttab:CreateSection("Autofarm Priority Tokens")
 pts:CreateTextBox("Asset ID", "rbxassetid", false, function(Value) rarename = Value end)
@@ -2885,18 +2896,18 @@ task.spawn(function()
         temptable.magnitude = 50
         if player.Character:FindFirstChild("ProgressLabel", true) then
             local pollenprglbl = player.Character:FindFirstChild("ProgressLabel", true)
-            maxpollen = tonumber(pollenprglbl.Text:match("%d+$"))
+            local maxpollen = tonumber(pollenprglbl.Text:match("%d+$"))
             local pollencount = player.CoreStats.Pollen.Value
-            pollenpercentage = pollencount / maxpollen * 100
+            temptable.pollenpercentage = pollencount / maxpollen * 100
             fieldselected = game.Workspace.FlowerZones[kocmoc.vars.field]
 
             if kocmoc.toggles.autouseconvertors then
-                if tonumber(pollenpercentage) >= (kocmoc.vars.convertat - (kocmoc.vars.autoconvertWaitTime)) then
+                if tonumber(temptable.pollenpercentage) >= (kocmoc.vars.convertat - (kocmoc.vars.autoconvertWaitTime)) then
                     if not temptable.consideringautoconverting then
                         temptable.consideringautoconverting = true
                         task.spawn(function()
                             task.wait(kocmoc.vars.autoconvertWaitTime)
-                            if tonumber(pollenpercentage) >= (kocmoc.vars.convertat - (kocmoc.vars.autoconvertWaitTime)) then
+                            if tonumber(temptable.pollenpercentage) >= (kocmoc.vars.convertat - (kocmoc.vars.autoconvertWaitTime)) then
                                 useConvertors()
                             end
                             temptable.consideringautoconverting = false
@@ -3146,7 +3157,8 @@ task.spawn(function()
                         makequests()
                     end
                     if kocmoc.toggles.autokillmobs then
-                        if temptable.act >= kocmoc.vars.monstertimer then
+                        if tick() - temptable.lastmobkill >= kocmoc.vars.monstertimer * 60 then
+                            temptable.lastmobkill = tick()
                             temptable.started.monsters = true
                             temptable.act = 0
                             killmobs()
@@ -3154,7 +3166,6 @@ task.spawn(function()
                         end
                     end
                     if kocmoc.vars.resetbeenergy then
-                        -- rconsoleprint("Act2:-"..tostring(temptable.act2))
                         if temptable.act2 >= kocmoc.vars.resettimer then
                             temptable.started.monsters = true
                             temptable.act2 = 0
@@ -3175,7 +3186,7 @@ task.spawn(function()
                         end
                     end
                 end
-                if tonumber(pollenpercentage) < tonumber(kocmoc.vars.convertat) or kocmoc.toggles.disableconversion and not temptable.planting then
+                if tonumber(temptable.pollenpercentage) < tonumber(kocmoc.vars.convertat) or kocmoc.toggles.disableconversion and not temptable.planting then
                     if not temptable.tokensfarm then
                         api.tween(2, fieldpos)
                         task.wait(2)
@@ -3229,7 +3240,7 @@ task.spawn(function()
                             task.wait(0.5)
                             gettoken()
                         end
-                        if (fieldposition - api.humanoidrootpart().Position).magnitude > temptable.magnitude and not temptable.planting and not temptable.doingcrosshairs and not temptable.doingbubbles then
+                        if (fieldposition - api.humanoidrootpart().Position).magnitude > temptable.magnitude and not findField(api.humanoidrootpart().CFrame.p) and not temptable.planting and not temptable.doingcrosshairs and not temptable.doingbubbles then
                             api.tween(0.1, fieldpos)
                             task.spawn(function()
                                 task.wait(0.5)
@@ -3264,7 +3275,7 @@ task.spawn(function()
                             getpuff()
                         end
                     end
-                elseif tonumber(pollenpercentage) >= tonumber(kocmoc.vars.convertat) and not temptable.started.vicious and not temptable.planting then
+                elseif tonumber(temptable.pollenpercentage) >= tonumber(kocmoc.vars.convertat) and not temptable.started.vicious and not temptable.planting then
                     if not kocmoc.toggles.disableconversion then
                         temptable.tokensfarm = false
                         api.tween(2, player.SpawnPos.Value * CFrame.fromEulerAnglesXYZ(0, 110, 0) + Vector3.new(0, 0, 9))
@@ -3290,7 +3301,8 @@ task.spawn(function()
                             makequests()
                         end
                         if kocmoc.toggles.autokillmobs then
-                            if temptable.act >= kocmoc.vars.monstertimer then
+                            if tick() - temptable.lastmobkill >= kocmoc.vars.monstertimer * 60 then
+                                temptable.lastmobkill = tick()
                                 temptable.started.monsters = true
                                 temptable.act = 0
                                 killmobs()
@@ -3298,7 +3310,6 @@ task.spawn(function()
                             end
                         end
                         if kocmoc.vars.resetbeenergy then
-                            -- rconsoleprint("Act2:-"..tostring(temptable.act2))
                             if temptable.act2 >= kocmoc.vars.resettimer then
                                 temptable.started.monsters = true
                                 temptable.act2 = 0
@@ -3328,19 +3339,16 @@ end)
 
 task.spawn(function()
     while task.wait(1) do
-        if kocmoc.toggles.killvicious and temptable.detected.vicious and
-            temptable.converting == false and not temptable.started.monsters and not game.Workspace.Toys["Ant Challenge"].Busy.Value then
+        if kocmoc.toggles.killvicious and temptable.detected.vicious and not temptable.converting and not temptable.started.monsters and not game.Workspace.Toys["Ant Challenge"].Busy.Value then
             temptable.started.vicious = true
             disableall()
             local vichumanoid = api.humanoidrootpart()
             for i, v in next, game.workspace.Particles:GetChildren() do
                 for x in string.gmatch(v.Name, "Vicious") do
                     if string.find(v.Name, "Vicious") then
-                        api.tween(1, CFrame.new(v.Position.x, v.Position.y,
-                                                v.Position.z))
+                        api.tween(1, CFrame.new(v.Position.x, v.Position.y, v.Position.z))
                         task.wait(1)
-                        api.tween(0.5, CFrame.new(v.Position.x, v.Position.y,
-                                                  v.Position.z))
+                        api.tween(0.5, CFrame.new(v.Position.x, v.Position.y, v.Position.z))
                         task.wait(.5)
                     end
                 end
