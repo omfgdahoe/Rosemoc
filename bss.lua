@@ -1211,7 +1211,7 @@ function docrosshairs()
     local savespeed = kocmoc.vars.walkspeed
 
     for _,v in pairs(game.Workspace.Particles:GetChildren()) do
-        if string.find(v.Name, "Crosshair") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") and v.BrickColor ~= BrickColor.new("Royal purple") then
+        if string.find(v.Name, "Crosshair") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.BrickColor ~= BrickColor.new("Flint") then
             if kocmoc.toggles.fastcrosshairs then
                 print(getBuffStack("8172818074"))
                 if (v.Position - api.humanoidrootpart().Position).magnitude > 200 then continue end
@@ -1224,28 +1224,22 @@ function docrosshairs()
                         until not v or not v.Parent
                     end
                 else
-                    local timestamp = v:FindFirstChild("timestamp")
-                    if timestamp then
+                    if v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Royal purple") then
                         repeat
-                            timestamp = v:FindFirstChild("timestamp")
+                            task.wait()
+                            api.humanoidrootpart().CFrame = CFrame.new(v.Position)
+                        until not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple") or not temptable.running
+                    else
+                        repeat
+                            local timestamp = v:FindFirstChild("timestamp")
                             if timestamp then
-                                print(tick() - timestamp.Value)
-                                if tick() - timestamp.Value > 1 then
+                                if tick() - timestamp.Value > 2.3 then
+                                    print(tick() - timestamp.Value)
                                     api.humanoidrootpart().CFrame = CFrame.new(v.Position)
                                 end
                             end
                             task.wait()
                         until not v or not v.Parent
-                    else
-                        timestamp = Instance.new("NumberValue", v)
-                        timestamp.Name = "timestamp"
-                        timestamp.Value = tick()
-
-                        repeat
-                            task.wait()
-                            print(v.BrickColor)
-                            api.humanoidrootpart().CFrame = CFrame.new(v.Position)
-                        until not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple") or not temptable.running
                     end
                 end
             else
@@ -2876,10 +2870,9 @@ game.Workspace.Particles.ChildAdded:Connect(function(v)
                 end
             end
         elseif v.Name == "Crosshair" and kocmoc.toggles.collectcrosshairs then
-            task.wait(0.1)
-            if v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Flint") then
-                table.insert(temptable.crosshairs, v)
-            end
+            local timestamp = Instance.new("NumberValue", v)
+            timestamp.Name = "timestamp"
+            timestamp.Value = tick()
         elseif string.find(v.Name, "Bubble") and getBuffTime("5101328809") > 0.2 and kocmoc.toggles.farmbubbles then
             if not kocmoc.toggles.farmpuffshrooms or (kocmoc.toggles.farmpuffshrooms and not game.Workspace.Happenings.Puffshrooms:FindFirstChildOfClass("Model")) then
                 if (v.Position - api.humanoidrootpart().Position).magnitude > 100 then return end
