@@ -1217,7 +1217,7 @@ end
 
 function docrosshairs()
     if kocmoc.toggles.farmpuffshrooms and game.Workspace.Happenings.Puffshrooms:FindFirstChildOfClass("Model") then return end
-    if temptable.started.ant or temptable.started.vicious or temptable.converting or temptable.planting then return end
+    if temptable.started.ant or temptable.started.vicious or temptable.converting or temptable.planting or temptable.started.monsters then return end
 
     local savespeed = kocmoc.vars.walkspeed
 
@@ -1225,7 +1225,7 @@ function docrosshairs()
         if string.find(v.Name, "Crosshair") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.BrickColor ~= BrickColor.new("Flint") then
             if kocmoc.toggles.fastcrosshairs then
                 if (v.Position - api.humanoidrootpart().Position).magnitude > 200 then continue end
-                if getBuffTime("8172818074") > 0.5 and getBuffStack("8172818074") > 9 and getBuffTime("5101329167") == 0 and temptable.pollenpercentage <= 75 then
+                if getBuffTime("8172818074") > 0.5 and getBuffStack("8172818074") > 9 and getBuffTime("5101329167") == 0 and temptable.pollenpercentage <= 50 then
                     if v.BrickColor == BrickColor.new("Alder") then
                         task.wait(1)
                         repeat
@@ -1239,7 +1239,7 @@ function docrosshairs()
                             api.humanoidrootpart().CFrame = CFrame.new(v.Position)
                             task.wait(0.5)
                         until not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple")
-                    elseif v.BrickColor == BrickColor.new("Royal purple") and temptable.pollenpercentage > 75 then
+                    elseif v.BrickColor == BrickColor.new("Royal purple") and temptable.pollenpercentage > 50 then
                         repeat
                             local timestamp = v:FindFirstChild("timestamp")
                             if timestamp then
@@ -3240,7 +3240,7 @@ task.spawn(function()
                             task.wait(0.5)
                             gettoken()
                         end
-                        if (fieldposition - api.humanoidrootpart().Position).magnitude > temptable.magnitude and not findField(api.humanoidrootpart().CFrame.p) and not temptable.planting and not temptable.doingcrosshairs and not temptable.doingbubbles then
+                        if (fieldposition - api.humanoidrootpart().Position).magnitude > temptable.magnitude and findField(api.humanoidrootpart().CFrame.p) ~= fieldselected and not temptable.planting and not temptable.doingcrosshairs and not temptable.doingbubbles then
                             api.tween(0.1, fieldpos)
                             task.spawn(function()
                                 task.wait(0.5)
