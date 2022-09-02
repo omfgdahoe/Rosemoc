@@ -894,8 +894,8 @@ function getBuffStack(decalID)
             for j,k in pairs(v:GetChildren()) do
                 if k:FindFirstChild("BG") and k.BG:FindFirstChild("Icon") then
                     if string.find(tostring(k.BG.Icon.Image), decalID) then
-                        local placeholder = tonumber(k.BG.Text.Text:gsub("x", ""))
-                        return placeholder or 1
+                        local placeholder = k.BG.Text.Text:gsub("x", "")
+                        return tonumber(placeholder) or 1
                     end
                 end
             end
