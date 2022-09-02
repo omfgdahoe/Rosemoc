@@ -1213,7 +1213,6 @@ function docrosshairs()
     for _,v in pairs(game.Workspace.Particles:GetChildren()) do
         if string.find(v.Name, "Crosshair") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.BrickColor ~= BrickColor.new("Flint") then
             if kocmoc.toggles.fastcrosshairs then
-                print(getBuffStack("8172818074"))
                 if (v.Position - api.humanoidrootpart().Position).magnitude > 200 then continue end
                 if getBuffTime("8172818074") > 0.5 and getBuffStack("8172818074") > 9 then
                     if v.BrickColor == BrickColor.new("Alder") then
@@ -1224,10 +1223,10 @@ function docrosshairs()
                         until not v or not v.Parent
                     end
                 else
-                    if v.BrickColor ~= BrickColor.new("Forest green") and v.BrickColor ~= BrickColor.new("Royal purple") then
+                    if v.BrickColor == BrickColor.new("Red flip/flop") or v.BrickColor == BrickColor.new("Alder") then
                         repeat
-                            task.wait()
                             api.humanoidrootpart().CFrame = CFrame.new(v.Position)
+                            task.wait(0.5)
                         until not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple")
                     else
                         repeat
@@ -1237,7 +1236,7 @@ function docrosshairs()
                                     api.humanoidrootpart().CFrame = CFrame.new(v.Position)
                                 end
                             end
-                            task.wait()
+                            task.wait(0.05)
                         until not v or not v.Parent
                     end
                 end
