@@ -1239,7 +1239,7 @@ function docrosshairs()
                             api.humanoidrootpart().CFrame = CFrame.new(v.Position)
                             task.wait(0.5)
                         until not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple")
-                    elseif v.BrickColor == BrickColor.new("Royal purple") and temptable.pollenpercentage > 50 then
+                    elseif (v.BrickColor == BrickColor.new("Royal purple") or v.BrickColor == BrickColor.new("Forest green")) and temptable.pollenpercentage > 50 then
                         repeat
                             local timestamp = v:FindFirstChild("timestamp")
                             if timestamp then
@@ -1983,7 +1983,7 @@ guiElements["toggles"]["farmbubbles"] = farmo:CreateToggle("Farm Bubbles", nil, 
 guiElements["toggles"]["farmflame"] = farmo:CreateToggle("Farm Flames", nil, function(State) kocmoc.toggles.farmflame = State end)
 guiElements["toggles"]["farmcoco"] = farmo:CreateToggle("Farm Coconuts & Shower", nil, function(State) kocmoc.toggles.farmcoco = State end)
 guiElements["toggles"]["collectcrosshairs"] = farmo:CreateToggle("Farm Precise Crosshairs", nil, function(State) kocmoc.toggles.collectcrosshairs = State end)
-guiElements["toggles"]["fastcrosshairs"] = farmo:CreateToggle("Hyper Precise Crosshairs ["..Danger.."]", nil, function(State) kocmoc.toggles.fastcrosshairs = State end)
+guiElements["toggles"]["fastcrosshairs"] = farmo:CreateToggle("Smart Precise Crosshairs ["..Danger.."]", nil, function(State) kocmoc.toggles.fastcrosshairs = State end)
 guiElements["toggles"]["farmfuzzy"] = farmo:CreateToggle("Farm Fuzzy Bombs", nil, function(State) kocmoc.toggles.farmfuzzy = State end)
 guiElements["toggles"]["farmunderballoons"] = farmo:CreateToggle("Farm Under Balloons", nil, function(State) kocmoc.toggles.farmunderballoons = State end)
 guiElements["toggles"]["farmclouds"] = farmo:CreateToggle("Farm Under Clouds", nil, function(State) kocmoc.toggles.farmclouds = State end)
@@ -3240,7 +3240,8 @@ task.spawn(function()
                             task.wait(0.5)
                             gettoken()
                         end
-                        if (fieldposition - api.humanoidrootpart().Position).magnitude > temptable.magnitude and findField(api.humanoidrootpart().CFrame.p) ~= fieldselected and not temptable.planting and not temptable.doingcrosshairs and not temptable.doingbubbles then
+                        print(findField(api.humanoidrootpart().CFrame.p), findField(fieldposition))
+                        if (fieldposition - api.humanoidrootpart().Position).magnitude > temptable.magnitude and findField(api.humanoidrootpart().CFrame.p) ~= findField(fieldposition) and not temptable.planting and not temptable.doingcrosshairs and not temptable.doingbubbles then
                             api.tween(0.1, fieldpos)
                             task.spawn(function()
                                 task.wait(0.5)
