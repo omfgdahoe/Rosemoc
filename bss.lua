@@ -799,6 +799,11 @@ function domob(place)
 
         local point = Vector3.new((place.CFrame.p.X + monsterpart.CFrame.p.X) / 2, monsterpart.CFrame.p.Y, (place.CFrame.p.Z + monsterpart.CFrame.p.Z) / 2)
 
+        if place:FindFirstChild("TimerLabel", true).Visible then
+            print("will not go kill "..place.." because it has not spawned in")
+            return false
+        end
+
         while not place:FindFirstChild("TimerLabel", true).Visible and tick() - timestamp < 25 do
             if tick() - secondstamp > 2 then
                 api.humanoidrootpart().CFrame = CFrame.new(point + Vector3.new(0, 30, 0))
@@ -810,19 +815,105 @@ function domob(place)
             api.humanoidrootpart().CFrame = CFrame.new(point)
             api.humanoidrootpart().Velocity = Vector3.new(0, 0, 0)
         end
+
+        if tick() - timestamp > 25 then
+            print("failed killing "..place.." because it has not spawned in yet after waiting 25 seconds")
+            return false
+        end
+
         task.wait(1)
-        for i = 1, 4 do
+        for i = 1, 2 do
             gettoken(place.CFrame.p)
         end
+
+        return true
     end
 end
 
 function killmobs()
     if kocmoc.toggles.smartmobkill then
+        local monsternames = {
+            "Mantis",
+            "Scorpion",
+            "Spider",
+            "Werewol",
+            "Rhino",
+            "Ladybug"
+        }
+        
+        local totalmonsters = {}
+
         for i, v in next, player.PlayerGui.ScreenGui.Menus.Children.Quests:GetDescendants() do
             if v.Name == "Description" and v.Parent and v.Parent.Parent then
-
+                local text = v.Text
+                for _,monstername in pairs(monsternames) do
+                    local monsterindex = text:find(monstername)
+                    if monsterindex and not text:find("Field") and text:find("/") then
+                        local totalmonstercount = text:sub(text:find("/") + 1, #text)
+                        local defeatedmonstercount = text:sub(text:find("\n"), text:find("/") - 1)
+                        totalmonsters[monstername] = totalmonsters[monstername] and totalmonsters[monstername] + totalmonstercount - defeatedmonstercount or totalmonstercount - defeatedmonstercount
+                    end
+                end
             end
+        end
+
+        if totalmonsters["Rhino"] > 0 then
+            if domob(monsterspawners:FindFirstChild("Rhino Bush")) then
+                totalmonsters["Rhino"] = totalmonsters["Rhino"] - 1
+            end
+        end
+        if totalmonsters["Ladybug"] > 0 then
+            if domob(monsterspawners:FindFirstChild("Ladybug Bush")) then
+                totalmonsters["Ladybug"] = totalmonsters["Ladybug"] - 1
+            end
+        end
+        if totalmonsters["Rhino"] > 0 then
+            if domob(monsterspawners:FindFirstChild("Rhino Cave 1")) then
+                totalmonsters["Rhino"] = totalmonsters["Rhino"] - 1
+            end
+        end
+        if totalmonsters["Rhino"] > 0 then
+            if domob(monsterspawners:FindFirstChild("Rhino Cave 2")) then
+                totalmonsters["Rhino"] = totalmonsters["Rhino"] - 1
+            end
+        end
+        if totalmonsters["Rhino"] > 0 then
+            if domob(monsterspawners:FindFirstChild("Rhino Cave 3")) then
+                totalmonsters["Rhino"] = totalmonsters["Rhino"] - 1
+            end
+        end
+        if totalmonsters["Rhino"] > 0 then
+            if domob(monsterspawners:FindFirstChild("PineappleBeetle")) then
+                totalmonsters["Rhino"] = totalmonsters["Rhino"] - 1
+            end
+        end
+        if totalmonsters["Mantis"] > 0 then
+            if domob(monsterspawners:FindFirstChild("PineappleMantis1")) then
+                totalmonsters["Mantis"] = totalmonsters["Mantis"] - 1
+            end
+        end
+        if totalmonsters["Spider"] > 0 then
+            domob(monsterspawners:FindFirstChild("Spider Cave"))
+        end
+        if totalmonsters["Ladybug"] > 0 then
+            if domob(monsterspawners:FindFirstChild("MushroomBush")) then
+                totalmonsters["Ladybug"] = totalmonsters["Ladybug"] - 1
+            end
+        end
+        if totalmonsters["Ladybug"] > 0 then
+            domob(monsterspawners:FindFirstChild("Ladybug Bush 2"))
+            domob(monsterspawners:FindFirstChild("Ladybug Bush 3"))
+        end
+        if totalmonsters["Scorpion"] > 0 then
+            domob(monsterspawners:FindFirstChild("ScorpionBush")) 
+            domob(monsterspawners:FindFirstChild("ScorpionBush2"))
+        end
+        if totalmonsters["Werewol"] > 0 then
+            domob(monsterspawners:FindFirstChild("WerewolfCave"))
+        end
+        if totalmonsters["Mantis"] > 0 then
+            domob(monsterspawners:FindFirstChild("ForestMantis1"))
+            domob(monsterspawners:FindFirstChild("ForestMantis2"))
         end
     else
         domob(monsterspawners:FindFirstChild("Rhino Bush")) -- Clover Field
@@ -834,7 +925,6 @@ function killmobs()
         domob(monsterspawners:FindFirstChild("PineappleBeetle")) -- Pineapple Field
         domob(monsterspawners:FindFirstChild("Spider Cave")) -- Spider Field
         domob(monsterspawners:FindFirstChild("MushroomBush")) -- Mushroom Field
-        domob(monsterspawners:FindFirstChild("Spider Cave")) -- Spider Field
         domob(monsterspawners:FindFirstChild("Ladybug Bush 2")) -- Strawberry Field
         domob(monsterspawners:FindFirstChild("Ladybug Bush 3")) -- Strawberry Field
         domob(monsterspawners:FindFirstChild("ScorpionBush")) -- Rose Field
