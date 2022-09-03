@@ -800,7 +800,7 @@ function domob(place)
         local point = Vector3.new((place.CFrame.p.X + monsterpart.CFrame.p.X) / 2, monsterpart.CFrame.p.Y, (place.CFrame.p.Z + monsterpart.CFrame.p.Z) / 2)
 
         if place:FindFirstChild("TimerLabel", true).Visible then
-            print("will not go kill "..place.." because it has not spawned in")
+            print("will not go kill "..tostring(place).." because it has not spawned in")
             return false
         end
 
@@ -817,7 +817,7 @@ function domob(place)
         end
 
         if tick() - timestamp > 25 then
-            print("failed killing "..place.." because it has not spawned in yet after waiting 25 seconds")
+            print("failed killing "..tostring(place).." because it has not spawned in yet after waiting 25 seconds")
             return false
         end
 
