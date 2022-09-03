@@ -313,7 +313,7 @@ task.spawn(function()
         if rosemoc.toggles.cubitesp then
             for i,v in pairs(game.Workspace["Client Cubits"]:GetChildren()) do
                 if v and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                    local dist = (player.Character.HumanoidRootPart.Position - v.Position).Magnitude
+                    local dist = math.round((player.Character.HumanoidRootPart.Position - v.Position).Magnitude * 100) / 100
                     local billboardGui = v:FindFirstChildWhichIsA("BillboardGui")
                     if not billboardGui then
                         billboardGui = Instance.new("BillboardGui")
@@ -331,7 +331,7 @@ task.spawn(function()
                         
                         local distancetext = Instance.new("TextLabel", frame)
                         distancetext.Name = "Distance"
-                        distancetext.Text = dist
+                        distancetext.Text = "Distance: "..dist
                         distancetext.BackgroundTransparency = 1
                         distancetext.Size = UDim2.new(1, 0, 1, 0)
                         distancetext.Font = "SourceSansBold"
@@ -339,6 +339,14 @@ task.spawn(function()
                         distancetext.TextColor3 = Color3.fromRGB(255, 0, 0)
                         distancetext.TextStrokeColor3 = Color3.fromRGB(127, 0, 0)
                         distancetext.TextStrokeTransparency = 0
+                    else
+                        local distancetext = billboardGui.Frame:FindFirstChild("Distance")
+                        distancetext.Text = "Distance: "..dist
+
+                        local r = math.min(255, math.min(dist, 100) / 100 * 2 * 255)
+                        local g = math.min(255, (1 - math.min(dist, 100) / 100) * 2 * 255)
+                        
+                        distancetext.TextColor3 = Color3.fromRGB(r, g, 0)
                     end
                 end
             end
