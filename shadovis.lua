@@ -1,5 +1,7 @@
 repeat task.wait() until game:IsLoaded()
 
+task.wait(5)
+
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RoseGoldIsntGay/Rosemoc/main/library.lua"))()
 
 local RunService = game:GetService("RunService")
@@ -310,8 +312,8 @@ task.spawn(function()
         
         if rosemoc.toggles.cubitesp then
             for i,v in pairs(game.Workspace["Client Cubits"]:GetChildren()) do
-                if v.PrimaryPart and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                    local dist = (player.Character.HumanoidRootPart.Position - v.PrimaryPart.Position).Magnitude
+                if v and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    local dist = (player.Character.HumanoidRootPart.Position - v.Position).Magnitude
                     local billboardGui = v:FindFirstChildWhichIsA("BillboardGui")
                     if not billboardGui then
                         billboardGui = Instance.new("BillboardGui")
