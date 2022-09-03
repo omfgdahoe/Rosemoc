@@ -347,7 +347,7 @@ task.spawn(function()
                         local g = math.min(255, (1 - math.min(dist, 100) / 100) * 2 * 255)
                         
                         distancetext.TextColor3 = Color3.fromRGB(r, g, 0)
-                        mobhptext.TextStrokeColor3 = Color3.fromRGB(r/2, g/2, 0)
+                        distancetext.TextStrokeColor3 = Color3.fromRGB(r/2, g/2, 0)
                     end
                 end
             end
