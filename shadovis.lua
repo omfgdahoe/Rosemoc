@@ -1,3 +1,5 @@
+repeat task.wait() until game:IsLoaded()
+
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RoseGoldIsntGay/Rosemoc/main/library.lua"))()
 
 local RunService = game:GetService("RunService")
