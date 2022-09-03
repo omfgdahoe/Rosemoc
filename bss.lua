@@ -857,61 +857,61 @@ function killmobs()
             end
         end
 
-        if totalmonsters["Rhino"] > 0 then
+        if totalmonsters["Rhino"] and totalmonsters["Rhino"] > 0 then
             if domob(monsterspawners:FindFirstChild("Rhino Bush")) then
                 totalmonsters["Rhino"] = totalmonsters["Rhino"] - 1
             end
         end
-        if totalmonsters["Ladybug"] > 0 then
+        if totalmonsters["Ladybug"] and totalmonsters["Ladybug"] > 0 then
             if domob(monsterspawners:FindFirstChild("Ladybug Bush")) then
                 totalmonsters["Ladybug"] = totalmonsters["Ladybug"] - 1
             end
         end
-        if totalmonsters["Rhino"] > 0 then
+        if totalmonsters["Rhino"] and totalmonsters["Rhino"] > 0 then
             if domob(monsterspawners:FindFirstChild("Rhino Cave 1")) then
                 totalmonsters["Rhino"] = totalmonsters["Rhino"] - 1
             end
         end
-        if totalmonsters["Rhino"] > 0 then
+        if totalmonsters["Rhino"] and totalmonsters["Rhino"] > 0 then
             if domob(monsterspawners:FindFirstChild("Rhino Cave 2")) then
                 totalmonsters["Rhino"] = totalmonsters["Rhino"] - 1
             end
         end
-        if totalmonsters["Rhino"] > 0 then
+        if totalmonsters["Rhino"] and totalmonsters["Rhino"] > 0 then
             if domob(monsterspawners:FindFirstChild("Rhino Cave 3")) then
                 totalmonsters["Rhino"] = totalmonsters["Rhino"] - 1
             end
         end
-        if totalmonsters["Rhino"] > 0 then
+        if totalmonsters["Rhino"] and totalmonsters["Rhino"] > 0 then
             if domob(monsterspawners:FindFirstChild("PineappleBeetle")) then
                 totalmonsters["Rhino"] = totalmonsters["Rhino"] - 1
             end
         end
-        if totalmonsters["Mantis"] > 0 then
+        if totalmonsters["Mantis"] and totalmonsters["Mantis"] > 0 then
             if domob(monsterspawners:FindFirstChild("PineappleMantis1")) then
                 totalmonsters["Mantis"] = totalmonsters["Mantis"] - 1
             end
         end
-        if totalmonsters["Spider"] > 0 then
+        if totalmonsters["Spider"] and totalmonsters["Spider"] > 0 then
             domob(monsterspawners:FindFirstChild("Spider Cave"))
         end
-        if totalmonsters["Ladybug"] > 0 then
+        if totalmonsters["Ladybug"] and totalmonsters["Ladybug"] > 0 then
             if domob(monsterspawners:FindFirstChild("MushroomBush")) then
                 totalmonsters["Ladybug"] = totalmonsters["Ladybug"] - 1
             end
         end
-        if totalmonsters["Ladybug"] > 0 then
+        if totalmonsters["Ladybug"] and totalmonsters["Ladybug"] > 0 then
             domob(monsterspawners:FindFirstChild("Ladybug Bush 2"))
             domob(monsterspawners:FindFirstChild("Ladybug Bush 3"))
         end
-        if totalmonsters["Scorpion"] > 0 then
+        if totalmonsters["Scorpion"] and totalmonsters["Scorpion"] > 0 then
             domob(monsterspawners:FindFirstChild("ScorpionBush")) 
             domob(monsterspawners:FindFirstChild("ScorpionBush2"))
         end
-        if totalmonsters["Werewol"] > 0 then
+        if totalmonsters["Werewol"] and totalmonsters["Werewol"] > 0 then
             domob(monsterspawners:FindFirstChild("WerewolfCave"))
         end
-        if totalmonsters["Mantis"] > 0 then
+        if totalmonsters["Mantis"] and totalmonsters["Mantis"] > 0 then
             domob(monsterspawners:FindFirstChild("ForestMantis1"))
             domob(monsterspawners:FindFirstChild("ForestMantis2"))
         end
