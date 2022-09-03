@@ -3240,7 +3240,6 @@ task.spawn(function()
                             task.wait(0.5)
                             gettoken()
                         end
-                        print(findField(api.humanoidrootpart().CFrame.p), findField(fieldposition))
                         if (fieldposition - api.humanoidrootpart().Position).magnitude > temptable.magnitude and findField(api.humanoidrootpart().CFrame.p) ~= findField(fieldposition) and not temptable.planting and not temptable.doingcrosshairs and not temptable.doingbubbles then
                             api.tween(0.1, fieldpos)
                             task.spawn(function()
