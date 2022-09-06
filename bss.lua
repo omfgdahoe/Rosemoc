@@ -46,9 +46,18 @@ end
 function maskequip(mask)
     if rtsg()["EquippedAccessories"]["Hat"] == mask then return end
     game:GetService("ReplicatedStorage").Events.ItemPackageEvent:InvokeServer("Equip", {
-        ["Mute"] = false,
-        ["Type"] = mask,
-        ["Category"] = "Accessory"
+        Mute = false,
+        Type = mask,
+        Category = "Accessory"
+    })
+end
+
+function equiptool(tool)
+    if rtsg()["EquippedCollector"] == tool then return end
+    game.ReplicatedStorage.Events.ItemPackageEvent:InvokeServer("Equip", {
+        Mute = true,
+        Type = tool,
+        Category = "Collector"
     })
 end
 
@@ -460,6 +469,7 @@ getgenv().kocmoc = {
         autouseMode = "Just Tickets",
         autoconvertWaitTime = 10,
         defmask = "Bubble",
+        deftool = "Petal Wand",
         resettimer = 3,
         questcolorprefer = "Any NPC",
         playertofollow = "",
@@ -1012,11 +1022,7 @@ function farmant()
     local anttable = {left = true, right = false}
     temptable.oldtool = rtsg()["EquippedCollector"]
     if temptable.oldtool ~= "Tide Popper" then
-        game.ReplicatedStorage.Events.ItemPackageEvent:InvokeServer("Equip", {
-            ["Mute"] = true,
-            ["Type"] = "Spark Staff",
-            ["Category"] = "Collector"
-        })
+        equiptool("Spark Staff")
     end
     local oldmask = rtsg()["EquippedAccessories"]["Hat"]
     maskequip("Demon Mask")
@@ -1082,11 +1088,7 @@ function farmant()
     until game.Workspace.Toys["Ant Challenge"].Busy.Value == false
     task.wait(1)
     if temptable.oldtool ~= "Tide Popper" then
-        game.ReplicatedStorage.Events.ItemPackageEvent:InvokeServer("Equip", {
-            ["Mute"] = true,
-            ["Type"] = temptable.oldtool,
-            ["Category"] = "Collector"
-        })
+        equiptool(temptable.oldtool)
     end
     maskequip(oldmask)
     temptable.started.ant = false
@@ -2080,6 +2082,7 @@ guiElements["toggles"]["farmclouds"] = farmo:CreateToggle("Farm Under Clouds", n
 farmo:CreateLabel("")
 guiElements["toggles"]["honeymaskconv"] = farmo:CreateToggle("Auto Honey Mask", nil, function(bool) kocmoc.toggles.honeymaskconv = bool end)
 guiElements["vars"]["defmask"] = farmo:CreateDropdown("Default Mask", MasksTable, function(val) kocmoc.vars.defmask = val end)
+guiElements["vars"]["deftool"] = farmo:CreateDropdown("Default Tool", collectorstable, function(val) kocmoc.vars.deftool = val end)
 guiElements["toggles"]["autoequipmask"] = farmo:CreateToggle("Equip Mask Based on Field", nil, function(bool) kocmoc.toggles.autoequipmask = bool end)
 guiElements["toggles"]["followplayer"] = farmo:CreateToggle("Follow Player", nil, function(bool)
     kocmoc.toggles.followplayer = bool
@@ -2283,28 +2286,13 @@ misco:CreateDropdown("Equip Accesories", accesoriestable, function(Option)
         ["Type"] = Option,
         ["Category"] = "Accessory"
     }
-    game:GetService("ReplicatedStorage").Events.ItemPackageEvent:InvokeServer(
-        ohString1, ohTable2)
+    game:GetService("ReplicatedStorage").Events.ItemPackageEvent:InvokeServer(ohString1, ohTable2)
 end)
 misco:CreateDropdown("Equip Masks", masktable, function(Option)
-    local ohString1 = "Equip"
-    local ohTable2 = {
-        ["Mute"] = false,
-        ["Type"] = Option,
-        ["Category"] = "Accessory"
-    }
-    game:GetService("ReplicatedStorage").Events.ItemPackageEvent:InvokeServer(
-        ohString1, ohTable2)
+    maskequip(Option)
 end)
 misco:CreateDropdown("Equip Collectors", collectorstable, function(Option)
-    local ohString1 = "Equip"
-    local ohTable2 = {
-        ["Mute"] = false,
-        ["Type"] = Option,
-        ["Category"] = "Collector"
-    }
-    game:GetService("ReplicatedStorage").Events.ItemPackageEvent:InvokeServer(
-        ohString1, ohTable2)
+    equiptool(Option)
 end)
 misco:CreateDropdown("Generate Amulet", {
     "Supreme Star Amulet", "Diamond Star Amulet", "Gold Star Amulet",
@@ -2891,24 +2879,16 @@ local loadingLoops = loadingInfo:CreateLabel("Loading Loops..")
 local honeytoggleouyfyt = false
 task.spawn(function()
     while task.wait(1) do
-        if kocmoc.toggles.honeymaskconv == true then
+        if kocmoc.toggles.honeymaskconv then
             if temptable.converting then
-                if honeytoggleouyfyt == false then
+                if not honeytoggleouyfyt then
                     honeytoggleouyfyt = true
-                    game:GetService("ReplicatedStorage").Events.ItemPackageEvent:InvokeServer("Equip", {
-                        Mute = false,
-                        Type = "Honey Mask",
-                        Category = "Accessory"
-                    })
+                    maskequip("Honey Mask")
                 end
             else
-                if honeytoggleouyfyt == true then
+                if honeytoggleouyfyt then
                     honeytoggleouyfyt = false
-                    game:GetService("ReplicatedStorage").Events.ItemPackageEvent:InvokeServer("Equip", {
-                        Mute = false,
-                        Type = kocmoc.vars.defmask,
-                        Category = "Accessory"
-                    })
+                    maskequip(kocmoc.vars.defmask)
                 end
             end
         end
@@ -2925,8 +2905,7 @@ task.spawn(function()
                     if k == i then inuse = true end
                 end
                 if inuse == false then
-                    game:GetService("ReplicatedStorage").Events
-                        .PlayerActivesCommand:FireServer({["Name"] = i})
+                    game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = i})
                 end
             end
         end
@@ -3381,6 +3360,7 @@ task.spawn(function()
                                 converthoney()
                             until gethiveballoon() == false or not kocmoc.toggles.convertballoons
                         end
+                        equiptool(kocmoc.vars.deftool)
                         temptable.converting = false
                         temptable.act = temptable.act + 1
                         task.wait(6)
@@ -3497,7 +3477,7 @@ task.spawn(function()
                                 task.wait(2)
                                 api.humanoidrootpart().CFrame = temptable.gacf(temptable.windy, 5)
                                 task.wait(2)
-                                for i = 1, 5 do
+                                for i = 1, 3 do
                                     gettoken(api.humanoidrootpart().Position)
                                 end -- collect tokens :yessir:
                                 wlvl = v.Name
@@ -4087,11 +4067,11 @@ end)
 
 task.spawn(function()
     local timestamp = tick()
-    while task.wait(10) do
+    while task.wait(15) do
         local timeout = false
         task.spawn(function()
             timeout = true
-            task.wait(10)
+            task.wait(15)
             if timeout then
                 if kocmoc.vars.webhookurl ~= "" and httpreq then
                     disconnected(kocmoc.vars.webhookurl, kocmoc.vars.discordid, "Server Timeout (Game Freeze)")

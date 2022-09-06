@@ -142,6 +142,8 @@ local function truncate(num)
     if not rosemoc.toggles.shortnumberstoggle then
         return num
     end
+
+    num = num:gsub("K", "000"):gsub("M", "000000"):gsub("B", "000000000")
     
     num = tonumber(math.round(num))
     if num <= 0 then
@@ -207,8 +209,9 @@ task.spawn(function()
         if rosemoc.toggles.mobesp then
             for i,v in pairs(game.Workspace.NPCs:GetChildren()) do
                 if v.PrimaryPart and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    if not v.Name:find("Lv ") then return end
                     local mobname = v.Name:sub(0, v.Name:find("Lv ") - 2)
-                    local moblevel = tonumber(v.Name:sub(v.Name:find("Lv ") + 3, (v.Name:find("HP:") or #v.Name + 2) - 2))
+                    local moblevel = v.Name:sub(v.Name:find("Lv ") + 3, (v.Name:find("HP:") or #v.Name + 2) - 2)
                     local hps = v.Name:find("HP:") and ((v.Name:sub(v.Name:find("HP:") + 5, #v.Name - 1)):split("/")) or -1
                     local hp = -1
                     local maxhp = -1
@@ -244,7 +247,7 @@ task.spawn(function()
                         
                         local mobleveltext = Instance.new("TextLabel", frame)
                         mobleveltext.Name = "MobLevel"
-                        mobleveltext.Text = "[Lv "..truncate(moblevel).."]"
+                        mobleveltext.Text = "[Lv "..moblevel.."]"
                         mobleveltext.BackgroundTransparency = 1
                         mobleveltext.Size = UDim2.new(1, 0, 1, 0)
                         mobleveltext.Font = "SourceSansBold"
@@ -284,7 +287,7 @@ task.spawn(function()
                         
                         billboardGui.MaxDistance = rosemoc.vars.mobesprange == 1000 and inf or rosemoc.vars.mobesprange
                         mobnametext.Text = mobname
-                        mobleveltext.Text = "[Lv "..truncate(moblevel).."]"
+                        mobleveltext.Text = "[Lv "..moblevel.."]"
                         if hp == -1 then
                             mobhptext.Text = hppercent.."% HP"
                         else
@@ -340,6 +343,7 @@ task.spawn(function()
                         distancetext.TextStrokeColor3 = Color3.fromRGB(127, 0, 0)
                         distancetext.TextStrokeTransparency = 0
                     else
+                        billboardGui.MaxDistance = rosemoc.vars.cubitesprange == 1000 and inf or rosemoc.vars.cubitesprange
                         local distancetext = billboardGui.Frame:FindFirstChild("Distance")
                         distancetext.Text = "Distance: "..dist
 
