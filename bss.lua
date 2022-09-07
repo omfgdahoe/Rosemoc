@@ -80,7 +80,7 @@ end
 
 -- Script tables
 for _, v in pairs(game:GetService("CoreGui"):GetDescendants()) do
-    if v:IsA("TextLabel") and string.find(v.Text, "Kocmoc v") then
+    if v:IsA("TextLabel") and v.Text:find("Kocmoc v") then
         v.Parent.Parent:Destroy()
     end
 end
@@ -294,7 +294,7 @@ local buffTable = {
 local AccessoryTypes = require(game:GetService("ReplicatedStorage").Accessories).GetTypes()
 local MasksTable = {}
 for i, v in pairs(AccessoryTypes) do
-    if string.find(i, "Mask") then
+    if tostring(i):find("Mask") then
         if i ~= "Honey Mask" then table.insert(MasksTable, i) end
     end
 end
@@ -2137,14 +2137,14 @@ guiElements["toggles"]["pesticideplanter"] = plantersection:CreateToggle("Blackl
 guiElements["toggles"]["petalplanter"] = plantersection:CreateToggle("Blacklist Petal Planter", nil, function(State) kocmoc.toggles.petalplanter = State end)
 
 local customplantersection = farmtab:CreateSection("Custom Planters")
-guiElements["toggles"]["docustomplanters"] = plantersection:CreateToggle("Custom Planters", nil, function(State) kocmoc.toggles.docustomplanters = State end)
-guiElements["vars"]["customplanter1"] = plantersection:CreateDropdown("Planter 1", DropdownPlanterTable, function(Option)
+guiElements["toggles"]["docustomplanters"] = customplantersection:CreateToggle("Custom Planters", nil, function(State) kocmoc.toggles.docustomplanters = State end)
+guiElements["vars"]["customplanter1"] = customplantersection:CreateDropdown("Planter 1", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter1 = Option
 end)
-guiElements["toggles"]["customplanterfield11"] = plantersection:CreateDropdown("Planter 1 Field 1", DropdownFieldsTable, function(Option)
+guiElements["toggles"]["customplanterfield11"] = customplantersection:CreateDropdown("Planter 1 Field 1", DropdownFieldsTable, function(Option)
 
 end)
-guiElements["vars"]["customplanterdelay11"] = plantersection:CreateTextBox("Harvest Planter 1 Field 1 Time", "Enter time in minutes", true, function(Value)
+guiElements["vars"]["customplanterdelay11"] = customplantersection:CreateTextBox("Harvest Planter 1 Field 1 Time", "Enter time in minutes", true, function(Value)
     if tonumber(Value) then
         kocmoc.vars.customplanterdelay11 = tonumber(Value)
     end
@@ -2797,7 +2797,7 @@ end)
 fieldsettings:CreateDropdown("Blacklisted Fields", kocmoc.blacklistedfields, function(Option) end)
 local aqs = setttab:CreateSection("Auto Quest Settings")
 
-guiElements["toggles"]["allquests"] = aqs:CreateToggle("All Quests", nil, function(State) kocmoc.toggles.allquests = State end)
+guiElements["toggles"]["allquests"] = aqs:CreateToggle("Non-Repeatable Quests", nil, function(State) kocmoc.toggles.allquests = State end)
 guiElements["toggles"]["buckobeequests"] = aqs:CreateToggle("Bucko Bee Quests", nil, function(State) kocmoc.toggles.buckobeequests = State end)
 guiElements["toggles"]["rileybeequests"] = aqs:CreateToggle("Riley Bee Quests", nil, function(State) kocmoc.toggles.rileybeequests = State end)
 guiElements["toggles"]["blackbearquests"] = aqs:CreateToggle("Black Bear Quests", nil, function(State) kocmoc.toggles.blackbearquests = State end)
@@ -2994,7 +2994,7 @@ task.spawn(function()
                             local pollentypes = {
                                 "White Pollen", "Red Pollen", "Blue Pollen", "Blue Flowers", "Red Flowers", "White Flowers"
                             }
-                            if (kocmoc.toggles.buckobeequests and string.find(questName, "Bucko Bee")) or (kocmoc.toggles.rileybeequests and string.find(questName, "Riley Bee")) or (kocmoc.toggles.polarbearquests and string.find(questName, "Polar Bear")) or (kocmoc.toggles.brownbearquests and string.find(questName, "Brown Bear")) or (kocmoc.toggles.blackbearquests and string.find(questName, "Black Bear")) or kocmoc.toggles.allquests then
+                            if (kocmoc.toggles.buckobeequests and questName:find("Bucko Bee")) or (kocmoc.toggles.rileybeequests and questName:find("Riley Bee")) or (kocmoc.toggles.polarbearquests and questName:find("Polar Bear")) or (kocmoc.toggles.brownbearquests and questName:find("Brown Bear")) or (kocmoc.toggles.blackbearquests and questName:find("Black Bear")) or (kocmoc.toggles.allquests and not questName:find("Bear:") and not questName:find("Bee:")) then
                                 if not string.find(v.Text, "Puffshroom") then
                                     if api.returnvalue(fieldstable, text) and not string.find(v.Text, "Complete!") and not api.findvalue(kocmoc.blacklistedfields, api.returnvalue( fieldstable, text)) then
                                         d = api.returnvalue(fieldstable, text)
@@ -3012,7 +3012,7 @@ task.spawn(function()
                                             fieldselected = game.Workspace.FlowerZones[kocmoc.bestfields.red]
                                             break
                                         end
-                                    elseif string.find(questName, "Bee") and string.find(text, "Feed") and not string.find(text, "Complete!") and not v:FindFirstChild("done") then
+                                    elseif questName:find("Bee") and string.find(text, "Feed") and not string.find(text, "Complete!") and not v:FindFirstChild("done") then
                                         local amount, kind = unpack((text:sub(6, text:find("to")-2)):split(" "))
                                         if amount and kind then
                                             if kind == "Blueberries" then
@@ -3033,7 +3033,7 @@ task.spawn(function()
                                             if kocmoc.vars.questcolorprefer == "Any NPC" then
                                                 farmant()
                                             else
-                                                if string.find(questName, kocmoc.vars.questcolorprefer) then
+                                                if questName:find(kocmoc.vars.questcolorprefer) then
                                                     farmant()
                                                 end
                                             end
@@ -3047,7 +3047,7 @@ task.spawn(function()
                                 local playerToFollow = game.Players:FindFirstChild(kocmoc.vars.playertofollow)
                                 if playerToFollow and playerToFollow.Character and playerToFollow.Character:FindFirstChild("HumanoidRootPart") then
                                     fieldselected = findField(playerToFollow.Character.HumanoidRootPart.CFrame.p)
-                                    if not fieldselected or fieldselected == "Ant Field" then
+                                    if not fieldselected or tostring(fieldselected) == "Ant Field" then
                                         fieldselected = game.Workspace.FlowerZones[kocmoc.vars.field]
                                     end
                                 end
