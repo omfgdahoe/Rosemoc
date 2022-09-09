@@ -4130,8 +4130,12 @@ task.spawn(function()
             }
 
             for i,cycle in pairs(plantercycles) do
-                if cycle.Planter == "" or cycle.Field == "" or cycle.Planter == "None" or cycle.Field == "None" then
-                    steps[i] = steps[i] - 1
+                for j,step in pairs(cycle) do
+                    if not step.Planter:find("Planter") then
+                        steps[i] = steps[i] - 1
+                    else if not step.Field:find("Field") and not step.Field:find("Patch") and not step.Field:find("Forest")
+                        steps[i] = steps[i] - 1
+                    end
                 end
             end
 
