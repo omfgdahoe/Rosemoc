@@ -4146,8 +4146,9 @@ task.spawn(function()
 
             if not temptable.started.ant and kocmoc.toggles.autofarm and not temptable.converting then
                 for i,cycle in pairs(plantercycles) do
+                    if steps[i] == 0 then continue end
                     local planted = false
-                    local currentstep = isfile("kocmoc/plantercache/cycle"..i.."cache.file") and readfile("kocmoc/plantercache/cycle"..i.."cache.file") or 1
+                    local currentstep = isfile("kocmoc/plantercache/cycle"..i.."cache.file") and tonumber(readfile("kocmoc/plantercache/cycle"..i.."cache.file")) or 1
 
                     for j,step in pairs(cycle) do
                         for _,planter in pairs(fetchAllPlanters()) do
