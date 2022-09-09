@@ -4145,20 +4145,20 @@ task.spawn(function()
                     planter3timestamp = 0,
                 }
 
-                if not isfile("kocmoc/plantercache/planter1cache") then
-                    writefile("kocmoc/plantercache/planter1cache", "1".." "..tostring(tick()))
+                if not isfile("kocmoc/plantercache/planter1cache.file") then
+                    writefile("kocmoc/plantercache/planter1cache.file", "1".." "..tostring(tick()))
                 else
-                    planterinfo.planter1index, planterinfo.planter1timestamp = unpack(readfile("kocmoc/plantercache/planter1cache"):split(" "))
+                    planterinfo.planter1index, planterinfo.planter1timestamp = unpack(readfile("kocmoc/plantercache/planter1cache.file"):split(" "))
                 end
-                if not isfile("kocmoc/plantercache/planter2cache") then
-                    writefile("kocmoc/plantercache/planter2cache", "1".." "..tostring(tick()))
+                if not isfile("kocmoc/plantercache/planter2cache.file") then
+                    writefile("kocmoc/plantercache/planter2cache.file", "1".." "..tostring(tick()))
                 else
-                    planterinfo.planter2index, planterinfo.planter2timestamp = unpack(readfile("kocmoc/plantercache/planter2cache"):split(" "))
+                    planterinfo.planter2index, planterinfo.planter2timestamp = unpack(readfile("kocmoc/plantercache/planter2cache.file"):split(" "))
                 end
-                if not isfile("kocmoc/plantercache/planter3cache") then
-                    writefile("kocmoc/plantercache/planter3cache", "1".." "..tostring(tick()))
+                if not isfile("kocmoc/plantercache/planter3cache.file") then
+                    writefile("kocmoc/plantercache/planter3cache.file", "1".." "..tostring(tick()))
                 else
-                    planterinfo.planter3index, planterinfo.planter3timestamp = unpack(readfile("kocmoc/plantercache/planter3cache"):split(" "))
+                    planterinfo.planter3index, planterinfo.planter3timestamp = unpack(readfile("kocmoc/plantercache/planter3cache.file"):split(" "))
                 end
 
                 local plantedplanters = fetchAllPlanter()
