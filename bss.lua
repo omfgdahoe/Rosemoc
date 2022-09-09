@@ -511,20 +511,20 @@ getgenv().kocmoc = {
         customplanterfield33 = "",
         customplanterfield34 = "",
         customplanterfield35 = "",
-        customplanterdelay11 = 0,
-        customplanterdelay12 = 0,
-        customplanterdelay13 = 0,
-        customplanterdelay14 = 0,
-        customplanterdelay21 = 0,
-        customplanterdelay22 = 0,
-        customplanterdelay23 = 0,
-        customplanterdelay24 = 0,
-        customplanterdelay25 = 0,
-        customplanterdelay31 = 0,
-        customplanterdelay32 = 0,
-        customplanterdelay33 = 0,
-        customplanterdelay34 = 0,
-        customplanterdelay35 = 0
+        customplanterdelay11 = 75,
+        customplanterdelay12 = 75,
+        customplanterdelay13 = 75,
+        customplanterdelay14 = 75,
+        customplanterdelay21 = 75,
+        customplanterdelay22 = 75,
+        customplanterdelay23 = 75,
+        customplanterdelay24 = 75,
+        customplanterdelay25 = 75,
+        customplanterdelay31 = 75,
+        customplanterdelay32 = 75,
+        customplanterdelay33 = 75,
+        customplanterdelay34 = 75,
+        customplanterdelay35 = 75
     },
     dispensesettings = {
         blub = false,
@@ -4156,6 +4156,7 @@ task.spawn(function()
                     print("current step: "..currentstep)
                     currentstep = (currentstep - 1) % steps[i] + 1
                     for j,step in pairs(cycle) do
+                        if step.Planter and step.Planter:find("Planter") and step.Field and (step.Field:find("Field") or step.Field:find("Patch") or step.Field:find("Forest")) then
                         for _,planter in pairs(fetchAllPlanters()) do
                             if planter.PotModel and planter.PotModel.Parent and planter.PotModel.PrimaryPart then
                                 if planter.GrowthPercent > step.Percent then
