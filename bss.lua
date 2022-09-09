@@ -2175,7 +2175,7 @@ customplanterssection:CreateLabel("Turning this on will disable auto planters!")
 guiElements["toggles"]["docustomplanters"] = customplanterssection:CreateToggle("Custom Planters", nil, function(State) kocmoc.toggles.docustomplanters = State end)
 
 local customplanter1section = plantertab:CreateSection("Custom Planter 1")
-guiElements["toggles"]["customplanterfield11"] = customplanter1section:CreateDropdown("Field 1", DropdownFieldsTable, function(Option)
+guiElements["vars"]["customplanterfield11"] = customplanter1section:CreateDropdown("Field 1", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield11 = Option
 end)
 guiElements["vars"]["customplanter11"] = customplanter1section:CreateDropdown("Field 1 Planter Type", DropdownPlanterTable, function(Option)
@@ -2184,7 +2184,7 @@ end)
 guiElements["vars"]["customplanterdelay11"] = customplanter1section:CreateSlider("Field 1 Harvest %", 0, 100, 75, false, function(Value)
     kocmoc.vars.customplanterdelay11 = Value
 end)
-guiElements["toggles"]["customplanterfield12"] = customplanter1section:CreateDropdown("Field 2", DropdownFieldsTable, function(Option)
+guiElements["vars"]["customplanterfield12"] = customplanter1section:CreateDropdown("Field 2", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield12 = Option
 end)
 guiElements["vars"]["customplanter12"] = customplanter1section:CreateDropdown("Field 2 Planter Type", DropdownPlanterTable, function(Option)
@@ -2193,7 +2193,7 @@ end)
 guiElements["vars"]["customplanterdelay12"] = customplanter1section:CreateSlider("Field 2 Harvest %", 0, 100, 75, false, function(Value)
     kocmoc.vars.customplanterdelay12 = Value
 end)
-guiElements["toggles"]["customplanterfield13"] = customplanter1section:CreateDropdown("Field 3", DropdownFieldsTable, function(Option)
+guiElements["vars"]["customplanterfield13"] = customplanter1section:CreateDropdown("Field 3", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield13 = Option
 end)
 guiElements["vars"]["customplanter13"] = customplanter1section:CreateDropdown("Field 3 Planter Type", DropdownPlanterTable, function(Option)
@@ -2202,7 +2202,7 @@ end)
 guiElements["vars"]["customplanterdelay13"] = customplanter1section:CreateSlider("Field 3 Harvest %", 0, 100, 75, false, function(Value)
     kocmoc.vars.customplanterdelay13 = Value
 end)
-guiElements["toggles"]["customplanterfield14"] = customplanter1section:CreateDropdown("Field 4", DropdownFieldsTable, function(Option)
+guiElements["vars"]["customplanterfield14"] = customplanter1section:CreateDropdown("Field 4", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield14 = Option
 end)
 guiElements["vars"]["customplanter14"] = customplanter1section:CreateDropdown("Field 4 Planter Type", DropdownPlanterTable, function(Option)
@@ -2211,7 +2211,7 @@ end)
 guiElements["vars"]["customplanterdelay14"] = customplanter1section:CreateSlider("Field 4 Harvest %", 0, 100, 75, false, function(Value)
     kocmoc.vars.customplanterdelay14 = Value
 end)
-guiElements["toggles"]["customplanterfield15"] = customplanter1section:CreateDropdown("Field 5", DropdownFieldsTable, function(Option)
+guiElements["vars"]["customplanterfield15"] = customplanter1section:CreateDropdown("Field 5", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield15 = Option
 end)
 guiElements["vars"]["customplanter15"] = customplanter1section:CreateDropdown("Field 5 Planter Type", DropdownPlanterTable, function(Option)
@@ -2222,7 +2222,7 @@ guiElements["vars"]["customplanterdelay15"] = customplanter1section:CreateSlider
 end)
 
 local customplanter2section = plantertab:CreateSection("Custom Planter 2")
-guiElements["toggles"]["customplanterfield21"] = customplanter2section:CreateDropdown("Field 1", DropdownFieldsTable, function(Option)
+guiElements["vars"]["customplanterfield21"] = customplanter2section:CreateDropdown("Field 1", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield21 = Option
 end)
 guiElements["vars"]["customplanter21"] = customplanter2section:CreateDropdown("Field 1 Planter Type", DropdownPlanterTable, function(Option)
@@ -2231,7 +2231,7 @@ end)
 guiElements["vars"]["customplanterdelay21"] = customplanter2section:CreateSlider("Field 1 Harvest %", 0, 100, 75, false, function(Value)
     kocmoc.vars.customplanterdelay21 = Value
 end)
-guiElements["toggles"]["customplanterfield12"] = customplanter2section:CreateDropdown("Field 2", DropdownFieldsTable, function(Option)
+guiElements["vars"]["customplanterfield12"] = customplanter2section:CreateDropdown("Field 2", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield22 = Option
 end)
 guiElements["vars"]["customplanter22"] = customplanter2section:CreateDropdown("Field 2 Planter Type", DropdownPlanterTable, function(Option)
@@ -2240,7 +2240,7 @@ end)
 guiElements["vars"]["customplanterdelay22"] = customplanter2section:CreateSlider("Field 2 Harvest %", 0, 100, 75, false, function(Value)
     kocmoc.vars.customplanterdelay22 = Value
 end)
-guiElements["toggles"]["customplanterfield23"] = customplanter2section:CreateDropdown("Field 3", DropdownFieldsTable, function(Option)
+guiElements["vars"]["customplanterfield23"] = customplanter2section:CreateDropdown("Field 3", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield23 = Option
 end)
 guiElements["vars"]["customplanter23"] = customplanter2section:CreateDropdown("Field 3 Planter Type", DropdownPlanterTable, function(Option)
@@ -2249,7 +2249,7 @@ end)
 guiElements["vars"]["customplanterdelay23"] = customplanter2section:CreateSlider("Field 3 Harvest %", 0, 100, 75, false, function(Value)
     kocmoc.vars.customplanterdelay23 = Value
 end)
-guiElements["toggles"]["customplanterfield24"] = customplanter2section:CreateDropdown("Field 4", DropdownFieldsTable, function(Option)
+guiElements["vars"]["customplanterfield24"] = customplanter2section:CreateDropdown("Field 4", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield24 = Option
 end)
 guiElements["vars"]["customplanter24"] = customplanter2section:CreateDropdown("Field 4 Planter Type", DropdownPlanterTable, function(Option)
@@ -2258,7 +2258,7 @@ end)
 guiElements["vars"]["customplanterdelay24"] = customplanter2section:CreateSlider("Field 4 Harvest %", 0, 100, 75, false, function(Value)
     kocmoc.vars.customplanterdelay24 = Value
 end)
-guiElements["toggles"]["customplanterfield25"] = customplanter2section:CreateDropdown("Field 5", DropdownFieldsTable, function(Option)
+guiElements["vars"]["customplanterfield25"] = customplanter2section:CreateDropdown("Field 5", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield25 = Option
 end)
 guiElements["vars"]["customplanter25"] = customplanter2section:CreateDropdown("Field 5 Planter Type", DropdownPlanterTable, function(Option)
@@ -2272,7 +2272,7 @@ local customplanter3section = plantertab:CreateSection("Custom Planter 3")
 guiElements["vars"]["customplanter31"] = customplanter3section:CreateDropdown("Field 1 Planter Type", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter31 = Option
 end)
-guiElements["toggles"]["customplanterfield31"] = customplanter3section:CreateDropdown("Field 1 Field", DropdownFieldsTable, function(Option)
+guiElements["vars"]["customplanterfield31"] = customplanter3section:CreateDropdown("Field 1 Field", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield31 = Option
 end)
 guiElements["vars"]["customplanterdelay31"] = customplanter3section:CreateSlider("Field 1 Harvest %", 0, 100, 75, false, function(Value)
@@ -2281,7 +2281,7 @@ end)
 guiElements["vars"]["customplanter32"] = customplanter3section:CreateDropdown("Field 2 Planter Type", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter32 = Option
 end)
-guiElements["toggles"]["customplanterfield32"] = customplanter3section:CreateDropdown("Field 2 Field", DropdownFieldsTable, function(Option)
+guiElements["vars"]["customplanterfield32"] = customplanter3section:CreateDropdown("Field 2 Field", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield32 = Option
 end)
 guiElements["vars"]["customplanterdelay32"] = customplanter3section:CreateSlider("Field 2 Harvest %", 0, 100, 75, false, function(Value)
@@ -2290,7 +2290,7 @@ end)
 guiElements["vars"]["customplanter33"] = customplanter3section:CreateDropdown("Field 3 Planter Type", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter33 = Option
 end)
-guiElements["toggles"]["customplanterfield33"] = customplanter3section:CreateDropdown("Field 3 Field", DropdownFieldsTable, function(Option)
+guiElements["vars"]["customplanterfield33"] = customplanter3section:CreateDropdown("Field 3 Field", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield33 = Option
 end)
 guiElements["vars"]["customplanterdelay33"] = customplanter3section:CreateSlider("Field 3 Harvest %", 0, 100, 75, false, function(Value)
@@ -2299,7 +2299,7 @@ end)
 guiElements["vars"]["customplanter34"] = customplanter3section:CreateDropdown("Field 4 Planter Type", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter34 = Option
 end)
-guiElements["toggles"]["customplanterfield34"] = customplanter3section:CreateDropdown("Field 4 Field", DropdownFieldsTable, function(Option)
+guiElements["vars"]["customplanterfield34"] = customplanter3section:CreateDropdown("Field 4 Field", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield34 = Option
 end)
 guiElements["vars"]["customplanterdelay34"] = customplanter3section:CreateSlider("Field 4 Harvest %", 0, 100, 75, false, function(Value)
@@ -2308,7 +2308,7 @@ end)
 guiElements["vars"]["customplanter35"] = customplanter3section:CreateDropdown("Field 5 Planter Type", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter35 = Option
 end)
-guiElements["toggles"]["customplanterfield35"] = customplanter3section:CreateDropdown("Field 5 Field", DropdownFieldsTable, function(Option)
+guiElements["vars"]["customplanterfield35"] = customplanter3section:CreateDropdown("Field 5 Field", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield35 = Option
 end)
 guiElements["vars"]["customplanterdelay35"] = customplanter3section:CreateSlider("Field 5 Harvest %", 0, 100, 75, false, function(Value)
