@@ -4139,10 +4139,6 @@ task.spawn(function()
                 end
             end
 
-            for i,v in pairs(steps) do
-                print(i,v)
-            end
-
             for i=1,3 do
                 if not isfile("kocmoc/plantercache/cycle"..i.."cache.file") then
                     for _,planter in pairs(fetchAllPlanters()) do
@@ -4157,8 +4153,8 @@ task.spawn(function()
                     if steps[i] == 0 then continue end
                     local planted = false
                     local currentstep = isfile("kocmoc/plantercache/cycle"..i.."cache.file") and tonumber(readfile("kocmoc/plantercache/cycle"..i.."cache.file")) or 1
-                    currentstep = currentstep % steps[i]
-
+                    print("current step: "..currentstep)
+                    currentstep = (currentstep - 1) % steps[i] + 1
                     for j,step in pairs(cycle) do
                         for _,planter in pairs(fetchAllPlanters()) do
                             if planter.PotModel and planter.PotModel.Parent and planter.PotModel.PrimaryPart then
@@ -4173,7 +4169,6 @@ task.spawn(function()
                             end
                         end
                     end
-
                     if not planted and cycle[currentstep].Planter then
                         PlantPlanter(cycle[currentstep].Planter:gsub(" Planter", ""), cycle[currentstep].Field)
                         writefile("kocmoc/plantercache/cycle"..i.."cache.file", tostring((currentstep % steps[i]) + 1))
