@@ -4157,14 +4157,15 @@ task.spawn(function()
                     currentstep = (currentstep - 1) % steps[i] + 1
                     for j,step in pairs(cycle) do
                         if step.Planter and step.Planter:find("Planter") and step.Field and (step.Field:find("Field") or step.Field:find("Patch") or step.Field:find("Forest")) then
-                        for _,planter in pairs(fetchAllPlanters()) do
-                            if planter.PotModel and planter.PotModel.Parent and planter.PotModel.PrimaryPart then
-                                if planter.GrowthPercent > step.Percent then
-                                    RequestCollectPlanter(planter)
-                                else
-                                    if planter.PotModel.Name == step.Planter and getPlanterLocation(planter.PotModel.PrimaryPart) == step.Field then
-                                        print("cycle "..i.." is current on step "..j.." ("..step.Planter.." "..step.Field..")")
-                                        planted = true
+                            for _,planter in pairs(fetchAllPlanters()) do
+                                if planter.PotModel and planter.PotModel.Parent and planter.PotModel.PrimaryPart then
+                                    if planter.GrowthPercent > step.Percent then
+                                        RequestCollectPlanter(planter)
+                                    else
+                                        if planter.PotModel.Name == step.Planter and getPlanterLocation(planter.PotModel.PrimaryPart) == step.Field then
+                                            print("cycle "..i.." is current on step "..j.." ("..step.Planter.." "..step.Field..")")
+                                            planted = true
+                                        end
                                     end
                                 end
                             end
