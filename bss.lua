@@ -4166,7 +4166,7 @@ task.spawn(function()
                     end
 
                     if not planted then
-                        PlantPlanter(cycle[currentstep].Planter, cycle[currentstep].Field)
+                        PlantPlanter(cycle[currentstep].Planter:gsub(" Planter", ""), cycle[currentstep].Field)
                         writefile("kocmoc/plantercache/cycle"..i.."cache.file", tostring((currentstep % steps[i]) + 1))
                     end
                 end
