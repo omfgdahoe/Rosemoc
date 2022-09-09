@@ -4161,7 +4161,7 @@ task.spawn(function()
                                 if planter.GrowthPercent > step.Percent then
                                     RequestCollectPlanter(planter)
                                 else
-                                    if v.PotModel.Name == step.Planter and getPlanterLocation(v.PotModel.PrimaryPart) == step.Field then
+                                    if planter.PotModel.Name == step.Planter and getPlanterLocation(planter.PotModel.PrimaryPart) == step.Field then
                                         print("cycle "..i.." is current on step "..j.." ("..step.Planter.." "..step.Field..")")
                                         planted = true
                                     end
