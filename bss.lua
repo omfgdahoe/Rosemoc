@@ -4135,6 +4135,10 @@ task.spawn(function()
                 end
             end
 
+            for i,v in pairs(steps) do
+                print(i,v)
+            end
+
             for i=1,3 do
                 if not isfile("kocmoc/plantercache/cycle"..i.."cache.file") then
                     for _,planter in pairs(fetchAllPlanters()) do
@@ -4165,7 +4169,7 @@ task.spawn(function()
                         end
                     end
 
-                    if not planted then
+                    if not planted and cycle[currentstep].Planter then
                         PlantPlanter(cycle[currentstep].Planter:gsub(" Planter", ""), cycle[currentstep].Field)
                         writefile("kocmoc/plantercache/cycle"..i.."cache.file", tostring((currentstep % steps[i]) + 1))
                     end
