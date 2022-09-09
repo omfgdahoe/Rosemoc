@@ -13,6 +13,7 @@ local httpreq = (syn and syn.request) or http_request or (http and http.request)
 
 if not isfolder("kocmoc") then makefolder("kocmoc") end
 if not isfolder("kocmoc/premium") then makefolder("kocmoc/premium") end
+if not isfolder("kocmoc/plantercache") then makefolder("kocmoc/plantercache") end
 
 if isfile("rosemoc.txt") == false then
     httpreq({
@@ -478,27 +479,50 @@ getgenv().kocmoc = {
         webhookurl = "",
         discordid = 0,
         webhooktimer = 60,
-        customplanter1 = "",
-        customplanter2 = "",
-        customplanter3 = "",
+        customplanter11 = "",
+        customplanter12 = "",
+        customplanter13 = "",
+        customplanter14 = "",
+        customplanter15 = "",
+        customplanter21 = "",
+        customplanter22 = "",
+        customplanter23 = "",
+        customplanter24 = "",
+        customplanter25 = "",
+        customplanter31 = "",
+        customplanter32 = "",
+        customplanter33 = "",
+        customplanter34 = "",
+        customplanter35 = "",
         customplanterfield11 = "",
         customplanterfield12 = "",
         customplanterfield13 = "",
+        customplanterfield14 = "",
+        customplanterfield15 = "",
         customplanterfield21 = "",
         customplanterfield22 = "",
         customplanterfield23 = "",
+        customplanterfield24 = "",
+        customplanterfield25 = "",
         customplanterfield31 = "",
         customplanterfield32 = "",
         customplanterfield33 = "",
+        customplanterfield34 = "",
+        customplanterfield35 = "",
         customplanterdelay11 = 0,
         customplanterdelay12 = 0,
         customplanterdelay13 = 0,
+        customplanterdelay14 = 0,
         customplanterdelay21 = 0,
         customplanterdelay22 = 0,
         customplanterdelay23 = 0,
+        customplanterdelay24 = 0,
+        customplanterdelay25 = 0,
         customplanterdelay31 = 0,
         customplanterdelay32 = 0,
-        customplanterdelay33 = 0
+        customplanterdelay33 = 0,
+        customplanterdelay34 = 0,
+        customplanterdelay35 = 0
     },
     dispensesettings = {
         blub = false,
@@ -810,7 +834,6 @@ function domob(place)
         local point = Vector3.new((place.CFrame.p.X + monsterpart.CFrame.p.X) / 2, monsterpart.CFrame.p.Y, (place.CFrame.p.Z + monsterpart.CFrame.p.Z) / 2)
 
         if place:FindFirstChild("TimerLabel", true).Visible then
-            print("will not go kill "..tostring(place).." because it has not spawned in")
             return false
         end
 
@@ -827,7 +850,6 @@ function domob(place)
         end
 
         if tick() - timestamp > 25 then
-            print("failed killing "..tostring(place).." because it has not spawned in yet after waiting 25 seconds")
             return false
         end
 
@@ -1997,6 +2019,7 @@ local hometab = Window:CreateTab("Home")
 local farmtab = Window:CreateTab("Farming")
 local combtab = Window:CreateTab("Combat")
 local itemstab = Window:CreateTab("Items")
+local plantertab = Window:CreateTab("Planters")
 local misctab = Window:CreateTab("Misc")
 local setttab = Window:CreateTab("Settings")
 local premiumtab = Window:CreateTab("Premium")
@@ -2118,7 +2141,7 @@ guiElements["vars"]["resettimer"] = farmt:CreateTextBox("Conversion Amount", "de
     kocmoc.vars.resettimer = tonumber(Value)
 end)
 
-local plantersection = farmtab:CreateSection("Automatic Planters & Nectars")
+local plantersection = plantertab:CreateSection("Automatic Planters & Nectars")
 guiElements["toggles"]["autoplanters"] = plantersection:CreateToggle("Auto Planters", nil, function(State) kocmoc.toggles.autoplanters = State end)
 guiElements["toggles"]["blacklistinvigorating"] = plantersection:CreateToggle("Blacklist Invigorating", nil, function(State) kocmoc.toggles.blacklistinvigorating = State end)
 guiElements["toggles"]["blacklistcomforting"] = plantersection:CreateToggle("Blacklist Comforting", nil, function(State) kocmoc.toggles.blacklistcomforting = State end)
@@ -2136,17 +2159,178 @@ guiElements["toggles"]["tackyplanter"] = plantersection:CreateToggle("Blacklist 
 guiElements["toggles"]["pesticideplanter"] = plantersection:CreateToggle("Blacklist Pesticide Planter", nil, function(State) kocmoc.toggles.pesticideplanter = State end)
 guiElements["toggles"]["petalplanter"] = plantersection:CreateToggle("Blacklist Petal Planter", nil, function(State) kocmoc.toggles.petalplanter = State end)
 
-local customplantersection = farmtab:CreateSection("Custom Planters")
-guiElements["toggles"]["docustomplanters"] = customplantersection:CreateToggle("Custom Planters", nil, function(State) kocmoc.toggles.docustomplanters = State end)
-guiElements["vars"]["customplanter1"] = customplantersection:CreateDropdown("Planter 1", DropdownPlanterTable, function(Option)
-    kocmoc.vars.customplanter1 = Option
-end)
-guiElements["toggles"]["customplanterfield11"] = customplantersection:CreateDropdown("Planter 1 Field 1", DropdownFieldsTable, function(Option)
+local customplanterssection = plantertab:CreateSection("Custom Planters")
+customplanterssection:CreateLabel("Turning this on will disable auto planters!")
+guiElements["toggles"]["docustomplanters"] = customplanter1section:CreateToggle("Custom Planters", nil, function(State) kocmoc.toggles.docustomplanters = State end)
 
+local customplanter1section = plantertab:CreateSection("Custom Planter 1")
+guiElements["vars"]["customplanter11"] = customplanter1section:CreateDropdown("Field 1 Planter Type", DropdownPlanterTable, function(Option)
+    kocmoc.vars.customplanter11 = Option
 end)
-guiElements["vars"]["customplanterdelay11"] = customplantersection:CreateTextBox("Harvest Planter 1 Field 1 Time", "Enter time in minutes", true, function(Value)
+guiElements["toggles"]["customplanterfield11"] = customplanter1section:CreateDropdown("Field 1 Field", DropdownFieldsTable, function(Option)
+    kocmoc.vars.customplanterfield11 = Option
+end)
+guiElements["vars"]["customplanterdelay11"] = customplanter1section:CreateTextBox("Harvest Field 1 Time", "Enter time in minutes", true, function(Value)
     if tonumber(Value) then
         kocmoc.vars.customplanterdelay11 = tonumber(Value)
+    end
+end)
+guiElements["vars"]["customplanter12"] = customplanter1section:CreateDropdown("Field 2 Planter Type", DropdownPlanterTable, function(Option)
+    kocmoc.vars.customplanter12 = Option
+end)
+guiElements["toggles"]["customplanterfield12"] = customplanter1section:CreateDropdown("Field 2 Field", DropdownFieldsTable, function(Option)
+    kocmoc.vars.customplanterfield12 = Option
+end)
+guiElements["vars"]["customplanterdelay12"] = customplanter1section:CreateTextBox("Harvest Field 2 Time", "Enter time in minutes", true, function(Value)
+    if tonumber(Value) then
+        kocmoc.vars.customplanterdelay12 = tonumber(Value)
+    end
+end)
+guiElements["vars"]["customplanter13"] = customplanter1section:CreateDropdown("Field 3 Planter Type", DropdownPlanterTable, function(Option)
+    kocmoc.vars.customplanter13 = Option
+end)
+guiElements["toggles"]["customplanterfield13"] = customplanter1section:CreateDropdown("Field 3 Field", DropdownFieldsTable, function(Option)
+    kocmoc.vars.customplanterfield13 = Option
+end)
+guiElements["vars"]["customplanterdelay13"] = customplanter1section:CreateTextBox("Harvest Field 3 Time", "Enter time in minutes", true, function(Value)
+    if tonumber(Value) then
+        kocmoc.vars.customplanterdelay13 = tonumber(Value)
+    end
+end)
+guiElements["vars"]["customplanter14"] = customplanter1section:CreateDropdown("Field 4 Planter Type", DropdownPlanterTable, function(Option)
+    kocmoc.vars.customplanter14 = Option
+end)
+guiElements["toggles"]["customplanterfield14"] = customplanter1section:CreateDropdown("Field 4 Field", DropdownFieldsTable, function(Option)
+    kocmoc.vars.customplanterfield14 = Option
+end)
+guiElements["vars"]["customplanterdelay14"] = customplanter1section:CreateTextBox("Harvest Field 4 Time", "Enter time in minutes", true, function(Value)
+    if tonumber(Value) then
+        kocmoc.vars.customplanterdelay14 = tonumber(Value)
+    end
+end)
+guiElements["vars"]["customplanter15"] = customplanter1section:CreateDropdown("Field 5 Planter Type", DropdownPlanterTable, function(Option)
+    kocmoc.vars.customplanter15 = Option
+end)
+guiElements["toggles"]["customplanterfield15"] = customplanter1section:CreateDropdown("Field 5 Field", DropdownFieldsTable, function(Option)
+    kocmoc.vars.customplanterfield15 = Option
+end)
+guiElements["vars"]["customplanterdelay15"] = customplanter1section:CreateTextBox("Harvest Field 5 Time", "Enter time in minutes", true, function(Value)
+    if tonumber(Value) then
+        kocmoc.vars.customplanterdelay15 = tonumber(Value)
+    end
+end)
+
+local customplanter1section = plantertab:CreateSection("Custom Planter 2")
+guiElements["vars"]["customplanter21"] = customplanter1section:CreateDropdown("Field 1 Planter Type", DropdownPlanterTable, function(Option)
+    kocmoc.vars.customplanter21 = Option
+end)
+guiElements["toggles"]["customplanterfield21"] = customplanter1section:CreateDropdown("Field 1 Field", DropdownFieldsTable, function(Option)
+    kocmoc.vars.customplanterfield21 = Option
+end)
+guiElements["vars"]["customplanterdelay21"] = customplanter1section:CreateTextBox("Harvest Field 1 Time", "Enter time in minutes", true, function(Value)
+    if tonumber(Value) then
+        kocmoc.vars.customplanterdelay21 = tonumber(Value)
+    end
+end)
+guiElements["vars"]["customplanter22"] = customplanter1section:CreateDropdown("Field 2 Planter Type", DropdownPlanterTable, function(Option)
+    kocmoc.vars.customplanter22 = Option
+end)
+guiElements["toggles"]["customplanterfield12"] = customplanter1section:CreateDropdown("Field 2 Field", DropdownFieldsTable, function(Option)
+    kocmoc.vars.customplanterfield22 = Option
+end)
+guiElements["vars"]["customplanterdelay22"] = customplanter1section:CreateTextBox("Harvest Field 2 Time", "Enter time in minutes", true, function(Value)
+    if tonumber(Value) then
+        kocmoc.vars.customplanterdelay22 = tonumber(Value)
+    end
+end)
+guiElements["vars"]["customplanter23"] = customplanter1section:CreateDropdown("Field 3 Planter Type", DropdownPlanterTable, function(Option)
+    kocmoc.vars.customplanter23 = Option
+end)
+guiElements["toggles"]["customplanterfield23"] = customplanter1section:CreateDropdown("Field 3 Field", DropdownFieldsTable, function(Option)
+    kocmoc.vars.customplanterfield23 = Option
+end)
+guiElements["vars"]["customplanterdelay23"] = customplanter1section:CreateTextBox("Harvest Field 3 Time", "Enter time in minutes", true, function(Value)
+    if tonumber(Value) then
+        kocmoc.vars.customplanterdelay23 = tonumber(Value)
+    end
+end)
+guiElements["vars"]["customplanter24"] = customplanter1section:CreateDropdown("Field 4 Planter Type", DropdownPlanterTable, function(Option)
+    kocmoc.vars.customplanter24 = Option
+end)
+guiElements["toggles"]["customplanterfield24"] = customplanter1section:CreateDropdown("Field 4 Field", DropdownFieldsTable, function(Option)
+    kocmoc.vars.customplanterfield24 = Option
+end)
+guiElements["vars"]["customplanterdelay24"] = customplanter1section:CreateTextBox("Harvest Field 4 Time", "Enter time in minutes", true, function(Value)
+    if tonumber(Value) then
+        kocmoc.vars.customplanterdelay24 = tonumber(Value)
+    end
+end)
+guiElements["vars"]["customplanter25"] = customplanter1section:CreateDropdown("Field 5 Planter Type", DropdownPlanterTable, function(Option)
+    kocmoc.vars.customplanter25 = Option
+end)
+guiElements["toggles"]["customplanterfield25"] = customplanter1section:CreateDropdown("Field 5 Field", DropdownFieldsTable, function(Option)
+    kocmoc.vars.customplanterfield25 = Option
+end)
+guiElements["vars"]["customplanterdelay25"] = customplanter1section:CreateTextBox("Harvest Field 5 Time", "Enter time in minutes", true, function(Value)
+    if tonumber(Value) then
+        kocmoc.vars.customplanterdelay25 = tonumber(Value)
+    end
+end)
+
+local customplanter1section = plantertab:CreateSection("Custom Planter 3")
+guiElements["vars"]["customplanter31"] = customplanter1section:CreateDropdown("Field 1 Planter Type", DropdownPlanterTable, function(Option)
+    kocmoc.vars.customplanter31 = Option
+end)
+guiElements["toggles"]["customplanterfield31"] = customplanter1section:CreateDropdown("Field 1 Field", DropdownFieldsTable, function(Option)
+    kocmoc.vars.customplanterfield31 = Option
+end)
+guiElements["vars"]["customplanterdelay31"] = customplanter1section:CreateTextBox("Harvest Field 1 Time", "Enter time in minutes", true, function(Value)
+    if tonumber(Value) then
+        kocmoc.vars.customplanterdelay31 = tonumber(Value)
+    end
+end)
+guiElements["vars"]["customplanter32"] = customplanter1section:CreateDropdown("Field 2 Planter Type", DropdownPlanterTable, function(Option)
+    kocmoc.vars.customplanter32 = Option
+end)
+guiElements["toggles"]["customplanterfield32"] = customplanter1section:CreateDropdown("Field 2 Field", DropdownFieldsTable, function(Option)
+    kocmoc.vars.customplanterfield32 = Option
+end)
+guiElements["vars"]["customplanterdelay32"] = customplanter1section:CreateTextBox("Harvest Field 2 Time", "Enter time in minutes", true, function(Value)
+    if tonumber(Value) then
+        kocmoc.vars.customplanterdelay32 = tonumber(Value)
+    end
+end)
+guiElements["vars"]["customplanter33"] = customplanter1section:CreateDropdown("Field 3 Planter Type", DropdownPlanterTable, function(Option)
+    kocmoc.vars.customplanter33 = Option
+end)
+guiElements["toggles"]["customplanterfield13"] = customplanter1section:CreateDropdown("Field 3 Field", DropdownFieldsTable, function(Option)
+    kocmoc.vars.customplanterfield33 = Option
+end)
+guiElements["vars"]["customplanterdelay33"] = customplanter1section:CreateTextBox("Harvest Field 3 Time", "Enter time in minutes", true, function(Value)
+    if tonumber(Value) then
+        kocmoc.vars.customplanterdelay33 = tonumber(Value)
+    end
+end)
+guiElements["vars"]["customplanter34"] = customplanter1section:CreateDropdown("Field 4 Planter Type", DropdownPlanterTable, function(Option)
+    kocmoc.vars.customplanter34 = Option
+end)
+guiElements["toggles"]["customplanterfield34"] = customplanter1section:CreateDropdown("Field 4 Field", DropdownFieldsTable, function(Option)
+    kocmoc.vars.customplanterfield34 = Option
+end)
+guiElements["vars"]["customplanterdelay34"] = customplanter1section:CreateTextBox("Harvest Field 4 Time", "Enter time in minutes", true, function(Value)
+    if tonumber(Value) then
+        kocmoc.vars.customplanterdelay34 = tonumber(Value)
+    end
+end)
+guiElements["vars"]["customplanter35"] = customplanter1section:CreateDropdown("Field 5 Planter Type", DropdownPlanterTable, function(Option)
+    kocmoc.vars.customplanter35 = Option
+end)
+guiElements["toggles"]["customplanterfield35"] = customplanter1section:CreateDropdown("Field 5 Field", DropdownFieldsTable, function(Option)
+    kocmoc.vars.customplanterfield35 = Option
+end)
+guiElements["vars"]["customplanterdelay35"] = customplanter1section:CreateTextBox("Harvest Field 5 Time", "Enter time in minutes", true, function(Value)
+    if tonumber(Value) then
+        kocmoc.vars.customplanterdelay35 = tonumber(Value)
     end
 end)
 
@@ -2828,14 +3012,6 @@ pts:CreateButton("Remove Token From Priority List", function()
     pts:CreateDropdown("Priority List", kocmoc.priority, function(Option) end)
 end)
 pts:CreateDropdown("Priority List", kocmoc.priority, function(Option) end)
-
-local warningsection = premiumtab:CreateSection("WARNING!!")
-warningsection:CreateLabel("Kocmoc v3 creator was hacked!")
-warningsection:CreateLabel("Do not buy Kocmoc Premium for now!")
-
-local warningsection2 = premiumtab:CreateSection("WARNING!!")
-warningsection2:CreateLabel("Kocmoc v3 creator was hacked!")
-warningsection2:CreateLabel("Do not buy Kocmoc Premium for now!")
 
 local buysection = premiumtab:CreateSection("Buy")
 buysection:CreateLabel("Support the developer of Kocmoc v3!")
@@ -3957,15 +4133,55 @@ task.spawn(function()
         planterData["Pesticide"] = not kocmoc.toggles.pesticideplanter and fullPlanterData["Pesticide"] or nil
         planterData["Petal"] = not kocmoc.toggles.petalplanter and fullPlanterData["Petal"] or nil
 
-        if kocmoc.toggles.autoplanters and not temptable.started.ant and kocmoc.toggles.autofarm and not temptable.converting then
-            RequestCollectPlanters(fetchAllPlanters())
-            if #fetchAllPlanters() < 3 then
-                local LeastNectar = calculateLeastNectar(fetchNectarBlacklist())
-                local Field = fetchBestFieldWithNectar(LeastNectar)
-                local Planter = fetchBestMatch(LeastNectar, Field)
-                if LeastNectar and Field and Planter then
-                    print(formatString(Planter, Field, LeastNectar))
-                    PlantPlanter(Planter, Field)
+        if kocmoc.toggles.docustomplanters then
+            if not temptable.started.ant and kocmoc.toggles.autofarm and not temptable.converting then
+                
+                local planterinfo = {
+                    planter1index = 1,
+                    planter2index = 1,
+                    planter3index = 1,
+                    planter1timestamp = 0,
+                    planter2timestamp = 0,
+                    planter3timestamp = 0,
+                }
+
+                if not isfile("kocmoc/plantercache/planter1cache") then
+                    writefile("kocmoc/plantercache/planter1cache", "1".." "..tostring(tick()))
+                else
+                    planterinfo.planter1index, planterinfo.planter1timestamp = unpack(readfile("kocmoc/plantercache/planter1cache"):split(" "))
+                end
+                if not isfile("kocmoc/plantercache/planter2cache") then
+                    writefile("kocmoc/plantercache/planter2cache", "1".." "..tostring(tick()))
+                else
+                    planterinfo.planter2index, planterinfo.planter2timestamp = unpack(readfile("kocmoc/plantercache/planter2cache"):split(" "))
+                end
+                if not isfile("kocmoc/plantercache/planter3cache") then
+                    writefile("kocmoc/plantercache/planter3cache", "1".." "..tostring(tick()))
+                else
+                    planterinfo.planter3index, planterinfo.planter3timestamp = unpack(readfile("kocmoc/plantercache/planter3cache"):split(" "))
+                end
+
+                local plantedplanters = fetchAllPlanter()
+                for i,v in pairs(plantedplanters) do
+                    if v.PotModel and v.PotModel.Parent and v.PotModel.PrimaryPart then
+                        local field = getPlanterLocation(v.PotModel.PrimaryPart)
+                        print(v, field)
+                        print("time since planted:", tick() - planterinfo[i + 3])
+                    end
+                end
+
+            end
+        else
+            if kocmoc.toggles.autoplanters and not temptable.started.ant and kocmoc.toggles.autofarm and not temptable.converting then
+                RequestCollectPlanters(fetchAllPlanters())
+                if #fetchAllPlanters() < 3 then
+                    local LeastNectar = calculateLeastNectar(fetchNectarBlacklist())
+                    local Field = fetchBestFieldWithNectar(LeastNectar)
+                    local Planter = fetchBestMatch(LeastNectar, Field)
+                    if LeastNectar and Field and Planter then
+                        print(formatString(Planter, Field, LeastNectar))
+                        PlantPlanter(Planter, Field)
+                    end
                 end
             end
         end
