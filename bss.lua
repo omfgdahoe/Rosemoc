@@ -4106,16 +4106,14 @@ task.spawn(function()
                     {Planter = kocmoc.vars.customplanter13, Field = kocmoc.vars.customplanterfield13, Percent = kocmoc.vars.customplanterdelay13},
                     {Planter = kocmoc.vars.customplanter14, Field = kocmoc.vars.customplanterfield14, Percent = kocmoc.vars.customplanterdelay14},
                     {Planter = kocmoc.vars.customplanter15, Field = kocmoc.vars.customplanterfield15, Percent = kocmoc.vars.customplanterdelay15}
-                }
-    
+                },
                 {
                     {Planter = kocmoc.vars.customplanter21, Field = kocmoc.vars.customplanterfield21, Percent = kocmoc.vars.customplanterdelay21},
                     {Planter = kocmoc.vars.customplanter22, Field = kocmoc.vars.customplanterfield22, Percent = kocmoc.vars.customplanterdelay22},
                     {Planter = kocmoc.vars.customplanter23, Field = kocmoc.vars.customplanterfield23, Percent = kocmoc.vars.customplanterdelay23},
                     {Planter = kocmoc.vars.customplanter24, Field = kocmoc.vars.customplanterfield24, Percent = kocmoc.vars.customplanterdelay24},
                     {Planter = kocmoc.vars.customplanter25, Field = kocmoc.vars.customplanterfield25, Percent = kocmoc.vars.customplanterdelay25}
-                }
-    
+                },
                 {
                     {Planter = kocmoc.vars.customplanter31, Field = kocmoc.vars.customplanterfield31, Percent = kocmoc.vars.customplanterdelay31},
                     {Planter = kocmoc.vars.customplanter32, Field = kocmoc.vars.customplanterfield32, Percent = kocmoc.vars.customplanterdelay32},
