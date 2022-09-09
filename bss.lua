@@ -4156,7 +4156,7 @@ task.spawn(function()
                     print("current step: "..currentstep)
                     currentstep = (currentstep - 1) % steps[i] + 1
                     for j,step in pairs(cycle) do
-                        if step.Planter and step.Planter:find("Planter") and step.Field and (step.Field:find("Field") or step.Field:find("Patch") or step.Field:find("Forest")) then
+                        if step.Percent and step.Planter and step.Planter:find("Planter") and step.Field and (step.Field:find("Field") or step.Field:find("Patch") or step.Field:find("Forest")) then
                             for _,planter in pairs(fetchAllPlanters()) do
                                 if planter.PotModel and planter.PotModel.Parent and planter.PotModel.PrimaryPart then
                                     if planter.GrowthPercent > step.Percent / 100 then
@@ -4173,7 +4173,7 @@ task.spawn(function()
                     end
                     if not planted and cycle[currentstep].Planter then
                         PlantPlanter(cycle[currentstep].Planter:gsub(" Planter", ""), cycle[currentstep].Field)
-                        writefile("kocmoc/plantercache/cycle"..i.."cache.file", tostring((currentstep % steps[i]) + 1))
+                        writefile("kocmoc/plantercache/cycle"..i.."cache.file", tostring((currentstep - 1) % steps[i] + 2))
                     end
                 end
             end
