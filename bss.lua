@@ -3497,7 +3497,7 @@ task.spawn(function()
                         if not windytokendb then
                             for _,token in pairs(workspace.Collectibles:GetChildren()) do
                                 decal = token:FindFirstChildOfClass("Decal")
-                                if decal and decal.Texture == "rbxassetid://1629547638" and player.Character:FindFirstChild("HumanoidRootPart") then
+                                if decal and decal.Texture == "rbxassetid://1629547638" and api.humanoidrootpart() then
                                     windytokendb = true
                                     windytokentp = true
                                     task.wait()
@@ -3513,7 +3513,7 @@ task.spawn(function()
                             end
                         end
                     end)
-                    if not windytokentp then
+                    if not windytokentp and api.humanoidrootpart() then
                         api.humanoidrootpart().CFrame = temptable.gacf(temptable.windy, 25)
                         temptable.float = true
                     end
