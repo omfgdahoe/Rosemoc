@@ -2232,7 +2232,7 @@ end)
 guiElements["vars"]["customplanterdelay21"] = customplanter2section:CreateSlider("Field 1 Harvest %", 0, 100, 75, false, function(Value)
     kocmoc.vars.customplanterdelay21 = Value
 end)
-guiElements["vars"]["customplanterfield12"] = customplanter2section:CreateDropdown("Field 2", DropdownFieldsTable, function(Option)
+guiElements["vars"]["customplanterfield22"] = customplanter2section:CreateDropdown("Field 2", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield22 = Option
 end)
 guiElements["vars"]["customplanter22"] = customplanter2section:CreateDropdown("Field 2 Planter Type", DropdownPlanterTable, function(Option)
