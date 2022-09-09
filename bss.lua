@@ -2161,7 +2161,7 @@ guiElements["toggles"]["petalplanter"] = plantersection:CreateToggle("Blacklist 
 
 local customplanterssection = plantertab:CreateSection("Custom Planters")
 customplanterssection:CreateLabel("Turning this on will disable auto planters!")
-guiElements["toggles"]["docustomplanters"] = customplanter1section:CreateToggle("Custom Planters", nil, function(State) kocmoc.toggles.docustomplanters = State end)
+guiElements["toggles"]["docustomplanters"] = customplanterssection:CreateToggle("Custom Planters", nil, function(State) kocmoc.toggles.docustomplanters = State end)
 
 local customplanter1section = plantertab:CreateSection("Custom Planter 1")
 guiElements["vars"]["customplanter11"] = customplanter1section:CreateDropdown("Field 1 Planter Type", DropdownPlanterTable, function(Option)
@@ -2220,115 +2220,115 @@ guiElements["vars"]["customplanterdelay15"] = customplanter1section:CreateTextBo
     end
 end)
 
-local customplanter1section = plantertab:CreateSection("Custom Planter 2")
-guiElements["vars"]["customplanter21"] = customplanter1section:CreateDropdown("Field 1 Planter Type", DropdownPlanterTable, function(Option)
+local customplanter2section = plantertab:CreateSection("Custom Planter 2")
+guiElements["vars"]["customplanter21"] = customplanter2section:CreateDropdown("Field 1 Planter Type", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter21 = Option
 end)
-guiElements["toggles"]["customplanterfield21"] = customplanter1section:CreateDropdown("Field 1 Field", DropdownFieldsTable, function(Option)
+guiElements["toggles"]["customplanterfield21"] = customplanter2section:CreateDropdown("Field 1 Field", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield21 = Option
 end)
-guiElements["vars"]["customplanterdelay21"] = customplanter1section:CreateTextBox("Harvest Field 1 Time", "Enter time in minutes", true, function(Value)
+guiElements["vars"]["customplanterdelay21"] = customplanter2section:CreateTextBox("Harvest Field 1 Time", "Enter time in minutes", true, function(Value)
     if tonumber(Value) then
         kocmoc.vars.customplanterdelay21 = tonumber(Value)
     end
 end)
-guiElements["vars"]["customplanter22"] = customplanter1section:CreateDropdown("Field 2 Planter Type", DropdownPlanterTable, function(Option)
+guiElements["vars"]["customplanter22"] = customplanter2section:CreateDropdown("Field 2 Planter Type", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter22 = Option
 end)
-guiElements["toggles"]["customplanterfield12"] = customplanter1section:CreateDropdown("Field 2 Field", DropdownFieldsTable, function(Option)
+guiElements["toggles"]["customplanterfield12"] = customplanter2section:CreateDropdown("Field 2 Field", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield22 = Option
 end)
-guiElements["vars"]["customplanterdelay22"] = customplanter1section:CreateTextBox("Harvest Field 2 Time", "Enter time in minutes", true, function(Value)
+guiElements["vars"]["customplanterdelay22"] = customplanter2section:CreateTextBox("Harvest Field 2 Time", "Enter time in minutes", true, function(Value)
     if tonumber(Value) then
         kocmoc.vars.customplanterdelay22 = tonumber(Value)
     end
 end)
-guiElements["vars"]["customplanter23"] = customplanter1section:CreateDropdown("Field 3 Planter Type", DropdownPlanterTable, function(Option)
+guiElements["vars"]["customplanter23"] = customplanter2section:CreateDropdown("Field 3 Planter Type", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter23 = Option
 end)
-guiElements["toggles"]["customplanterfield23"] = customplanter1section:CreateDropdown("Field 3 Field", DropdownFieldsTable, function(Option)
+guiElements["toggles"]["customplanterfield23"] = customplanter2section:CreateDropdown("Field 3 Field", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield23 = Option
 end)
-guiElements["vars"]["customplanterdelay23"] = customplanter1section:CreateTextBox("Harvest Field 3 Time", "Enter time in minutes", true, function(Value)
+guiElements["vars"]["customplanterdelay23"] = customplanter2section:CreateTextBox("Harvest Field 3 Time", "Enter time in minutes", true, function(Value)
     if tonumber(Value) then
         kocmoc.vars.customplanterdelay23 = tonumber(Value)
     end
 end)
-guiElements["vars"]["customplanter24"] = customplanter1section:CreateDropdown("Field 4 Planter Type", DropdownPlanterTable, function(Option)
+guiElements["vars"]["customplanter24"] = customplanter2section:CreateDropdown("Field 4 Planter Type", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter24 = Option
 end)
-guiElements["toggles"]["customplanterfield24"] = customplanter1section:CreateDropdown("Field 4 Field", DropdownFieldsTable, function(Option)
+guiElements["toggles"]["customplanterfield24"] = customplanter2section:CreateDropdown("Field 4 Field", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield24 = Option
 end)
-guiElements["vars"]["customplanterdelay24"] = customplanter1section:CreateTextBox("Harvest Field 4 Time", "Enter time in minutes", true, function(Value)
+guiElements["vars"]["customplanterdelay24"] = customplanter2section:CreateTextBox("Harvest Field 4 Time", "Enter time in minutes", true, function(Value)
     if tonumber(Value) then
         kocmoc.vars.customplanterdelay24 = tonumber(Value)
     end
 end)
-guiElements["vars"]["customplanter25"] = customplanter1section:CreateDropdown("Field 5 Planter Type", DropdownPlanterTable, function(Option)
+guiElements["vars"]["customplanter25"] = customplanter2section:CreateDropdown("Field 5 Planter Type", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter25 = Option
 end)
-guiElements["toggles"]["customplanterfield25"] = customplanter1section:CreateDropdown("Field 5 Field", DropdownFieldsTable, function(Option)
+guiElements["toggles"]["customplanterfield25"] = customplanter2section:CreateDropdown("Field 5 Field", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield25 = Option
 end)
-guiElements["vars"]["customplanterdelay25"] = customplanter1section:CreateTextBox("Harvest Field 5 Time", "Enter time in minutes", true, function(Value)
+guiElements["vars"]["customplanterdelay25"] = customplanter2section:CreateTextBox("Harvest Field 5 Time", "Enter time in minutes", true, function(Value)
     if tonumber(Value) then
         kocmoc.vars.customplanterdelay25 = tonumber(Value)
     end
 end)
 
-local customplanter1section = plantertab:CreateSection("Custom Planter 3")
-guiElements["vars"]["customplanter31"] = customplanter1section:CreateDropdown("Field 1 Planter Type", DropdownPlanterTable, function(Option)
+local customplanter3section = plantertab:CreateSection("Custom Planter 3")
+guiElements["vars"]["customplanter31"] = customplanter3section:CreateDropdown("Field 1 Planter Type", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter31 = Option
 end)
-guiElements["toggles"]["customplanterfield31"] = customplanter1section:CreateDropdown("Field 1 Field", DropdownFieldsTable, function(Option)
+guiElements["toggles"]["customplanterfield31"] = customplanter3section:CreateDropdown("Field 1 Field", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield31 = Option
 end)
-guiElements["vars"]["customplanterdelay31"] = customplanter1section:CreateTextBox("Harvest Field 1 Time", "Enter time in minutes", true, function(Value)
+guiElements["vars"]["customplanterdelay31"] = customplanter3section:CreateTextBox("Harvest Field 1 Time", "Enter time in minutes", true, function(Value)
     if tonumber(Value) then
         kocmoc.vars.customplanterdelay31 = tonumber(Value)
     end
 end)
-guiElements["vars"]["customplanter32"] = customplanter1section:CreateDropdown("Field 2 Planter Type", DropdownPlanterTable, function(Option)
+guiElements["vars"]["customplanter32"] = customplanter3section:CreateDropdown("Field 2 Planter Type", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter32 = Option
 end)
-guiElements["toggles"]["customplanterfield32"] = customplanter1section:CreateDropdown("Field 2 Field", DropdownFieldsTable, function(Option)
+guiElements["toggles"]["customplanterfield32"] = customplanter3section:CreateDropdown("Field 2 Field", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield32 = Option
 end)
-guiElements["vars"]["customplanterdelay32"] = customplanter1section:CreateTextBox("Harvest Field 2 Time", "Enter time in minutes", true, function(Value)
+guiElements["vars"]["customplanterdelay32"] = customplanter3section:CreateTextBox("Harvest Field 2 Time", "Enter time in minutes", true, function(Value)
     if tonumber(Value) then
         kocmoc.vars.customplanterdelay32 = tonumber(Value)
     end
 end)
-guiElements["vars"]["customplanter33"] = customplanter1section:CreateDropdown("Field 3 Planter Type", DropdownPlanterTable, function(Option)
+guiElements["vars"]["customplanter33"] = customplanter3section:CreateDropdown("Field 3 Planter Type", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter33 = Option
 end)
-guiElements["toggles"]["customplanterfield13"] = customplanter1section:CreateDropdown("Field 3 Field", DropdownFieldsTable, function(Option)
+guiElements["toggles"]["customplanterfield13"] = customplanter3section:CreateDropdown("Field 3 Field", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield33 = Option
 end)
-guiElements["vars"]["customplanterdelay33"] = customplanter1section:CreateTextBox("Harvest Field 3 Time", "Enter time in minutes", true, function(Value)
+guiElements["vars"]["customplanterdelay33"] = customplanter3section:CreateTextBox("Harvest Field 3 Time", "Enter time in minutes", true, function(Value)
     if tonumber(Value) then
         kocmoc.vars.customplanterdelay33 = tonumber(Value)
     end
 end)
-guiElements["vars"]["customplanter34"] = customplanter1section:CreateDropdown("Field 4 Planter Type", DropdownPlanterTable, function(Option)
+guiElements["vars"]["customplanter34"] = customplanter3section:CreateDropdown("Field 4 Planter Type", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter34 = Option
 end)
-guiElements["toggles"]["customplanterfield34"] = customplanter1section:CreateDropdown("Field 4 Field", DropdownFieldsTable, function(Option)
+guiElements["toggles"]["customplanterfield34"] = customplanter3section:CreateDropdown("Field 4 Field", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield34 = Option
 end)
-guiElements["vars"]["customplanterdelay34"] = customplanter1section:CreateTextBox("Harvest Field 4 Time", "Enter time in minutes", true, function(Value)
+guiElements["vars"]["customplanterdelay34"] = customplanter3section:CreateTextBox("Harvest Field 4 Time", "Enter time in minutes", true, function(Value)
     if tonumber(Value) then
         kocmoc.vars.customplanterdelay34 = tonumber(Value)
     end
 end)
-guiElements["vars"]["customplanter35"] = customplanter1section:CreateDropdown("Field 5 Planter Type", DropdownPlanterTable, function(Option)
+guiElements["vars"]["customplanter35"] = customplanter3section:CreateDropdown("Field 5 Planter Type", DropdownPlanterTable, function(Option)
     kocmoc.vars.customplanter35 = Option
 end)
-guiElements["toggles"]["customplanterfield35"] = customplanter1section:CreateDropdown("Field 5 Field", DropdownFieldsTable, function(Option)
+guiElements["toggles"]["customplanterfield35"] = customplanter3section:CreateDropdown("Field 5 Field", DropdownFieldsTable, function(Option)
     kocmoc.vars.customplanterfield35 = Option
 end)
-guiElements["vars"]["customplanterdelay35"] = customplanter1section:CreateTextBox("Harvest Field 5 Time", "Enter time in minutes", true, function(Value)
+guiElements["vars"]["customplanterdelay35"] = customplanter3section:CreateTextBox("Harvest Field 5 Time", "Enter time in minutes", true, function(Value)
     if tonumber(Value) then
         kocmoc.vars.customplanterdelay35 = tonumber(Value)
     end
