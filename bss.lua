@@ -4133,7 +4133,7 @@ task.spawn(function()
                 for j,step in pairs(cycle) do
                     if not step.Planter:find("Planter") then
                         steps[i] = steps[i] - 1
-                    else if not step.Field:find("Field") and not step.Field:find("Patch") and not step.Field:find("Forest")
+                    elseif not step.Field:find("Field") and not step.Field:find("Patch") and not step.Field:find("Forest")
                         steps[i] = steps[i] - 1
                     end
                 end
