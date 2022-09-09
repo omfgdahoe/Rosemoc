@@ -4157,6 +4157,7 @@ task.spawn(function()
                     if steps[i] == 0 then continue end
                     local planted = false
                     local currentstep = isfile("kocmoc/plantercache/cycle"..i.."cache.file") and tonumber(readfile("kocmoc/plantercache/cycle"..i.."cache.file")) or 1
+                    currentstep = currentstep % steps[i]
 
                     for j,step in pairs(cycle) do
                         for _,planter in pairs(fetchAllPlanters()) do
