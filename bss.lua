@@ -1341,9 +1341,9 @@ function docrosshairs()
         if string.find(v.Name, "Crosshair") and v.Parent and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.BrickColor ~= BrickColor.new("Flint") then
             if kocmoc.toggles.fastcrosshairs then
                 if (v.Position - api.humanoidrootpart().Position).magnitude > 200 then continue end
-                if getBuffTime("8172818074") > 0.5 and getBuffStack("8172818074") > 9 and getBuffTime("5101329167") == 0 and temptable.pollenpercentage <= 50 then
+                if getBuffTime("8172818074") > 0.5 and getBuffStack("8172818074") > 9 and getBuffTime("5101329167") == 0 then
                     if v.BrickColor == BrickColor.new("Alder") then
-                        task.wait(1)
+                        task.wait(1.2)
                         repeat
                             task.wait()
                             api.humanoidrootpart().CFrame = CFrame.new(v.Position)
@@ -1352,19 +1352,9 @@ function docrosshairs()
                 else
                     if v.BrickColor == BrickColor.new("Red flip/flop") or v.BrickColor == BrickColor.new("Alder") then
                         repeat
-                            api.humanoidrootpart().CFrame = CFrame.new(v.Position)
-                            task.wait(0.5)
-                        until not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple")
-                    elseif (v.BrickColor == BrickColor.new("Royal purple") or v.BrickColor == BrickColor.new("Forest green")) and temptable.pollenpercentage > 50 then
-                        repeat
-                            local timestamp = v:FindFirstChild("timestamp")
-                            if timestamp then
-                                if tick() - timestamp.Value > 2.2 then
-                                    api.humanoidrootpart().CFrame = CFrame.new(v.Position)
-                                end
-                            end
+                            api.humanoid():MoveTo(v.Position)
                             task.wait(0.1)
-                        until not v or not v.Parent
+                        until not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple")
                     end
                 end
             else
@@ -3687,7 +3677,30 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-    while task.wait(0.001) do
+    while task.wait(0.2) do
+        if kocmoc.toggles.autodig then
+            if player.Character then
+                local tool = player.Character:FindFirstChildOfClass("Tool")
+                if tool then
+                    local clickEvent = tool:FindFirstChild("ClickEvent", true)
+                    if clickEvent then
+                        clickEvent:FireServer()
+                    end
+                end
+                if kocmoc.vars.autodigmode == "Collector Steal" then
+                    local onnet = game.Workspace.NPCs.Onett.Onett["Porcelain Dipper"]:FindFirstChild("ClickEvent")
+                    if onnet then
+                        task.wait()
+                        onnet:FireServer()
+                    end
+                end
+            end
+        end
+    end
+end)
+
+task.spawn(function()
+    while task.wait() do
         if kocmoc.toggles.traincrab and api.humanoidrootpart() then
             api.humanoidrootpart().CFrame = CFrame.new(-307.52117919922, 110.11863250732, 467.86791992188)
         end
@@ -3711,26 +3724,6 @@ task.spawn(function()
                             end
                         end
                     end
-                end
-            end
-        end
-        if kocmoc.toggles.autodig then
-            if player.Character then
-                local tool = player.Character:FindFirstChildOfClass("Tool")
-                if tool then
-                    local clickEvent = tool:FindFirstChild("ClickEvent", true)
-                    if clickEvent then
-                        clickEvent:FireServer()
-                    end
-                end
-                if kocmoc.vars.autodigmode == "Collector Steal" then
-                    task.spawn(function()
-                        local onnet = game.Workspace.NPCs.Onett.Onett["Porcelain Dipper"]:FindFirstChild("ClickEvent")
-                        if onnet then
-                            task.wait()
-                            onnet:FireServer()
-                        end
-                    end)
                 end
             end
         end
@@ -3842,15 +3835,14 @@ task.spawn(function()
 end)
 
 task.spawn(function()
-    while task.wait(0.2) do
+    while task.wait(2) do
         temptable.runningfor = temptable.runningfor + 1
         temptable.honeycurrent = statsget().Totals.Honey
         if kocmoc.toggles.honeystorm then
             game.ReplicatedStorage.Events.ToyEvent:FireServer("Honeystorm")
         end
         if kocmoc.toggles.collectgingerbreads then
-            game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer(
-                "Gingerbread House")
+            game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer("Gingerbread House")
         end
         if kocmoc.toggles.autodispense then
             if kocmoc.dispensesettings.rj then
@@ -3889,13 +3881,6 @@ task.spawn(function()
         if kocmoc.toggles.freeantpass then
             game:GetService("ReplicatedStorage").Events.ToyEvent:FireServer("Free Ant Pass Dispenser")
         end
-        gainedhoneylabel:UpdateText("Gained Honey: " .. api.suffixstring(temptable.honeycurrent - temptable.honeystart))
-        uptimelabel:UpdateText("Uptime: " .. truncatetime(math.round(tick() - temptable.starttime)))
-    end
-end)
-
-task.spawn(function()
-    while task.wait(1) do
         if kocmoc.toggles.autoquest then
             local completeQuest = game.ReplicatedStorage.Events.CompleteQuestFromPool
             completeQuest:FireServer("Polar Bear")
@@ -3917,6 +3902,8 @@ task.spawn(function()
                 completeQuest:FireServer("Honey Bee")
             end
         end
+        gainedhoneylabel:UpdateText("Gained Honey: " .. api.suffixstring(temptable.honeycurrent - temptable.honeystart))
+        uptimelabel:UpdateText("Uptime: " .. truncatetime(math.round(tick() - temptable.starttime)))
     end
 end)
 
