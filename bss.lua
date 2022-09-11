@@ -1343,18 +1343,19 @@ function docrosshairs()
                 if (v.Position - api.humanoidrootpart().Position).magnitude > 200 then continue end
                 if getBuffTime("8172818074") > 0.5 and getBuffStack("8172818074") > 9 and getBuffTime("5101329167") == 0 then
                     if v.BrickColor == BrickColor.new("Alder") then
-                        task.wait(1.2)
+                        task.wait(0.5)
+                        local save_height = v.Position.y
                         repeat
                             task.wait()
                             api.humanoidrootpart().CFrame = CFrame.new(v.Position)
-                        until not v or not v.Parent
+                        until not v or not v.Parent or v.Position.y ~= save_height
                     end
                 else
                     if v.BrickColor == BrickColor.new("Red flip/flop") or v.BrickColor == BrickColor.new("Alder") then
                         repeat
                             api.humanoid():MoveTo(v.Position)
                             task.wait(0.1)
-                        until not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple")
+                        until (v.Position - api.humanoidrootpart().Position).magnitude <= 4 or not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple")
                     end
                 end
             else
@@ -2162,7 +2163,8 @@ guiElements["toggles"]["petalplanter"] = plantersection:CreateToggle("Blacklist 
 
 local customplanterssection = plantertab:CreateSection("Custom Planters")
 customplanterssection:CreateLabel("Turning this on will disable auto planters!")
-customplanterssection:CreateLabel("["..Danger.."] You should know what you are doing before turning this on! ["..Danger.."]")
+customplanterssection:CreateLabel("["..Danger.."] You should know what you are")
+customplanterssection:CreateLabel("doing before turning this on! ["..Danger.."]")
 guiElements["toggles"]["docustomplanters"] = customplanterssection:CreateToggle("Custom Planters", nil, function(State) kocmoc.toggles.docustomplanters = State end)
 
 local customplanter1section = plantertab:CreateSection("Custom Planter 1")
