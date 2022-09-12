@@ -1290,7 +1290,7 @@ end
 
 function getflame()
     for _,v in pairs(game.Workspace.PlayerFlames:GetChildren()) do
-        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.PF.Color.Keypoints[1].Value.G == 0 and (v.Position - api.humanoidrootpart().Position).magnitude < temptable.magnitude * 0.9 then
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and v.PF.Color.Keypoints[1].Value.G == 0 and findField(v.Position) == findField(api.humanoidrootpart().Position) then
             api.humanoid():MoveTo(v.Position)
             repeat
                 task.wait()
@@ -1354,7 +1354,7 @@ function docrosshairs()
                     if v.BrickColor == BrickColor.new("Red flip/flop") or v.BrickColor == BrickColor.new("Alder") then
                         repeat
                             api.humanoid():MoveTo(v.Position)
-                            task.wait(0.1)
+                            task.wait()
                         until (v.Position - api.humanoidrootpart().Position).magnitude <= 4 or not v or not v.Parent or v.BrickColor == BrickColor.new("Forest green") or v.BrickColor == BrickColor.new("Royal purple")
                     end
                 end
@@ -4159,9 +4159,17 @@ task.spawn(function()
                             end
                         end
                     end
-                    if not planted and cycle[currentstep].Planter and #fetchAllPlanters() < 3 and GetItemListWithValue()[cycle[currentstep].Planter:gsub(" Planter", "") .. "Planter"] and GetItemListWithValue()[cycle[currentstep].Planter:gsub(" Planter", "") .. "Planter"] > 0 then
-                        PlantPlanter(cycle[currentstep].Planter:gsub(" Planter", ""), cycle[currentstep].Field)
-                        writefile("kocmoc/plantercache/cycle"..i.."cache.file", tostring((currentstep - 1) % steps[i] + 2))
+                    if not planted and cycle[currentstep].Planter and #fetchAllPlanters() < 3 then
+                        local planter = cycle[currentstep].Planter
+                        if planter == "The Planter Of Plenty" and GetItemListWithValue()[planter] and GetItemListWithValue()[planter] > 0 then
+                            PlantPlanter(planter, cycle[currentstep].Field)
+                            writefile("kocmoc/plantercache/cycle"..i.."cache.file", tostring((currentstep - 1) % steps[i] + 2))
+                        else
+                            if GetItemListWithValue()[planter:gsub(" Planter", "") .. "Planter"] and GetItemListWithValue()[planter:gsub(" Planter", "") .. "Planter"] > 0 then
+                                PlantPlanter(planter:gsub(" Planter", ""), cycle[currentstep].Field)
+                                writefile("kocmoc/plantercache/cycle"..i.."cache.file", tostring((currentstep - 1) % steps[i] + 2))
+                            end
+                        end
                     end
                 end
             end
