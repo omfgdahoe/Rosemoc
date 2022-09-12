@@ -4161,7 +4161,7 @@ task.spawn(function()
                     end
                     if not planted and cycle[currentstep].Planter and #fetchAllPlanters() < 3 then
                         local planter = cycle[currentstep].Planter
-                        if planter == "The Planter Of Plenty" and GetItemListWithValue()[planter] and GetItemListWithValue()[planter] > 0 then
+                        if planter == "The Planter Of Plenty" and GetItemListWithValue()["PlentyPlanter"] and GetItemListWithValue()["PlentyPlanter"] > 0 then
                             PlantPlanter(planter, cycle[currentstep].Field)
                             writefile("kocmoc/plantercache/cycle"..i.."cache.file", tostring((currentstep - 1) % steps[i] + 2))
                         else
