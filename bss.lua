@@ -1965,9 +1965,15 @@ function PlantPlanter(name, field)
                             player.Character.HumanoidRootPart.CFrame = specField.CFrame
                             task.wait()
                         end
-                        game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({
-                            ["Name"] = name .. " Planter"
-                        })
+                        if name == "The Planter Of Plenty" then
+                            game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({
+                                ["Name"] = name
+                            })
+                        else
+                            game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({
+                                ["Name"] = name .. " Planter"
+                            })
+                        end
                     end
                     attempts = attempts + 1
                 end
