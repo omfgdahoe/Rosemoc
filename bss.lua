@@ -35,6 +35,7 @@ end
 -- Script temporary variables
 local player = game.Players.LocalPlayer
 local playerstatsevent = game:GetService("ReplicatedStorage").Events.RetrievePlayerStats
+local playeractivescommand = game:GetService("ReplicatedStorage").Events.PlayerActivesCommand
 local statstable = playerstatsevent:InvokeServer()
 local monsterspawners = game.Workspace.MonsterSpawners
 local NectarBlacklist = {}
@@ -64,7 +65,6 @@ end
 
 local lasttouched = nil
 local lastfieldpos = nil
-local done = true
 local hi = false
 local Items = require(game:GetService("ReplicatedStorage").EggTypes).GetTypes()
 local v1 = require(game.ReplicatedStorage.ClientStatCache):Get()
@@ -194,7 +194,10 @@ getgenv().temptable = {
     doingbubbles = false,
     doingcrosshairs = false,
     pollenpercentage = 0,
-    lastmobkill = 0
+    lastmobkill = 0,
+    usegumdropsforquest = false,
+    lastgumdropuse = tick(),
+    autox4glitter = isfile("kocmoc/plantercache/x4.file") and tonumber(readfile("kocmoc/plantercache/x4.file")) or 1
 }
 local planterst = {plantername = {}, planterid = {}}
 
@@ -452,7 +455,17 @@ getgenv().kocmoc = {
         tweenteleport = false,
         docustomplanters = false,
         fastcrosshairs = false,
-        smartmobkill = false
+        smartmobkill = false,
+        ["autouseBlue Extract"] = false,
+        ["autouseRed Extract"] = false,
+        ["autouseOil"] = false,
+        ["autouseEnzymes"] = false,
+        ["autouseGlue"] = false,
+        ["autouseGlitter"] = false,
+        ["autouseTropical Drink"] = false,
+        usegumdropsforquest = false,
+        autox4 = false,
+        newtokencollection = false
     },
     vars = {
         field = "Ant Field",
@@ -524,14 +537,7 @@ getgenv().kocmoc = {
         customplanterdelay32 = 75,
         customplanterdelay33 = 75,
         customplanterdelay34 = 75,
-        customplanterdelay35 = 75,
-        ["autouseBlue Extract"] = false,
-        ["autouseRed Extract"] = false,
-        ["autouseOil"] = false,
-        ["autouseEnzymes"] = false,
-        ["autouseGlue"] = false,
-        ["autouseGlitter"] = false,
-        ["autouseTropical Drink"] = false
+        customplanterdelay35 = 75
     },
     dispensesettings = {
         blub = false,
@@ -768,19 +774,54 @@ function enableall()
     end
 end
 
-function gettoken(v3)
+function gettoken(v3, farmclosest)
     --if temptable.doingbubbles or temptable.doingcrosshairs then return end
     if not v3 then v3 = fieldposition end
     task.wait()
-    for e, r in next, game.Workspace.Collectibles:GetChildren() do
-        itb = false
-        if r:FindFirstChildOfClass("Decal") and kocmoc.toggles.enabletokenblacklisting then
-            if api.findvalue(kocmoc.bltokens, string.split(r:FindFirstChildOfClass("Decal").Texture, "rbxassetid://")[2]) then
-                itb = true
+    if farmclosest then
+        for i=0,10 do
+            local closesttoken = {}
+            for e, r in next, game.Workspace.Collectibles:GetChildren() do
+                if r:FindFirstChild("farmed") then continue end
+                itb = false
+                if r:FindFirstChildOfClass("Decal") and kocmoc.toggles.enabletokenblacklisting then
+                    if api.findvalue(kocmoc.bltokens, string.split(r:FindFirstChildOfClass("Decal").Texture, "rbxassetid://")[2]) then
+                        itb = true
+                    end
+                end
+                if not itb and findField(r.Position) == findField(api.humanoidrootpart().Position) then
+                    if closesttoken.Distance then
+                        if (r.Position - api.humanoidrootpart().Position).magnitude < closesttoken.Distance then
+                            closesttoken = {Token = r, Distance = (r.Position - api.humanoidrootpart().Position).magnitude}
+                        end
+                    else
+                        closesttoken = {Token = r, Distance = (r.Position - api.humanoidrootpart().Position).magnitude}
+                    end
+                end
+            end
+            if closesttoken.Token then
+                farm(closesttoken.Token)
+                local farmed = Instance.new("BoolValue", closesttoken.Token)
+                farmed.Name = "farmed"
+                task.spawn(function()
+                    task.wait(1)
+                    if closesttoken.Token and closesttoken.Token.Parent then
+                        farmed.Parent = nil
+                    end
+                end)
             end
         end
-        if tonumber((r.Position - api.humanoidrootpart().Position).magnitude) <= temptable.magnitude / 1.4 and not itb and (v3 - r.Position).magnitude <= temptable.magnitude then
-            farm(r)
+    else
+        for e, r in next, game.Workspace.Collectibles:GetChildren() do
+            itb = false
+            if r:FindFirstChildOfClass("Decal") and kocmoc.toggles.enabletokenblacklisting then
+                if api.findvalue(kocmoc.bltokens, string.split(r:FindFirstChildOfClass("Decal").Texture, "rbxassetid://")[2]) then
+                    itb = true
+                end
+            end
+            if tonumber((r.Position - api.humanoidrootpart().Position).magnitude) <= temptable.magnitude / 1.4 and not itb and (v3 - r.Position).magnitude <= temptable.magnitude then
+                farm(r)
+            end
         end
     end
 end
@@ -793,10 +834,10 @@ function makesprinklers(position, onlyonesprinkler)
     if sprinkler == "The Supreme Saturator" then
         if sprinklermodel then
             if (sprinklermodel.Base.CFrame.p - position).magnitude > 32 then
-                game.ReplicatedStorage.Events.PlayerActivesCommand:FireServer({["Name"] = "Sprinkler Builder"})
+                playeractivescommand:FireServer({["Name"] = "Sprinkler Builder"})
             end
         else
-            game.ReplicatedStorage.Events.PlayerActivesCommand:FireServer({["Name"] = "Sprinkler Builder"})
+            playeractivescommand:FireServer({["Name"] = "Sprinkler Builder"})
         end
         return
     end
@@ -819,7 +860,7 @@ function makesprinklers(position, onlyonesprinkler)
                 api.humanoid().Jump = true
                 task.wait(.2)
             end
-            game.ReplicatedStorage.Events.PlayerActivesCommand:FireServer({["Name"] = "Sprinkler Builder"})
+            playeractivescommand:FireServer({["Name"] = "Sprinkler Builder"})
             if sprinklercount ~= 1 then
                 api.humanoid().JumpPower = k
                 task.wait(1)
@@ -1062,7 +1103,7 @@ function farmant()
     local acl = CFrame.new(Vector3.new(127, 48, 547), Vector3.new(94, 51.8, 550))
     local acr = CFrame.new(Vector3.new(65, 48, 534), Vector3.new(94, 51.8, 550))
     task.wait(1)
-    game.ReplicatedStorage.Events.PlayerActivesCommand:FireServer({
+    playeractivescommand:FireServer({
         ["Name"] = "Sprinkler Builder"
     })
     api.humanoidrootpart().CFrame = api.humanoidrootpart().CFrame + Vector3.new(0, 15, 0)
@@ -1134,7 +1175,7 @@ function collectplanters()
             api.humanoidrootpart().CFrame = soil.CFrame
             game:GetService("ReplicatedStorage").Events.PlanterModelCollect:FireServer(planterst.planterid[i])
             task.wait(.5)
-            game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = v .. " Planter"})
+            playeractivescommand:FireServer({["Name"] = v .. " Planter"})
             for i = 1, 5 do gettoken(soil.Position) end
             task.wait(2)
         end
@@ -1254,6 +1295,14 @@ function getpuff()
 
     if closestPuffStem then
         api.walkTo(closestPuffStem.CFrame.p)
+    end
+end
+
+function doautox4()
+    if temptable.autox4glitter == 1 then
+        writefile("kocmoc/plantercache/x4.file", "0")
+    else
+        writefile("kocmoc/plantercache/x4.file", "1")
     end
 end
 
@@ -1501,14 +1550,12 @@ local function useConvertors()
     if GetItemListWithValue()["Snowflake"] > 0 and
         string.find(kocmoc.vars.autouseMode, "Snowflak") or
         string.find(kocmoc.vars.autouseMode, "All") then
-        game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer(
-            {["Name"] = "Snowflake"})
+        playeractivescommand:FireServer({["Name"] = "Snowflake"})
     end
     if GetItemListWithValue()["Coconut"] > 0 and
         string.find(kocmoc.vars.autouseMode, "Coconut") or
         string.find(kocmoc.vars.autouseMode, "All") then
-        game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer(
-            {["Name"] = "Coconut"})
+        playeractivescommand:FireServer({["Name"] = "Coconut"})
     end
 end
 
@@ -1973,13 +2020,9 @@ function PlantPlanter(name, field)
                             task.wait()
                         end
                         if name == "The Planter Of Plenty" then
-                            game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({
-                                ["Name"] = name
-                            })
+                            playeractivescommand:FireServer({["Name"] = name})
                         else
-                            game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({
-                                ["Name"] = name .. " Planter"
-                            })
+                            playeractivescommand:FireServer({["Name"] = name .. " Planter"})
                         end
                     end
                     attempts = attempts + 1
@@ -2405,15 +2448,14 @@ local useitems = itemstab:CreateSection("Use Items")
 
 useitems:CreateButton("Use All Buffs ["..Danger.."]", function()
     for i, v in pairs(buffTable) do
-        game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = i})
+        playeractivescommand:FireServer({["Name"] = i})
     end
 end)
 useitems:CreateLabel("")
 
 for i, v in pairs(buffTable) do
     useitems:CreateButton("Use " .. i, function()
-        game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer(
-            {["Name"] = i})
+        playeractivescommand:FireServer({["Name"] = i})
     end)
     guiElements["vars"]["autouse"..i] = useitems:CreateToggle("Auto Use " .. i, nil, function(bool)
         buffTable[i].b = bool
@@ -2805,6 +2847,12 @@ end)
 guiElements["vars"]["jumppower"] = farmsettings:CreateSlider("Jump Power", 0, 120, 70, false, function(Value)
     kocmoc.vars.jumppower = Value
 end)
+guiElements["toggles"]["autox4"] = farmsettings:CreateToggle("Auto x4 Field Boost", nil, function(State)
+    kocmoc.toggles.autox4 = State
+end)
+guiElements["toggles"]["newtokencollection"] = farmsettings:CreateToggle("New Token Collection", nil, function(State)
+    kocmoc.toggles.newtokencollection = State
+end)
 local raresettings = setttab:CreateSection("Tokens Settings")
 raresettings:CreateTextBox("Asset ID", "rbxassetid", false, function(Value)
     rarename = Value
@@ -2987,6 +3035,7 @@ guiElements["toggles"]["tptonpc"] = aqs:CreateToggle("Teleport To NPC", nil, fun
 guiElements["toggles"]["autoquesthoneybee"] = aqs:CreateToggle("Include Honey Bee Quests", nil, function(State) kocmoc.toggles.autoquesthoneybee = State end)
 guiElements["toggles"]["buyantpass"] = aqs:CreateToggle("Buy Ant Pass When Needed", nil, function(State) kocmoc.toggles.buyantpass = State end)
 guiElements["toggles"]["smartmobkill"] = aqs:CreateToggle("Modify Mob Kill To Match Quests", nil, function(State) kocmoc.toggles.smartmobkill = State end)
+guiElements["toggles"]["usegumdropsforquest"] = aqs:CreateToggle("Use Gumdrops For Goo Quests", nil, function(State) kocmoc.toggles.usegumdropsforquest = State end)
 
 
 local pts = setttab:CreateSection("Autofarm Priority Tokens")
@@ -3072,7 +3121,7 @@ task.spawn(function()
                     if k == i then inuse = true end
                 end
                 if not inuse then
-                    game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = i})
+                    playeractivescommand:FireServer({["Name"] = i})
                 end
             end
         end
@@ -3153,6 +3202,7 @@ task.spawn(function()
             end
 
             if kocmoc.toggles.autofarm then
+                temptable.usegumdropsforquest = false
                 if kocmoc.toggles.autodoquest and player.PlayerGui.ScreenGui.Menus.Children.Quests.Content:FindFirstChild("Frame") then
                     for i, v in next, player.PlayerGui.ScreenGui.Menus.Children.Quests:GetDescendants() do
                         if v.Name == "Description" and v.Parent and v.Parent.Parent then
@@ -3163,7 +3213,10 @@ task.spawn(function()
                             }
                             if (kocmoc.toggles.buckobeequests and questName:find("Bucko Bee")) or (kocmoc.toggles.rileybeequests and questName:find("Riley Bee")) or (kocmoc.toggles.polarbearquests and questName:find("Polar Bear")) or (kocmoc.toggles.brownbearquests and questName:find("Brown Bear")) or (kocmoc.toggles.blackbearquests and questName:find("Black Bear")) or (kocmoc.toggles.allquests and not questName:find("Bear:") and not questName:find("Bee:")) then
                                 if not string.find(v.Text, "Puffshroom") then
-                                    if api.returnvalue(fieldstable, text) and not string.find(v.Text, "Complete!") and not api.findvalue(kocmoc.blacklistedfields, api.returnvalue( fieldstable, text)) then
+                                    if text:find(" Goo ") then
+                                        temptable.usegumdropsforquest = true
+                                    end
+                                    if api.returnvalue(fieldstable, text) and not string.find(v.Text, "Complete!") and not api.findvalue(kocmoc.blacklistedfields, api.returnvalue(fieldstable, text)) then
                                         d = api.returnvalue(fieldstable, text)
                                         fieldselected = game.Workspace.FlowerZones[d]
                                         break
@@ -3430,7 +3483,7 @@ task.spawn(function()
                         if kocmoc.toggles.autosprinkler then
                             makesprinklers(fieldposition, onlyonesprinkler)
                             task.wait(0.5)
-                            game.ReplicatedStorage.Events.PlayerActivesCommand:FireServer({["Name"] = "Sprinkler Builder"})
+                            playeractivescommand:FireServer({["Name"] = "Sprinkler Builder"})
                         end
                     else
                         if not game.Workspace.MonsterSpawners.CoconutCrab.Attachment.TimerGui.TimerLabel.Visible and not temptable.started.vicious and not temptable.started.monsters and not temptable.started.windy and findField(fieldposition).Name == "Coconut Field" then
@@ -3501,14 +3554,21 @@ task.spawn(function()
                         if kocmoc.toggles.farmunderballoons then
                             getballoons()
                         end
-                        if not kocmoc.toggles.donotfarmtokens and done then
-                            gettoken()
+                        if not kocmoc.toggles.donotfarmtokens then
+                            gettoken(nil, kocmoc.toggles.newtokencollection)
                         end
                         if not kocmoc.toggles.farmflower then
                             getflower()
                         end
                         if kocmoc.toggles.farmpuffshrooms and game.Workspace.Happenings.Puffshrooms:FindFirstChildOfClass("Model") then
                             getpuff()
+                        end
+                        if kocmoc.toggles.autox4 then
+                            doautox4()
+                        end
+                        if temptable.usegumdropsforquest and kocmoc.toggles.usegumdropsforquest and tick() - lastgumdropuse > 3 then
+                            lastgumdropuse = tick()
+                            playeractivescommand:FireServer({["Name"] = "Gumdrops"})
                         end
                     end
                 elseif tonumber(temptable.pollenpercentage) >= tonumber(kocmoc.vars.convertat) and not temptable.started.vicious and not temptable.planting then
