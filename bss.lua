@@ -524,7 +524,14 @@ getgenv().kocmoc = {
         customplanterdelay32 = 75,
         customplanterdelay33 = 75,
         customplanterdelay34 = 75,
-        customplanterdelay35 = 75
+        customplanterdelay35 = 75,
+        ["autouseBlue Extract"] = false,
+        ["autouseRed Extract"] = false,
+        ["autouseOil"] = false,
+        ["autouseEnzymes"] = false,
+        ["autouseGlue"] = false,
+        ["autouseGlitter"] = false,
+        ["autouseTropical Drink"] = false
     },
     dispensesettings = {
         blub = false,
@@ -2408,7 +2415,10 @@ for i, v in pairs(buffTable) do
         game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer(
             {["Name"] = i})
     end)
-    useitems:CreateToggle("Auto Use " .. i, nil, function(bool) buffTable[i].b = bool end)
+    guiElements["vars"]["autouse"..i] = useitems:CreateToggle("Auto Use " .. i, nil, function(bool)
+        buffTable[i].b = bool
+        kocmoc.vars["autouse"..i] = bool
+    end)
 end
 
 local miscc = misctab:CreateSection("Misc")
@@ -3055,12 +3065,13 @@ task.spawn(function()
     while task.wait(5) do
         local buffs = fetchBuffTable(buffTable)
         for i, v in pairs(buffTable) do
-            if v["b"] == true then
+            buffTable[i].b = kocmoc.vars["autouse"..i]
+            if v["b"] then
                 local inuse = false
                 for k, p in pairs(buffs) do
                     if k == i then inuse = true end
                 end
-                if inuse == false then
+                if not inuse then
                     game:GetService("ReplicatedStorage").Events.PlayerActivesCommand:FireServer({["Name"] = i})
                 end
             end
