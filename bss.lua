@@ -3566,8 +3566,8 @@ task.spawn(function()
                         if kocmoc.toggles.autox4 then
                             doautox4()
                         end
-                        if temptable.usegumdropsforquest and kocmoc.toggles.usegumdropsforquest and tick() - lastgumdropuse > 3 then
-                            lastgumdropuse = tick()
+                        if temptable.usegumdropsforquest and kocmoc.toggles.usegumdropsforquest and tick() - temptable.lastgumdropuse > 3 then
+                            temptable.lastgumdropuse = tick()
                             playeractivescommand:FireServer({["Name"] = "Gumdrops"})
                         end
                     end
