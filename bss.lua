@@ -6,9 +6,9 @@ getgenv().ExploitSpecific = "📜"
 
 -- API CALLS
 
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RoseGoldIsntGay/Rosemoc/main/library.lua"))()
-getgenv().api = loadstring(game:HttpGet("https://raw.githubusercontent.com/RoseGoldIsntGay/Rosemoc/main/api.lua"))()
-local bssapi = loadstring(game:HttpGet("https://raw.githubusercontent.com/RoseGoldIsntGay/Rosemoc/main/bssapi.lua"))()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Azurium-js/Rosemoc/main/library.lua"))()
+getgenv().api = loadstring(game:HttpGet("https://raw.githubusercontent.com/Azurium-js/Rosemoc/main/api.lua"))()
+local bssapi = loadstring(game:HttpGet("https://raw.githubusercontent.com/Azurium-js/Rosemoc/main/bssapi.lua"))()
 local httpreq = (syn and syn.request) or http_request or (http and http.request) or request
 
 if not isfolder("kocmoc") then makefolder("kocmoc") end
