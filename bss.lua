@@ -15,23 +15,6 @@ if not isfolder("kocmoc") then makefolder("kocmoc") end
 if not isfolder("kocmoc/premium") then makefolder("kocmoc/premium") end
 if not isfolder("kocmoc/plantercache") then makefolder("kocmoc/plantercache") end
 
-if isfile("rosemoc.txt") == false then
-    httpreq({
-        Url = "http://127.0.0.1:6463/rpc?v=1",
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json",
-            ["Origin"] = "https://discord.com"
-        },
-        Body = game:GetService("HttpService"):JSONEncode({
-            cmd = "INVITE_BROWSER",
-            args = {code = "BeF364YJS5"},
-            nonce = game:GetService("HttpService"):GenerateGUID(false)
-        }),
-        writefile("rosemoc.txt", "discord")
-    })
-end
-
 -- Script temporary variables
 local player = game.Players.LocalPlayer
 local playerstatsevent = game:GetService("ReplicatedStorage").Events.RetrievePlayerStats
