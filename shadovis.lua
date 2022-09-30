@@ -2,7 +2,7 @@ repeat task.wait() until game:IsLoaded()
 
 task.wait(5)
 
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Azurium-js/Rosemoc/main/library.lua"))()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/omfgdahoe/Rosemoc/main/library.lua"))()
 
 local RunService = game:GetService("RunService")
 local VirtualUser = game:GetService("VirtualUser")
